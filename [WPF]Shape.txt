@@ -1,0 +1,89 @@
+Shape 또한 FrameworkElement에서 파생된 상속 클래스.
+
+
+1. Shape(Windows.Shapes.Shape)
+derive from the Windows.Shapes.Shape
+<Properties>
+Fill/Stroke/Stretch(Fill/None/Uniform/UniformToFill)/DefiningGeometry/GeometryTransform/RenderedGeometry
+- Rectangle
+Width, Height, Canvas.Left, Canvas.Top
+- Ellipse
+Width, Height, Canvas.Left, Canvas.Top
+- Line
+X1, Y1, X2, Y2
+- PolyLine
+Points
+- Polygon
+- Path
+
+1-1. Brush => Shape.Fill 프로퍼티 값
+be found in the System.Windows.Media namespace) 
+derive from Freezable(redraw itself automatically)
+*Opacity
+- SolidColorBrush
+- LinearGradientBrush
+GradientStop(Color, Offset), StartPoint, EndPoint, SpreadMethod(Pad/Reflect/Repeat)
+- RadicalGradientBrush
+GradientStop(Color, Offset), GradientOrigin, RadiusX, RadiusY
+- ImageBrush
+ImageSource(->Windows.Resources로 등록해서 사용), TileMode(Tile/FlipX/FlipY/FlipXY)
+- VisualBrush
+Visual(Binding이용)
+- BitmapCacheBrush
+Target(Binding이용)
+
+1-2. Transform => Shape.RenderTransform 프로퍼티 값
+derive from the abstarct System.Windows.Media.Transform) 
+*RenderTransform(Transform 타입), RenderTransformOrigin(Transform형의 기준점) 프로퍼티는 모든 Element에 적용가능하다.
+<RenderTransform 종류>
+- TranslateTransfrom(위치)
+- RotateTransform(각도)
+Angle, CenterX, CenterY, (Shape.RenderTransformOrigin)
+- ScaleTransform(크기)
+ScaleX, ScaleY
+- SkewTransform(왜곡)
+- MatrixTransform(행렬곱)
+- TransformGroup(멀티)
+
+2. Path 
+=> Shape을 더 다양하게 활용하게 하는 Object
+=> Path.Data accepts ShapeGeometry
+- LineGeometry 
+StartPoint, EndPoint
+- RectanlgeGeometry
+Rect
+- EllipseGeometry
+RadiusX, RadiusY, Center
+- GeometryGroup(n개의 ShapeGeometry를 단순 그룹핑하여 통째로 사용)
+FillRule(EvenOdd/Nonzero, GeometryGroup에 포함된 ShapeGeometry들이 overlap될때의 설정값)
+*Windows.Resources에 등록하고 Binding 하여 이용
+- CombinedGeometry(2개의 ShapeGeometry를 연산)
+Geometry1, Geometry2, GeometryCombineMode(Union/Intersect/Xor/Exclude)
+- PathGeometry
+PathFigure	
+*The PathFigure is a shape that’s drawn using an unbroken line that consists of a number of segments.
+-> 4개의 프로퍼티(각 PathSegment들이 이 4개의 프로퍼티를 다른 의미로 사용)와 PathSegments 들을 가지고 만드는 것
+	예시) Path>Path.Data>PathGeometry>PathFigure
+	...
+	<PathFigure StartPoint/EndPoint/IsClosed/IsFilled> 
+		<(PathSegment Type) .... >
+	...
+  <PathFigure의 프로퍼티 =>StartPoint, EndPoint, IsClosed, IsFilled>
+  *PathFigure accepts PathSegments
+  *there's derived from PathSements
+   - LineSegment, PolyLineSegment	
+     + StartPoint(시작점)
+     Point(끝점)
+	Path>Path.Data>PathGeometry>PathFigure
+	<PathFigure StartPoint="300, 300">
+		<LineSegments Point="350,350">
+   - ArcSegment
+     + StartPoint(시작점), IsClosed(def: False, 닫힘여부-끝점과 시작점을 연결하는 선을 자동으로 추가해줌), IsFilled(def:False, 내부칼라(Path.Fill값))
+     Point(직전 Point로부터 연결할 지점), Size(곡율)
+	<PathFigure IsClosed="True" StartPoint="10,100" IsFilled="True">
+                        <ArcSegment Point="100,100" Size="200, 300" />
+                        <ArcSegment Point="100,50" Size="200, 300"/>
+   - BezierSegment, PolyBezierSegment, 
+     + StartPoint(시작점)
+   - QuadraticBezierSegment, PolyQuadraticBezierSegment
+- StreamGeometry

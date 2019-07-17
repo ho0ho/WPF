@@ -1,0 +1,40 @@
+﻿<Window x:Class="WPF0528.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF0528"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.Background>
+            <LinearGradientBrush>
+                <LinearGradientBrush.GradientStops>
+                    <GradientStop Offset="0.00"  Color="#FFFF7F80" />
+                    <!--<GradientStop Offset="0.50" Color="#FFFF7F80" />-->
+                    <GradientStop Offset="1.00" Color="White" />
+                </LinearGradientBrush.GradientStops>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,10,13,10" Name="txtQuestion" 
+             TextWrapping="Wrap" FontFamily="Verdana" FontSize="24"
+             Grid.Row="0" >   <!-- Attached Properties. Grid.Row는 Grid꺼인데 TextBox가 자기것처럼 사용하고 있음 -->
+            [Place question here.]
+        </TextBox>
+        <Button VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0,0,20" Width="127" Height="23" Name="cmdAnswer"
+            Click="cmdAnswer_Click" 
+            Grid.Row="1">
+            Ask the Eight Ball
+        </Button>
+        <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,10,13,10" Name="txtAnswer" 
+             TextWrapping="Wrap" IsReadOnly="True" FontFamily="Verdana" FontSize="24" Foreground="Green"
+             Grid.Row="2">
+            [Answer will appear here.]
+        </TextBox>
+    </Grid>
+</Window>

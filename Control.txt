@@ -1,0 +1,17 @@
+Element
+    Control(System.Windows.Control)
+    : User-interacitive와 관련있는 Element
+    - Content Control(System.Windows.ContentControl)
+      (1) control that is ablde to hold(and display) a piece of content (2) control that can contain a single nested element.
+      * Panel은 2개이상의 Element를 하위요소(nested)로 가질수 있으나, ContentControl은 하나(Content Property)만 가질 수 있다(예. Label->String)
+      예) Label, Button, ToolTip, ScrollViewer 
+    - Headered content control
+      예) TabItem, GroupBox, Expander
+    - Text Control: the small set of controls that allow users to enter input
+      예) TextBox, PasswordBox, RichTextBox
+    - List Control:
+      예) ListBox, ComboBox
+    - Range-based Control
+      예) Slider, ProgressBar
+    - Date Control
+      예) Calendar, DatePicker

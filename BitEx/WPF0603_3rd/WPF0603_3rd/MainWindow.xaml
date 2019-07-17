@@ -1,0 +1,44 @@
+﻿<Window x:Class="WPF0603_3rd.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF0603_3rd"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="700">
+    <Window.Resources>
+        <local:HireDateConverter x:Key="HireDateConverter"></local:HireDateConverter>
+        
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>    
+        
+        <StackPanel Margin="10">
+            <Button HorizontalAlignment="Right" Click="btnClick_getEmployees" Padding="3"> Get Emplyees </Button>
+        </StackPanel>
+        <!-- DataGrid -->
+        <!-- AlternatingRowBackGround : 격자로 색깔로 구분되게 나오는 프로퍼티 -->
+        <!-- AutoGenerateColumns : True면 알아서 컬럼명을 완성시킴. False일땐 DataGrid.Columns으로 지정해줘야함. -->
+        <DataGrid Grid.Row="1" Name="listEmps" Margin="10" RowBackground="OrangeRed" AutoGenerateColumns="False" AlternatingRowBackground="RoyalBlue">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="사번" Binding="{Binding Path=EmployeeID}"></DataGridTextColumn>
+                <DataGridTextColumn Header="이름" Binding="{Binding Path=FirstName}"></DataGridTextColumn>
+                <DataGridTextColumn Header="성" Width="50" Binding="{Binding Path=LastName}"></DataGridTextColumn>                
+                <DataGridTextColumn Header="E-mail" Binding="{Binding Path=Email}"></DataGridTextColumn>
+                <DataGridTextColumn Header="연락처" Binding="{Binding Path=PhoneNumber}"></DataGridTextColumn>
+                <DataGridTextColumn Header="입사일" Binding="{Binding Path=HireDate, Converter={StaticResource HireDateConverter}}"></DataGridTextColumn>
+                <DataGridTextColumn Header="업무번호" Binding="{Binding Path=JobID}"></DataGridTextColumn>
+                <DataGridTextColumn Header="급여" Binding="{Binding Path=Salary}"></DataGridTextColumn>
+                <DataGridTextColumn Header="커미션율" Binding="{Binding Path=CommissionPCT}"></DataGridTextColumn>
+                <DataGridTextColumn Header="매니저 사번" Binding="{Binding Path=ManagerID}"></DataGridTextColumn>
+                <DataGridTextColumn Header="부서번호" Binding="{Binding Path=DepartmentID}"></DataGridTextColumn>
+            </DataGrid.Columns>
+
+        </DataGrid>
+        
+    </Grid>
+</Window>

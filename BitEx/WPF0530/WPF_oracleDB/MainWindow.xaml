@@ -1,0 +1,110 @@
+﻿<Window x:Class="WPF_oracleDB.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_oracleDB"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="800">
+
+    <Window.Resources>
+        <local:HireDateConverter x:Key="HireDateConverter"></local:HireDateConverter>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>            
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            
+            <Label Grid.Column="0" x:Name="lbl_employeeID" Content="Employee ID :" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Center" Width="Auto"/>
+            <TextBox Grid.Column="1" x:Name="txt_employeeID" Margin="10" Height="20" TextWrapping="Wrap"/>
+            <Button Grid.Column="2" x:Name="btn_getEmployeeID" Content="Get EmployeeID" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Center" Width="Auto" Padding="2" Click="Btn_getEmployeeID_Click"/>
+            
+        </Grid>
+        <Border Grid.Row="1" Margin="5" Background="RoyalBlue">
+            <Grid Name="Grid2" Grid.Row="1" Margin="5" Background="OrangeRed">
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row ="0" Grid.Column="0" x:Name="lbl_FirstName" Content="First Name :" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Center"/>
+                <TextBox Grid.Row ="0" Grid.Column="1" x:Name="txt_FistName" Margin="5" TextWrapping="Wrap"
+                         Text="{Binding Path=FirstName}"/>
+                <Label Grid.Row ="0" Grid.Column="2" x:Name="lbl_LastName" Content="Last Name :" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Center"/>
+                <TextBox Grid.Row ="0" Grid.Column="3" x:Name="txt_LastName" Margin="5" TextWrapping="Wrap"
+                         Text="{Binding Path=LastName}"/>
+
+                <Label Grid.Row ="1" Grid.Column="0" x:Name="lbl_Email" Content="Email :" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Center"/>
+                <TextBox Grid.Row ="1" Grid.Column="1" x:Name="txt_Email" Margin="5" TextWrapping="Wrap"
+                         Text="{Binding Path=Email}"/>
+                <Label Grid.Row ="1" Grid.Column="2" x:Name="lbl_PhoneNumber" Content="Phone Number :" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Center"/>
+                <TextBox Grid.Row ="1" Grid.Column="3" x:Name="txt_PhoneNumber" Margin="5" TextWrapping="Wrap"
+                         Text="{Binding Path=PhoneNumber}"/>
+
+                <!-- HireDate : YYYY/MM/DD 형식으로 뽑기 -->
+                <!-- 1. Convert 이용 -->
+                <!-- 2. StringFormat(교재 604p) 이용 
+                        2-1. StringFormat={}{0:MM/dd/yyyy}    (확인해보기)
+                        2-2. StringFormat=Date:{0:MM/dd/yyyy} (확인해보기)
+                        2-3. StringFormat=d                   (확인해보기) -->
+                <Label Grid.Row ="2" Grid.Column="0" x:Name="lbl_HireDate" Content="HireDate :" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Center"/>
+                <!--<TextBox Grid.Row ="2" Grid.Column="1" x:Name="txt_HireDate" Margin="5" TextWrapping="Wrap"
+                         Text="{Binding Path=HireDate, StringFormat=f}"/>-->                
+                <TextBox Grid.Row ="2" Grid.Column="1" x:Name="txt_HireDate" Margin="5" TextWrapping="Wrap"
+                         Text="{Binding Path=HireDate, Converter={StaticResource HireDateConverter}}"/>          
+                
+                    
+                <Label Grid.Row ="2" Grid.Column="2" x:Name="lbl_JobID" Content="JobID :" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Center"/>
+                <!--JobID는 double인데 TextBox컨트롤이 데이터 가져올 때 ToString()까지 해줌-->
+                <!-- 내가 만든 컨트롤일 경우 이런 기능까지 구현해줘야함 -->
+                <TextBox Grid.Row ="2" Grid.Column="3" x:Name="txt_JobID" Margin="5" TextWrapping="Wrap"
+                         Text="{Binding Path=JobID}"/>
+
+                <Label Grid.Row ="3" Grid.Column="0" x:Name="lbl_Salary" Content="Salary :" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Center"/>
+                <TextBox Grid.Row ="3" Grid.Column="1" x:Name="txt_Salary" Margin="5" TextWrapping="Wrap"
+                         Text="{Binding Path=Salary}"/>
+                <Label Grid.Row ="3" Grid.Column="2" x:Name="lbl_CommissionPCT" Content="CommissionPCT :" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Center"/>
+                <TextBox Grid.Row ="3" Grid.Column="3" x:Name="txt_CommissionPCT" Margin="5" TextWrapping="Wrap"
+                         Text="{Binding Path=CommissionPCT}"/>
+
+                <Label Grid.Row ="4" Grid.Column="0" x:Name="lbl_ManagerID" Content="ManagerID :" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Center"/>
+                <TextBox Grid.Row ="4" Grid.Column="1" x:Name="txt_ManagerID" Margin="5" TextWrapping="Wrap"
+                         Text="{Binding Path=ManagerID}"/>
+                <Label Grid.Row ="4" Grid.Column="2" x:Name="lbl_DepartmentID" Content="DepartmentID :" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Center"/>
+                <TextBox Grid.Row ="4" Grid.Column="3" x:Name="txt_DepartmentID" Margin="5" TextWrapping="Wrap"
+                         Text="{Binding Path=DepartmentID}"/>
+
+                <DockPanel Grid.Row="5" Grid.ColumnSpan="4">
+                    <Button x:Name="button" Content="확인" HorizontalAlignment="Right" Margin="5" VerticalAlignment="Center" 
+                            Width="75" Padding="2" Click="btn_OK_Click"/>
+                </DockPanel>
+
+            </Grid>
+        </Border>
+
+
+
+
+
+
+    </Grid>
+</Window>

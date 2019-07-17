@@ -1,0 +1,83 @@
+﻿<Window x:Class="MeditSmile2D.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MeditSmile2D"
+        mc:Ignorable="d"
+        
+        xmlns:View="clr-namespace:MeditSmile2D.View"       
+        DataContext="{Binding Main, Source={StaticResource Locator}}"
+        Title="MeditSmile2D" Height="450" Width="800">
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="44"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="{Binding Title}" VerticalAlignment="Center" FontWeight="Bold" FontSize="18.667"/>
+        <StackPanel Grid.Row="1">
+            <RadioButton x:Name="radio1" IsChecked="{Binding IsTemplate1}"> Template #1 </RadioButton>
+            <RadioButton x:Name="radio2" IsChecked="{Binding IsTemplate2}"> Template #2 </RadioButton>
+            <!--<RadioButton x:Name="radio3" IsChecked="{Binding IsTemplate3}"> Template #3 </RadioButton>
+            <RadioButton x:Name="radio4" IsChecked="{Binding IsTemplate4}"> Template #4 </RadioButton>
+            <RadioButton x:Name="radio5" IsChecked="{Binding IsTemplate5}"> Template #5 </RadioButton>-->
+        </StackPanel>
+            
+        <Canvas x:Name="book" Grid.Row="2">
+            <View:Teeth x:Name="ssideL" Points="{Binding Points[5]}" IsClosedCurve="{Binding IsClosedCurve}"/>
+            <View:Teeth x:Name="sideL" Points="{Binding Points[4]}" IsClosedCurve="{Binding IsClosedCurve}"/>
+            <View:Teeth x:Name="frontL" Points="{Binding Points[3]}" IsClosedCurve="{Binding IsClosedCurve}"/>
+            <View:Teeth x:Name="frontR" Points="{Binding Points[0]}" IsClosedCurve="{Binding IsClosedCurve}"/>
+            <View:Teeth x:Name="sideR" Points="{Binding Points[1]}" IsClosedCurve="{Binding IsClosedCurve}"/>
+            <View:Teeth x:Name="ssideR" Points="{Binding Points[2]}" IsClosedCurve="{Binding IsClosedCurve}"/>
+        </Canvas>
+        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="[You Can Drag &amp; Drop the Points for Testing the Control]" VerticalAlignment="Bottom" Grid.Row="3" Margin="0,0,0,4" FontSize="13.333"/>
+
+        <ListBox Grid.Row="2" ItemsSource="{Binding Points[5]}" ItemContainerStyle="{StaticResource TeethDotStyle}">
+            <ListBox.Template>
+                <ControlTemplate>
+                    <Canvas IsItemsHost="True"/>
+                </ControlTemplate>
+            </ListBox.Template>
+        </ListBox>
+        <ListBox Grid.Row="2" ItemsSource="{Binding Points[4]}" ItemContainerStyle="{StaticResource TeethDotStyle}">
+            <ListBox.Template>
+                <ControlTemplate>
+                    <Canvas IsItemsHost="True"/>
+                </ControlTemplate>
+            </ListBox.Template>
+        </ListBox>
+        <ListBox Grid.Row="2" ItemsSource="{Binding Points[3]}" ItemContainerStyle="{StaticResource TeethDotStyle}">
+            <ListBox.Template>
+                <ControlTemplate>
+                    <Canvas IsItemsHost="True"/>
+                </ControlTemplate>
+            </ListBox.Template>
+        </ListBox>
+        <ListBox Grid.Row="2" ItemsSource="{Binding Points[0]}" ItemContainerStyle="{StaticResource TeethDotStyle}">
+            <ListBox.Template>
+                <ControlTemplate>
+                    <Canvas IsItemsHost="True"/>
+                </ControlTemplate>
+            </ListBox.Template>
+        </ListBox>
+        <ListBox Grid.Row="2" ItemsSource="{Binding Points[1]}" ItemContainerStyle="{StaticResource TeethDotStyle}">
+            <ListBox.Template>
+                <ControlTemplate>
+                    <Canvas IsItemsHost="True"/>
+                </ControlTemplate>
+            </ListBox.Template>
+        </ListBox>
+        <ListBox Grid.Row="2" ItemsSource="{Binding Points[2]}" ItemContainerStyle="{StaticResource TeethDotStyle}">
+            <ListBox.Template>
+                <ControlTemplate>
+                    <Canvas IsItemsHost="True"/>
+                </ControlTemplate>
+            </ListBox.Template>
+        </ListBox>
+    </Grid>
+</Window>
