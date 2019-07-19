@@ -8,8 +8,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="View/DictionaryResources/MainResourceDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <vm:ViewModelLocator x:Key="Locator1"/>
-            <vm:ViewModelLocator x:Key="Locator2"/>
+            
         </ResourceDictionary>
     </Application.Resources>
 </Application>

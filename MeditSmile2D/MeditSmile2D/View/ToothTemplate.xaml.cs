@@ -23,10 +23,6 @@ namespace MeditSmile2D.View
         public ToothTemplate()
         {
             InitializeComponent();
-
-            Binding binding = new Binding("Main");
-            binding.Source = FindResource("Locator");
-            SetBinding(DataContextProperty, binding);
         }
     }
 }

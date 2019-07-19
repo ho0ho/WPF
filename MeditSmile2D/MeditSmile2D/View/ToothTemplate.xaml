@@ -8,55 +8,65 @@
              d:DesignHeight="450" d:DesignWidth="800">
 
     <Grid>
-        <Canvas x:Name="book" Grid.Row="2">
+        <Canvas x:Name="book">
             <local:Teeth x:Name="frontL" Points="{Binding Points[5]}" IsClosedCurve="{Binding IsClosedCurve}"/>
-            <local:Teeth x:Name="frontR" Points="{Binding Points[4]}" IsClosedCurve="{Binding IsClosedCurve}"/>
-            <local:Teeth x:Name="sideL" Points="{Binding Points[3]}" IsClosedCurve="{Binding IsClosedCurve}"/>
-            <local:Teeth x:Name="sideR" Points="{Binding Points[0]}" IsClosedCurve="{Binding IsClosedCurve}"/>
-            <local:Teeth x:Name="ssideL" Points="{Binding Points[1]}" IsClosedCurve="{Binding IsClosedCurve}"/>
-            <local:Teeth x:Name="ssideR" Points="{Binding Points[2]}" IsClosedCurve="{Binding IsClosedCurve}"/>
+            <ListBox ItemsSource="{Binding Points[5]}" ItemContainerStyle="{StaticResource PointListBoxItemStyle}">
+                <ListBox.Template>
+                    <ControlTemplate>
+                        <Canvas IsItemsHost="True"/>
+                    </ControlTemplate>
+                </ListBox.Template>
+            </ListBox>
         </Canvas>
-        <ListBox Grid.Row="2" ItemsSource="{Binding Points[5]}" ItemContainerStyle="{StaticResource PointListBoxItemStyle}">
+        <Canvas>
+            <local:Teeth x:Name="frontR" Points="{Binding Points[4]}" IsClosedCurve="{Binding IsClosedCurve}"/>
+            <ListBox Grid.Row="1" ItemsSource="{Binding Points[4]}" ItemContainerStyle="{StaticResource PointListBoxItemStyle}">
+                <ListBox.Template>
+                    <ControlTemplate>
+                        <Canvas IsItemsHost="True"/>
+                    </ControlTemplate>
+                </ListBox.Template>
+            </ListBox>
+        </Canvas>
+        <Canvas>
+            <local:Teeth x:Name="sideL" Points="{Binding Points[3]}" IsClosedCurve="{Binding IsClosedCurve}"/>
+            <ListBox Grid.Row="2" ItemsSource="{Binding Points[3]}" ItemContainerStyle="{StaticResource PointListBoxItemStyle}">
+                <ListBox.Template>
+                    <ControlTemplate>
+                        <Canvas IsItemsHost="True"/>
+                    </ControlTemplate>
+                </ListBox.Template>
+            </ListBox>
+        </Canvas>
+        <Canvas>
+            <local:Teeth x:Name="sideR" Points="{Binding Points[0]}" IsClosedCurve="{Binding IsClosedCurve}"/>
+            <ListBox Grid.Row="1" ItemsSource="{Binding Points[0]}" ItemContainerStyle="{StaticResource PointListBoxItemStyle}">
+                <ListBox.Template>
+                    <ControlTemplate>
+                        <Canvas IsItemsHost="True"/>
+                    </ControlTemplate>
+                </ListBox.Template>
+            </ListBox>
+        </Canvas>
+        <Canvas>
+        <local:Teeth x:Name="ssideL" Points="{Binding Points[1]}" IsClosedCurve="{Binding IsClosedCurve}"/>
+        <ListBox Grid.Row="1" ItemsSource="{Binding Points[1]}" ItemContainerStyle="{StaticResource PointListBoxItemStyle}">
             <ListBox.Template>
                 <ControlTemplate>
                     <Canvas IsItemsHost="True"/>
                 </ControlTemplate>
             </ListBox.Template>
         </ListBox>
-        <ListBox Grid.Row="2" ItemsSource="{Binding Points[4]}" ItemContainerStyle="{StaticResource PointListBoxItemStyle}">
-            <ListBox.Template>
-                <ControlTemplate>
-                    <Canvas IsItemsHost="True"/>
-                </ControlTemplate>
-            </ListBox.Template>
-        </ListBox>
-        <ListBox Grid.Row="2" ItemsSource="{Binding Points[3]}" ItemContainerStyle="{StaticResource PointListBoxItemStyle}">
-            <ListBox.Template>
-                <ControlTemplate>
-                    <Canvas IsItemsHost="True"/>
-                </ControlTemplate>
-            </ListBox.Template>
-        </ListBox>
-        <ListBox Grid.Row="2" ItemsSource="{Binding Points[0]}" ItemContainerStyle="{StaticResource PointListBoxItemStyle}">
-            <ListBox.Template>
-                <ControlTemplate>
-                    <Canvas IsItemsHost="True"/>
-                </ControlTemplate>
-            </ListBox.Template>
-        </ListBox>
-        <ListBox Grid.Row="2" ItemsSource="{Binding Points[1]}" ItemContainerStyle="{StaticResource PointListBoxItemStyle}">
-            <ListBox.Template>
-                <ControlTemplate>
-                    <Canvas IsItemsHost="True"/>
-                </ControlTemplate>
-            </ListBox.Template>
-        </ListBox>
-        <ListBox Grid.Row="2" ItemsSource="{Binding Points[2]}" ItemContainerStyle="{StaticResource PointListBoxItemStyle}">
-            <ListBox.Template>
-                <ControlTemplate>
-                    <Canvas IsItemsHost="True"/>
-                </ControlTemplate>
-            </ListBox.Template>
-        </ListBox>
+        </Canvas>
+        <Canvas>
+            <local:Teeth x:Name="ssideR" Points="{Binding Points[2]}" IsClosedCurve="{Binding IsClosedCurve}"/>
+            <ListBox Grid.Row="1" ItemsSource="{Binding Points[2]}" ItemContainerStyle="{StaticResource PointListBoxItemStyle}">
+                <ListBox.Template>
+                    <ControlTemplate>
+                        <Canvas IsItemsHost="True"/>
+                    </ControlTemplate>
+                </ListBox.Template>
+            </ListBox>
+        </Canvas>
     </Grid>
 </UserControl>

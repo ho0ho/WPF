@@ -23,15 +23,7 @@ namespace MeditSmile2D
         public MainWindow()
         {
             InitializeComponent();
-
-            
-            Binding binding = new Binding("Main");
-
-
-            binding.Source = FindResource("Locator");
-
-
-            this.SetBinding(Window.DataContextProperty, binding);
+            DataContext = new ViewModel.MainViewModel();
         }
     }
 }

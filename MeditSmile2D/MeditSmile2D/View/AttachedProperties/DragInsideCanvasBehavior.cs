@@ -34,8 +34,6 @@ namespace MeditSmile2D.View.AttachedProperties
         #region RegistredElements
 
         private static Dictionary<FrameworkElement, MyHandlersData> _registredElements;
-
-
         private static Dictionary<FrameworkElement, MyHandlersData> RegistredElements
         {
             get { return _registredElements ?? (_registredElements = new Dictionary<FrameworkElement, MyHandlersData>()); }
@@ -51,10 +49,10 @@ namespace MeditSmile2D.View.AttachedProperties
             if (frameworkElement == null)
                 return;
 
-
             var canvas = ViewUtils.GetParent(frameworkElement, (t) => t is Canvas) as Canvas;
             if (canvas == null)
                 return;
+
             var mousePosition = Mouse.GetPosition(canvas);
             int lastMouseMoveTime = Environment.TickCount;
             bool itemIsClicked = false;

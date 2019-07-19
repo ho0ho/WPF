@@ -8,9 +8,9 @@
              
              x:Name="TeethControl"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Border BorderBrush="Gray" BorderThickness="2">
-        <Canvas>
+    <Canvas>
+        <Grid>
             <Path x:Name="path" Stroke="{Binding PathColor, ElementName=TeethControl}" StrokeThickness="1"/>
-        </Canvas>
-    </Border>
+        </Grid>
+    </Canvas>
 </UserControl>

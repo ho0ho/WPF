@@ -15,10 +15,16 @@
 using CommonServiceLocator;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows;
 //using Microsoft.Practices.ServiceLocation;
 
 namespace MeditSmile2D.ViewModel
 {
+    using ToothType = ObservableCollection<ObservableCollection<PointViewModel>>;
+    using TeethType = ObservableCollection<PointViewModel>;
+
     /// <summary>
     /// This class contains static references to all the view models in the
     /// application and provides an entry point for the bindings.
@@ -51,7 +57,7 @@ namespace MeditSmile2D.ViewModel
 
         #endregion
 
-        public ViewModelLocator()
+        public ViewModelLocator(string name)
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
@@ -65,10 +71,14 @@ namespace MeditSmile2D.ViewModel
             ////    // Create run time view services and models
             ////    SimpleIoc.Default.Register<IDataService, DataService>();
             ////}
-            
-            
-            
+            ///
 
+           
+
+            ////string infoIdx = "TemplateData" + IndexOfTemplate.ToString();
+            //string infoIdx = "TemplateData";
+            //if (Application.Current.Resources[infoIdx] == null)
+            //    Application.Current.Resources.Add(infoIdx, template);
 
             SimpleIoc.Default.Register<MainViewModel>();
         }
