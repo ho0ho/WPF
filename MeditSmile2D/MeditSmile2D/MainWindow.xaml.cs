@@ -24,6 +24,7 @@ namespace MeditSmile2D
         {
             InitializeComponent();
             DataContext = new ViewModel.MainViewModel();
+            ((App)Application.Current).cb_mirror = mirror;
         }
     }
 }

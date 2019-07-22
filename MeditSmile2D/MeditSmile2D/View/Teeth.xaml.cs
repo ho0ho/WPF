@@ -42,41 +42,11 @@ namespace MeditSmile2D.View
 
         private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            /// 이 함수내로 진입했다는 것은, Teeth.Points 프로퍼티가 SetValue() 된 적이 있었음을 의미.
-            /// Teeth.Points에 들어오는 데이터 DependencyObject d는 TeethType으로, 
-            /// 이 함수는 결국 치아 1개에 대한 데이터(가 변동될 때)를 다루는 함수
-
-            // 그래서 Teeth로 형변환 후 진행
             var teeth = d as Teeth;
             if (teeth == null) return;
 
             if (e.NewValue is INotifyCollectionChanged)
-            {
-                /* 이 함수에서 수행하는 전체 프로세스는 아래와 같다. 
-                 
-                   1. 치아 1개 자체의 값이 변경될 때 수행될 Changed 함수를 등록
-                      e.NewValue => ToothType
-                                 => INotifyCollectionChanged로 형변환한 후 
-                                 => INotifyCollectionChanged.CollectionChanged 에 Changed함수 등록
-                                 - 치아 1개(점 10개의 콜렉션)에 대한 Changed 함수 : Teeth.OnPointCollectionChanged()
-
-                   2. 그 후, e.NewValue(=> 치아 1개를 의미)가 갖는 10개의 PointViewModel객체에 대해 각각 Changed함수 등록
-                      point      => TeethType
-                                 => INotifyPropertyChanged로 형변환한 후,
-                                 => INotifyCollectionChanged.PropertyChanged 에 Changed함수 등록
-                                 - 점 1개에 대한 Changed 함수 : Teeth.OnPointPropertyChanged() 
-
-                   즉, 모든 각 점(PointViewModel 객체)이 변경될 때 수행될 OnChanged 함수를 직접 정의하고, 
-                   => Teeth.OnPointPropertyChanged() 정의
-                   이 모든 점들의 Changed 함수를 등록하기 위해, 각 점들을 INotifyPropertyChanged 타입으로 형변환한뒤, 
-                   INotifyPropertyChanged.PropertyChanged에 Changed 함수를 모두 등록한다. 
-
-                   치아 1개(TeethType 객체)가 변경될 때 수행될 OnChanged 함수를 직접 정의한 뒤,
-                   => Teeth.OnPointCollectionChanged() 정의
-                   해당 치아의 Change 함수를 등록하기 위해, 해당 치아를 INotifyCollectionChanged 타입으로 형변환한 뒤,
-                   INotifyCollectionChanged.CollectionChanged에 Changed 함수를 등록한다.
-                 */
-
+            { 
                 (e.NewValue as INotifyCollectionChanged).CollectionChanged += teeth.OnPointCollectionChanged;
                 teeth.RegisterCollectionItemPropertyChanged(e.NewValue as IEnumerable);
             }
@@ -122,7 +92,6 @@ namespace MeditSmile2D.View
 
         private void SetPathData()
         {
-            // Drawing
             if (Points == null) return;
             var points = new List<Point>();
 
@@ -168,6 +137,37 @@ namespace MeditSmile2D.View
             var Teeth_PathGeometry = new PathGeometry { Figures = Teeth_PathFigureCollection };
 
             path.Data = Teeth_PathGeometry;
+
+            // AdjSize(points);
+        }
+
+        public double Top;
+        public double Left;
+
+        private void AdjSize(List<Point> pts)
+        {
+            double xMin = float.MaxValue;
+            double xMax = float.MinValue;
+            double yMin = float.MaxValue;
+            double yMax = float.MinValue;
+
+            foreach (var pt in pts)
+            {
+                if (pt.X > xMax)
+                    xMax = pt.X;
+                if (pt.X < xMin)
+                    xMin = pt.X;
+                if (pt.Y > yMax)
+                    yMax = pt.Y;
+                if (pt.Y < yMin)
+                    yMin = pt.Y;
+            }
+
+            Top = yMin;
+            Left = xMin;
+
+            Canvas.SetLeft(this, Left);
+            Canvas.SetTop(this, Top);
         }
 
         private void RegisterCollectionItemPropertyChanged(IEnumerable collection)
@@ -191,13 +191,12 @@ namespace MeditSmile2D.View
             SetPathData();
         }
 
-        // 이게 가장 근본적인 Changed 함수
         private void OnPointPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            
             if (e.PropertyName == "X" || e.PropertyName == "Y")
             {
-                SetPathData();
-                
+                SetPathData();                
             }
         }
     }

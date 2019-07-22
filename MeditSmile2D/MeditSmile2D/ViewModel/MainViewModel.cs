@@ -69,12 +69,7 @@ namespace MeditSmile2D.ViewModel
                 {
                     _IsTemplate0 = value;
                     SelectedTemplates[0] = value;
-                    RaisePropertyChanged(IsTemplate0Name);
-
-                    /// 1.
-                    // IsTemplate값이 변경되었을 때 
-                    // Points 프로퍼티를 재구성해서 Teeth.Points를 다시 그려주도록
-                    // "Points"라는 이름의 프로퍼티를 찾음(=> MainViewModel.Points를 호출)       
+                    RaisePropertyChanged(IsTemplate0Name);    
                     RaisePropertyChanged("Points");                    
                 }
             }
@@ -213,5 +208,19 @@ namespace MeditSmile2D.ViewModel
         }
 
         #endregion
+
+        private bool _IsMirror;
+        public bool IsMirror
+        {
+            get { return _IsMirror; }
+            set
+            {
+                if (_IsMirror == value)
+                    return;
+                _IsMirror = value;
+                RaisePropertyChanged("IsMirror");
+                //RaisePropertyChanged("X");
+            }
+        }
     }
 }

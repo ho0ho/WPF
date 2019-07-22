@@ -24,5 +24,7 @@ namespace MeditSmile2D.View
         {
             InitializeComponent();
         }
+
+
     }
 }

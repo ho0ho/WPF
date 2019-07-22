@@ -7,6 +7,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 
 namespace MeditSmile2D
@@ -15,6 +16,7 @@ namespace MeditSmile2D
     /// App.xaml에 대한 상호 작용 논리
     /// </summary>
     /// 
+
     using TemplatesType = ObservableCollection<ObservableCollection<ObservableCollection<PointViewModel>>>;
     using ToothType = ObservableCollection<ObservableCollection<PointViewModel>>;
     using TeethType = ObservableCollection<PointViewModel>;
@@ -66,17 +68,27 @@ namespace MeditSmile2D
 
                         };
 
+
         #endregion
 
         public TemplatesType templates;
         public ToothType template;
 
+        public CheckBox cb_mirror;
+
+        public Dictionary<string, int> dic;
+
         public App()
         {
-            
-            PointViewModel guideline = new PointViewModel(260, 70);
+            dic = new Dictionary<string, int>();
+            dic.Add("ListBox_ssideL", 5);
+            dic.Add("ListBox_sideL", 4);
+            dic.Add("ListBox_frontL", 3);
+            dic.Add("ListBox_frontR", 0);
+            dic.Add("ListBox_sideR", 1);
+            dic.Add("ListBox_ssideR", 2);
 
-            // initiation of Templates
+            PointViewModel guideline = new PointViewModel(300, 70, 0);
             templates = new TemplatesType();       
             for (int k = 0; k < 5; k++)
             {
@@ -88,9 +100,13 @@ namespace MeditSmile2D
                     {
                         PointViewModel dot;
                         if (i >= 0 && i < 3)
-                            dot = new PointViewModel(fx[k, i, j], fy[k, i, j]);
+                        {
+                            dot = new PointViewModel(fx[k, i, j], fy[k, i, j], j);
+                        }
                         else
-                            dot = new PointViewModel(-1 * fx[k, i - 3, j], fy[k, i - 3, j]);
+                        {
+                            dot = new PointViewModel(-1 * fx[k, i - 3, j], fy[k, i - 3, j], j);
+                        }
                         dot.X += guideline.X;
                         dot.Y += guideline.Y;
                         teeth.Add(dot);
