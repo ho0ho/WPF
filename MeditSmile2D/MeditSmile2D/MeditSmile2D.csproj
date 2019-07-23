@@ -75,14 +75,20 @@
     <Compile Include="ViewModel\PointViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\AttachedProperties\DragInsideCanvasBehavior.cs" />
+    <Compile Include="View\DrawTeeth.xaml.cs">
+      <DependentUpon>DrawTeeth.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Teeth.xaml.cs">
       <DependentUpon>Teeth.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ToothTemplate.xaml.cs">
-      <DependentUpon>ToothTemplate.xaml</DependentUpon>
+    <Compile Include="View\Tooth.xaml.cs">
+      <DependentUpon>Tooth.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Utils\InterpolationUtils.cs" />
     <Compile Include="View\Utils\ViewUtils.cs" />
+    <Compile Include="View\WrapTeeth.xaml.cs">
+      <DependentUpon>WrapTeeth.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -99,11 +105,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\DrawTeeth.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Teeth.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ToothTemplate.xaml">
+    <Page Include="View\Tooth.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WrapTeeth.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

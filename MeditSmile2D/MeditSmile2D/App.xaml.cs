@@ -75,6 +75,7 @@ namespace MeditSmile2D
         public ToothType template;
 
         public CheckBox cb_mirror;
+        public Canvas canvas;
 
         public Dictionary<string, int> dic;
 
@@ -87,8 +88,8 @@ namespace MeditSmile2D
             dic.Add("CentralIncisorR", 0);
             dic.Add("LateralIncisorR", 1);
             dic.Add("CanineR", 2);
-
-            PointViewModel guideline = new PointViewModel(300, 70, 0);
+            
+            // PointViewModel guideline = new PointViewModel(500, 300, 0);
             templates = new TemplatesType();       
             for (int k = 0; k < 5; k++)
             {
@@ -107,8 +108,8 @@ namespace MeditSmile2D
                         {
                             dot = new PointViewModel(-1 * fx[k, i - 3, j], fy[k, i - 3, j], j);
                         }
-                        dot.X += guideline.X;
-                        dot.Y += guideline.Y;
+                        //dot.X += guideline.X;
+                        //dot.Y += guideline.Y;
                         teeth.Add(dot);
                     }
                     template.Add(teeth);

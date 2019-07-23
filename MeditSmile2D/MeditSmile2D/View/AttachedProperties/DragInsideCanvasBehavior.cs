@@ -118,23 +118,25 @@ namespace MeditSmile2D.View.AttachedProperties
                             {
                                 x = x + mouseDiffX;
                                 frameworkElement.SetValue(Canvas.LeftProperty, x);
+
                                 if (((App)Application.Current).cb_mirror.IsChecked == true)
                                 {
-                                    ListBoxItem lb = FindSymmetryPoint(frameworkElement);
-                                    PointViewModel dot_mir = (PointViewModel)(lb.Content);
+                                    ListBoxItem sys = FindSymmetryPoint(frameworkElement);
+                                    PointViewModel p_sys = (PointViewModel)(sys.Content);
                                     var mouseDiffX2 = - mouseDiffX;
-                                    lb.SetValue(Canvas.LeftProperty, dot_mir.X+ mouseDiffX2);
+                                    sys.SetValue(Canvas.LeftProperty, p_sys.X + mouseDiffX2);
                                 }
                             }
                             if (y + mouseDiffY >= 0 && mousePosition.Y >= 0 && (containerHeight <= 0 || (y + mouseDiffY <= containerHeight && mousePosition.Y <= containerHeight)))
                             {
                                 y = y + mouseDiffY;
                                 frameworkElement.SetValue(Canvas.TopProperty, y);
+
                                 if (((App)Application.Current).cb_mirror.IsChecked == true)
                                 {
-                                    ListBoxItem lb = FindSymmetryPoint(frameworkElement);
-                                    PointViewModel dot_mir = (PointViewModel)(lb.Content);
-                                    lb.SetValue(Canvas.TopProperty, dot_mir.Y + mouseDiffY);
+                                    ListBoxItem sys = FindSymmetryPoint(frameworkElement);
+                                    PointViewModel p_sys = (PointViewModel)(sys.Content);
+                                    sys.SetValue(Canvas.TopProperty, p_sys.Y + mouseDiffY);
                                 }
                             }
 
@@ -166,26 +168,45 @@ namespace MeditSmile2D.View.AttachedProperties
             var dic = ((App)Application.Current).dic;
 
             PointViewModel dot = (PointViewModel)(((ListBoxItem)frameworkElement).Content);
-            var canvas_dot = ((Canvas)(VisualTreeHelper.GetParent((ListBoxItem)frameworkElement)));
-            var listBox_dot = (ListBox)(VisualTreeHelper.GetParent(canvas_dot));
-            var book = ((Canvas)(VisualTreeHelper.GetParent(listBox_dot)));
 
-            int idx_me = dic[listBox_dot.Name];
+            DependencyObject t = frameworkElement;
+            while(true)
+            {
+                t = VisualTreeHelper.GetParent(t);
+                if (t is Teeth)
+                    break;
+            }
+
+            int idx_me = dic[((Teeth)t).Name];
             int idx_you = idx_me + (idx_me >= 0 && idx_me < 3 ? +3 : -3);
 
-            ListBox ch = new ListBox(); ;
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(book); i++)
+            var parent = VisualTreeHelper.GetParent(t);
+            Teeth sysTeeth = new Teeth(); ;
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
             {
-                if (VisualTreeHelper.GetChild(book, i) is ListBox)
+                if (VisualTreeHelper.GetChild(parent, i) is Teeth)
                 {
-                    ch = VisualTreeHelper.GetChild(book, i) as ListBox;
+                    sysTeeth = VisualTreeHelper.GetChild(parent, i) as Teeth;
                     var myKey = dic.FirstOrDefault(p => p.Value == idx_you).Key;
-                    if (myKey == ch.Name)
+                    if (myKey == sysTeeth.Name)
                         break;
                 }
             }
 
-            return (ListBoxItem)(ch.ItemContainerGenerator.ContainerFromIndex(dot.S));
+            ListBox lb = new ListBox();
+            foreach (DependencyObject c in LogicalTreeHelper.GetChildren(sysTeeth))
+            {
+                foreach(var cc in LogicalTreeHelper.GetChildren(c))
+                {
+                    if (cc is ListBox)
+                    {
+                        lb = cc as ListBox;
+                        break;
+                    }
+                }
+            }
+
+            return (ListBoxItem)(lb.ItemContainerGenerator.ContainerFromIndex(dot.S));
         }
 
         #endregion

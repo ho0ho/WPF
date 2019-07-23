@@ -127,12 +127,12 @@ namespace MeditSmile2D.View.Utils
                 {
                     StartPoint = new Point(x1, y1),
                     EndPoint = new Point(x2, y2),
-                    FirstControlPoint = i == 0 ? new Point(x1, y1) : new Point(ctrl1_x, ctrl1_y),
-                    SecondControlPoint = i == points.Count - 2 ? new Point(x2, y2) : new Point(ctrl2_x, ctrl2_y)
+                    //FirstControlPoint = i == 0 ? new Point(x1, y1) : new Point(ctrl1_x, ctrl1_y),
+                    //SecondControlPoint = i == points.Count - 2 ? new Point(x2, y2) : new Point(ctrl2_x, ctrl2_y)
 
                     #region isClosedCurve 여부
-                    //FirstControlPoint = i == 0 && !isClosedCurve ? new Point(x1, y1) : new Point(ctrl1_x, ctrl1_y),
-                    //SecondControlPoint = i == points.Count - 2 && !isClosedCurve ? new Point(x2, y2) : new Point(ctrl2_x, ctrl2_y)
+                    FirstControlPoint = i == 0 && !isClosedCurve ? new Point(x1, y1) : new Point(ctrl1_x, ctrl1_y),
+                    SecondControlPoint = i == points.Count - 2 && !isClosedCurve ? new Point(x2, y2) : new Point(ctrl2_x, ctrl2_y)
                     #endregion
                 });
             }

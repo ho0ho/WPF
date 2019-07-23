@@ -21,11 +21,12 @@ namespace MeditSmile2D.ViewModel
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-
+    using TemplateType = ObservableCollection<ObservableCollection<ObservableCollection<PointViewModel>>>;
     using ToothType = ObservableCollection<ObservableCollection<PointViewModel>>;
+    using TeethType = ObservableCollection<PointViewModel>;
 
     public class MainViewModel : ViewModelBase, INotifyPropertyChanged
-    { 
+    {        
         public MainViewModel()
         {
             SelectedTemplates.Add(IsTemplate0 = false);
@@ -59,7 +60,6 @@ namespace MeditSmile2D.ViewModel
         private List<bool> SelectedTemplates = new List<bool>();
 
         private bool _IsTemplate0;
-        private string IsTemplate0Name = "IsTemplate0";
         public bool IsTemplate0
         {
             get { return _IsTemplate0; }
@@ -69,7 +69,7 @@ namespace MeditSmile2D.ViewModel
                 {
                     _IsTemplate0 = value;
                     SelectedTemplates[0] = value;
-                    RaisePropertyChanged(IsTemplate0Name);    
+                    RaisePropertyChanged("IsTemplate0");    
                     RaisePropertyChanged("Points");                    
                 }
             }
@@ -139,6 +139,7 @@ namespace MeditSmile2D.ViewModel
                     RaisePropertyChanged(IsTemplate4Name);
                     RaisePropertyChanged("Points");
                 }
+
             }
         }
 
@@ -167,6 +168,115 @@ namespace MeditSmile2D.ViewModel
                 return null;
             return ((App)Application.Current).templates[idx];
         }
+
+        #region 개별치아 바인딩 코드
+        //private ToothType _Points;
+        //public ToothType Points
+        //{
+        //    get { return _Points = GetAllPoints(); }
+        //}
+
+        //private ToothType GetAllPoints()
+        //{
+        //    int rb_idx = Idx_Templates();
+        //    if (rb_idx < 0)
+        //        return null;
+        //    else
+        //    {
+        //        ToothType tooth = new ToothType();
+        //        tooth.Add(_CanineL);
+        //        tooth.Add(_LateralIncisorL);
+        //        tooth.Add(_CentralIncisorL);
+        //        tooth.Add(_CentralIncisorR);
+        //        tooth.Add(_LateralIncisorR);
+        //        tooth.Add(_CanineR);
+        //        return tooth;
+        //    }
+        //}
+
+        //private TeethType _CanineL;
+        //public TeethType CanineL
+        //{
+        //    get {
+        //        int idx = Idx_Templates();
+        //        if (idx < 0)
+        //            return null;
+        //        _CanineL = ((App)Application.Current).templates[idx][5];
+        //        RaisePropertyChanged("Points");
+        //        return _CanineL;
+        //    }
+        //}
+
+        //private TeethType _LateralIncisorL;
+        //public TeethType LateralIncisorL
+        //{
+        //    get
+        //    {
+        //        int idx = Idx_Templates();
+        //        if (idx < 0)
+        //            return null;
+        //        _LateralIncisorL = ((App)Application.Current).templates[idx][4];
+        //        RaisePropertyChanged("Points");
+        //        return _LateralIncisorL;
+        //    }
+        //}
+
+        //private TeethType _CentralIncisorL;
+        //public TeethType CentralIncisorL
+        //{
+        //    get
+        //    {
+        //        int idx = Idx_Templates();
+        //        if (idx < 0)
+        //            return null;
+        //        _CentralIncisorL = ((App)Application.Current).templates[idx][3];
+        //        RaisePropertyChanged("Points");
+        //        return _CentralIncisorL;
+        //    }
+        //}
+
+        //private TeethType _CentralIncisorR;
+        //public TeethType CentralIncisorR
+        //{
+        //    get
+        //    {
+        //        int idx = Idx_Templates();
+        //        if (idx < 0)
+        //            return null;
+        //        _CentralIncisorR = ((App)Application.Current).templates[idx][0];
+        //        RaisePropertyChanged("Points");
+        //        return _CentralIncisorR;
+        //    }
+        //}
+
+        //private TeethType _LateralIncisorR;
+        //public TeethType LateralIncisorR
+        //{
+        //    get
+        //    {
+        //        int idx = Idx_Templates();
+        //        if (idx < 0)
+        //            return null;
+        //        _LateralIncisorR = ((App)Application.Current).templates[idx][1];
+        //        RaisePropertyChanged("Points");
+        //        return _LateralIncisorR;
+        //    }
+        //}
+
+        //private TeethType _CanineR;
+        //public TeethType CanineR
+        //{
+        //    get
+        //    {
+        //        int idx = Idx_Templates();
+        //        if (idx < 0)
+        //            return null;
+        //        _CanineR = ((App)Application.Current).templates[idx][2];
+        //        RaisePropertyChanged("Points");
+        //        return _CanineR;
+        //    }
+        //}
+        #endregion
 
         private int Idx_Templates()
         {
@@ -209,18 +319,13 @@ namespace MeditSmile2D.ViewModel
 
         #endregion
 
+        #region IsMirror
         private bool _IsMirror;
         public bool IsMirror
         {
             get { return _IsMirror; }
-            set
-            {
-                if (_IsMirror == value)
-                    return;
-                _IsMirror = value;
-                RaisePropertyChanged("IsMirror");
-                //RaisePropertyChanged("X");
-            }
+            set { _IsMirror = value; }
         }
+        #endregion
     }
 }

@@ -34,7 +34,7 @@
             <Canvas.Background>
                 <ImageBrush x:Name="img"></ImageBrush>
             </Canvas.Background>
-            <View:ToothTemplate/>
+            <View:Tooth/>
         </Canvas>
 
     </Grid>

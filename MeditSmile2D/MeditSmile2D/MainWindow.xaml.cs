@@ -1,6 +1,8 @@
-﻿using Microsoft.Win32;
+﻿using MeditSmile2D.ViewModel;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -20,13 +22,36 @@ namespace MeditSmile2D
     /// <summary>
     /// MainWindow.xaml에 대한 상호 작용 논리
     /// </summary>
+    /// 
+    using TemplateType = ObservableCollection<ObservableCollection<ObservableCollection<PointViewModel>>>;
+    using ToothType = ObservableCollection<ObservableCollection<PointViewModel>>;
+    using TeethType = ObservableCollection<PointViewModel>;
+
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new ViewModel.MainViewModel();
+
             ((App)Application.Current).cb_mirror = mirror;
+            ((App)Application.Current).canvas = canvas;
+
+            DataContext = new MainViewModel();
+
+            float canvasWidth = (float)(canvas.ActualWidth);
+            float canvasHeight = (float)(canvas.ActualHeight);
+            TemplateType templates = ((App)Application.Current).templates;
+            foreach (ToothType tooth in templates)
+            {
+                foreach (TeethType teeth in tooth)
+                {
+                    foreach (PointViewModel point in teeth)
+                    {
+                        point.X += canvasWidth / 2;
+                        point.Y += canvasHeight / 2;
+                    }
+                }
+            }
         }
 
         private static int i = 0;
