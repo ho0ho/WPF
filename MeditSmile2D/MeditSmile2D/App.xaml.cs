@@ -81,12 +81,12 @@ namespace MeditSmile2D
         public App()
         {
             dic = new Dictionary<string, int>();
-            dic.Add("ListBox_ssideL", 5);
-            dic.Add("ListBox_sideL", 4);
-            dic.Add("ListBox_frontL", 3);
-            dic.Add("ListBox_frontR", 0);
-            dic.Add("ListBox_sideR", 1);
-            dic.Add("ListBox_ssideR", 2);
+            dic.Add("CanineL", 5);
+            dic.Add("LateralIncisorL", 4);
+            dic.Add("CentralIncisorL", 3);
+            dic.Add("CentralIncisorR", 0);
+            dic.Add("LateralIncisorR", 1);
+            dic.Add("CanineR", 2);
 
             PointViewModel guideline = new PointViewModel(300, 70, 0);
             templates = new TemplatesType();       

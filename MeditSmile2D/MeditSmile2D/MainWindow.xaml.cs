@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +27,43 @@ namespace MeditSmile2D
             InitializeComponent();
             DataContext = new ViewModel.MainViewModel();
             ((App)Application.Current).cb_mirror = mirror;
+        }
+
+        private static int i = 0;
+        private string fileName = " capture_img.jpeg";        
+        private string savePath = "../../results/";
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            var rect = new Rect(canvas.RenderSize);
+            var visual = new DrawingVisual();
+            using (var dc = visual.RenderOpen())
+            {
+                dc.DrawRectangle(new VisualBrush(canvas), null, rect);
+            }
+
+            RenderTargetBitmap renderBitmap = new RenderTargetBitmap(
+                (int)rect.Width, (int)rect.Height, 96, 96, PixelFormats.Default);
+            renderBitmap.Render(visual);
+
+            FileStream stream = File.Create(savePath + i.ToString() + fileName);
+            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
+            encoder.Save(stream);
+            stream.Close();
+
+            MessageBox.Show($"{i++} : 결과가 저장되었습니다.");
+        }
+
+        private void Open_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new OpenFileDialog();
+            dlg.InitialDirectory = "D:\\ho-ho\\WPF_\\MeditSmile2D\\MeditSmile2D\\images\\";
+            dlg.Title = "이미지 불러오기";
+            dlg.DefaultExt = ".bmp|.jpg|.jpeg|.png";
+            dlg.Filter = "Image Files (*.bmp, *.jpg, *.jpeg, *.png) | *.bmp; *.jpg; *jpeg; *.png";
+
+            if (dlg.ShowDialog() == true)
+                img.ImageSource = new BitmapImage(new Uri(dlg.FileName));
         }
     }
 }

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:MeditSmile2D"
         mc:Ignorable="d"
         xmlns:View="clr-namespace:MeditSmile2D.View"
-        Title="MeditSmile2D" Height="600" Width="1000">
+        Title="MeditSmile2D" MinHeight="600" MinWidth="1000" SizeToContent="WidthAndHeight">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -17,20 +17,25 @@
 
         <TextBlock Grid.Row="0" HorizontalAlignment="Center" TextWrapping="Wrap" Text="{Binding Title}" VerticalAlignment="Center" FontWeight="Bold" FontSize="18.667"/>
         <DockPanel Grid.Row="1" LastChildFill="False">
-            <StackPanel x:Name="radios" Orientation="Horizontal" DockPanel.Dock="left" Width="auto">
+            <CheckBox Name="mirror" Margin="10" DockPanel.Dock="Left" IsChecked="{Binding IsMirror}">대칭모드</CheckBox>
+            <Button Name="open" Margin="10" Width="100" Click="Open_Click">열기</Button>
+            <Button Name="save" Margin="10" Width="100" Click="Save_Click">저장</Button>
+            <StackPanel x:Name="radios" Orientation="Horizontal" DockPanel.Dock="Right" Width="auto">
                 <RadioButton x:Name="radio0" Margin="10" IsChecked="{Binding IsTemplate0}">Template #0</RadioButton>
                 <RadioButton x:Name="radio1" Margin="10" IsChecked="{Binding IsTemplate1}">Template #1</RadioButton>
                 <RadioButton x:Name="radio2" Margin="10" IsChecked="{Binding IsTemplate2}">Template #2</RadioButton>
                 <RadioButton x:Name="radio3" Margin="10" IsChecked="{Binding IsTemplate3}">Template #3</RadioButton>
                 <RadioButton x:Name="radio4" Margin="10" IsChecked="{Binding IsTemplate4}">Template #4</RadioButton>
             </StackPanel>
-            <CheckBox Name="mirror" Margin="10" DockPanel.Dock="Right" IsChecked="{Binding IsMirror}">대칭모드</CheckBox>
+            
         </DockPanel>
 
-        <Grid x:Name="canvas" Grid.Row="2" >
-            <Image Source="images/tooth.jpg"></Image>            
+        <Canvas x:Name="canvas" Grid.Row="2" >
+            <Canvas.Background>
+                <ImageBrush x:Name="img"></ImageBrush>
+            </Canvas.Background>
             <View:ToothTemplate/>
-        </Grid>
+        </Canvas>
 
     </Grid>
 </Window>

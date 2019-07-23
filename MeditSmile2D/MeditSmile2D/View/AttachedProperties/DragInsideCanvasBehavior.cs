@@ -114,38 +114,15 @@ namespace MeditSmile2D.View.AttachedProperties
                             //                                                          frameworkElement.SetValue(Canvas.LeftProperty, x);
                             //                                                          frameworkElement.SetValue(Canvas.TopProperty, y);
                             //                                                      }
-
-
-                            Dictionary<string, int> dic = ((App)Application.Current).dic;
                             if (x + mouseDiffX >= 0 && mousePosition.X >= 0 && (containerWidth <= 0 || (x + mouseDiffX <= containerWidth) && (mousePosition.X <= containerWidth)))
                             {
                                 x = x + mouseDiffX;
                                 frameworkElement.SetValue(Canvas.LeftProperty, x);
                                 if (((App)Application.Current).cb_mirror.IsChecked == true)
                                 {
-                                    PointViewModel dot = (PointViewModel)(((ListBoxItem)frameworkElement).Content);
-                                    var canvas_dot = ((Canvas)(VisualTreeHelper.GetParent((ListBoxItem)frameworkElement)));
-                                    var listBox_dot = (ListBox)(VisualTreeHelper.GetParent(canvas_dot));
-                                    var book = ((Canvas)(VisualTreeHelper.GetParent(listBox_dot)));
-
-                                    int idx_me = dic[listBox_dot.Name];
-                                    int idx_you = Math.Abs(idx_me - 3);
-
-                                    ListBox ch = new ListBox(); ;
-                                    for (int i = 0; i < VisualTreeHelper.GetChildrenCount(book); i++)
-                                    {
-                                        if (VisualTreeHelper.GetChild(book, i) is ListBox)
-                                        {
-                                            ch = VisualTreeHelper.GetChild(book, i) as ListBox;
-                                            var myKey = dic.FirstOrDefault(p => p.Value == idx_you).Key;
-                                            if (myKey == ch.Name)
-                                                break;
-                                        }
-                                    }
-
-                                    ListBoxItem lb = (ListBoxItem)(ch.ItemContainerGenerator.ContainerFromIndex(dot.S));
-                                    PointViewModel dot_mir = (PointViewModel)(((ListBoxItem)lb).Content);
-                                    var mouseDiffX2 = -mouseDiffX;
+                                    ListBoxItem lb = FindSymmetryPoint(frameworkElement);
+                                    PointViewModel dot_mir = (PointViewModel)(lb.Content);
+                                    var mouseDiffX2 = - mouseDiffX;
                                     lb.SetValue(Canvas.LeftProperty, dot_mir.X+ mouseDiffX2);
                                 }
                             }
@@ -155,30 +132,9 @@ namespace MeditSmile2D.View.AttachedProperties
                                 frameworkElement.SetValue(Canvas.TopProperty, y);
                                 if (((App)Application.Current).cb_mirror.IsChecked == true)
                                 {
-                                    PointViewModel dot = (PointViewModel)(((ListBoxItem)frameworkElement).Content);
-                                    int s = dot.S;
-                                    var canvas_dot = ((Canvas)(VisualTreeHelper.GetParent((ListBoxItem)frameworkElement)));
-                                    var listBox_dot = (ListBox)(VisualTreeHelper.GetParent(canvas_dot));
-                                    var book = ((Canvas)(VisualTreeHelper.GetParent(listBox_dot)));
-
-                                    int idx_me = dic[listBox_dot.Name];
-                                    int idx_you = Math.Abs(idx_me - 3);
-
-                                    ListBox ch = new ListBox(); ;
-                                    for (int i = 0; i < VisualTreeHelper.GetChildrenCount(book); i++)
-                                    {
-                                        if (VisualTreeHelper.GetChild(book, i) is ListBox)
-                                        {
-                                            ch = VisualTreeHelper.GetChild(book, i) as ListBox;
-                                            var myKey = dic.FirstOrDefault(p => p.Value == idx_you).Key;
-                                            if (myKey == ch.Name)
-                                                break;
-                                        }
-                                    }
-
-                                    ListBoxItem lb = (ListBoxItem)(ch.ItemContainerGenerator.ContainerFromIndex(s));
-                                    PointViewModel dot_mir = (PointViewModel)(((ListBoxItem)lb).Content);
-                                    lb.SetValue(Canvas.TopProperty, dot_mir.Y+mouseDiffY);
+                                    ListBoxItem lb = FindSymmetryPoint(frameworkElement);
+                                    PointViewModel dot_mir = (PointViewModel)(lb.Content);
+                                    lb.SetValue(Canvas.TopProperty, dot_mir.Y + mouseDiffY);
                                 }
                             }
 
@@ -194,7 +150,6 @@ namespace MeditSmile2D.View.AttachedProperties
                     frameworkElement.AddHandler(Mouse.MouseMoveEvent, RegistredElements[frameworkElement].MouseMove, false);
                 }
 
-
                 if (mouseDown != null)
                     frameworkElement.RemoveHandler(Mouse.MouseDownEvent, mouseDown);
                 if (mouseUp != null)
@@ -204,6 +159,33 @@ namespace MeditSmile2D.View.AttachedProperties
                 if (RegistredElements.ContainsKey(frameworkElement))
                     RegistredElements.Remove(frameworkElement);
             }
+        }
+
+        private static ListBoxItem FindSymmetryPoint(FrameworkElement frameworkElement)
+        {
+            var dic = ((App)Application.Current).dic;
+
+            PointViewModel dot = (PointViewModel)(((ListBoxItem)frameworkElement).Content);
+            var canvas_dot = ((Canvas)(VisualTreeHelper.GetParent((ListBoxItem)frameworkElement)));
+            var listBox_dot = (ListBox)(VisualTreeHelper.GetParent(canvas_dot));
+            var book = ((Canvas)(VisualTreeHelper.GetParent(listBox_dot)));
+
+            int idx_me = dic[listBox_dot.Name];
+            int idx_you = idx_me + (idx_me >= 0 && idx_me < 3 ? +3 : -3);
+
+            ListBox ch = new ListBox(); ;
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(book); i++)
+            {
+                if (VisualTreeHelper.GetChild(book, i) is ListBox)
+                {
+                    ch = VisualTreeHelper.GetChild(book, i) as ListBox;
+                    var myKey = dic.FirstOrDefault(p => p.Value == idx_you).Key;
+                    if (myKey == ch.Name)
+                        break;
+                }
+            }
+
+            return (ListBoxItem)(ch.ItemContainerGenerator.ContainerFromIndex(dot.S));
         }
 
         #endregion
