@@ -23,6 +23,11 @@ namespace MeditSmile2D.View
         public WrapTeeth()
         {
             InitializeComponent();
+
+            lineH.Visibility = Visibility.Hidden;
+            lineV.Visibility = Visibility.Hidden;
+            lengthH.Visibility = Visibility.Hidden;
+            lengthV.Visibility = Visibility.Hidden;
         }
 
         #region Points
@@ -87,6 +92,7 @@ namespace MeditSmile2D.View
             Point maxP = GetMax(points);
 
             DrawRect(minP, maxP);
+            
             DrawLineXY(minP, maxP);
         }
 
@@ -153,7 +159,6 @@ namespace MeditSmile2D.View
             return new Point(xMax, yMax);
         }
 
-
         public double Top;
         public double Left;
 
@@ -191,15 +196,45 @@ namespace MeditSmile2D.View
             lineV.X2 = endVertical.X - Left;
             lineV.Y2 = endVertical.Y - Top;
 
+            // infomation of length
+            double value;
+            double leftH, topH, leftV, topV;
+            double padding = 10;
 
-            // infomation of line
-            //lengthX.Content = 
+            // for length of Horizontal Line
+            lengthH.Content = widthRect.ToString();
+            value = lineH.X1 + widthRect / 2 - padding;
+            double.TryParse(value.ToString("N2"), out leftH);
+            value = lineV.Y1 + padding;
+            double.TryParse(value.ToString("N2"), out topH);
+
+            Canvas.SetLeft(lengthH, leftH);
+            Canvas.SetTop(lengthH, topH);
+
+
+            // for length of Vertical Line
+            lengthV.Content = heightRect.ToString();
+            value = lineV.X1 + padding;
+            double.TryParse(value.ToString("N2"), out leftV);
+            value = lineV.Y1 + heightRect / 2 - padding;
+            double.TryParse(value.ToString("N2"), out topV);
+
+            Canvas.SetLeft(lengthV, leftV);
+            Canvas.SetTop(lengthV, topV);
+
+            if (((MainWindow)Application.Current.MainWindow).lengthTeeth.IsChecked == true)
+            {
+                lineH.Visibility = Visibility.Visible;
+                lineV.Visibility = Visibility.Visible;
+                lengthH.Visibility = Visibility.Visible;
+                lengthV.Visibility = Visibility.Visible;
+            }
+                
         }
 
         #endregion
 
         //#region events
-
         //private Point origMouseDownPoint;
         //private bool isLeftMouseAndControlDownOnRectangle;
         //private bool isLeftMouseDownOnRectangle;

@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 
 namespace MeditSmile2D.View.ArrowLine
 {
-    class ArrowLine : ArrowLineBase
+    public class ArrowLine : ArrowLineBase
     {
         public static readonly DependencyProperty X1Property =
-            DependencyProperty.Register("X1",
-                typeof(double), typeof(ArrowLine),
-                new FrameworkPropertyMetadata(0.0,
-                        FrameworkPropertyMetadataOptions.AffectsMeasure));
+            DependencyProperty.Register("X1", typeof(double), typeof(ArrowLine),
+                new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsMeasure));
 
         public double X1
         {
@@ -25,8 +18,7 @@ namespace MeditSmile2D.View.ArrowLine
         public static readonly DependencyProperty Y1Property =
             DependencyProperty.Register("Y1",
                 typeof(double), typeof(ArrowLine),
-                new FrameworkPropertyMetadata(0.0,
-                        FrameworkPropertyMetadataOptions.AffectsMeasure));
+                new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsMeasure));
 
         public double Y1
         {
@@ -37,8 +29,7 @@ namespace MeditSmile2D.View.ArrowLine
         public static readonly DependencyProperty X2Property =
             DependencyProperty.Register("X2",
                 typeof(double), typeof(ArrowLine),
-                new FrameworkPropertyMetadata(0.0,
-                        FrameworkPropertyMetadataOptions.AffectsMeasure));
+                new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsMeasure));
 
         public double X2
         {
@@ -49,8 +40,7 @@ namespace MeditSmile2D.View.ArrowLine
         public static readonly DependencyProperty Y2Property =
             DependencyProperty.Register("Y2",
                 typeof(double), typeof(ArrowLine),
-                new FrameworkPropertyMetadata(0.0,
-                        FrameworkPropertyMetadataOptions.AffectsMeasure));
+                new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsMeasure));
 
         public double Y2
         {

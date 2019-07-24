@@ -329,6 +329,22 @@ namespace MeditSmile2D.ViewModel
         }
         #endregion
 
+        #region ShowLength
+        private bool _ShowLength;
+        public bool ShowLength
+        {
+            get { return _ShowLength; }
+            set
+            {
+                if (_ShowLength != value)
+                {
+
+                }
+            }
+        }
+
+        #endregion
+
         #region Data Members of Events
 
         /// <summary>

@@ -19,6 +19,7 @@
         <TextBlock Grid.Row="0" HorizontalAlignment="Center" TextWrapping="Wrap" Text="{Binding Title}" VerticalAlignment="Center" FontWeight="Bold" FontSize="18.667"/>
         <DockPanel Grid.Row="1" LastChildFill="False">
             <CheckBox Name="mirror" Margin="10" DockPanel.Dock="Left" IsChecked="{Binding IsMirror}">대칭모드</CheckBox>
+            <CheckBox Name="lengthTeeth" Margin="10" DockPanel.Dock="Left" IsChecked="{Binding ShowLength}">치아길이</CheckBox>
             <Button Name="open" Margin="10" Width="100" Click="Open_Click">열기</Button>
             <Button Name="save" Margin="10" Width="100" Click="Save_Click">저장</Button>
             <StackPanel x:Name="radios" Orientation="Horizontal" DockPanel.Dock="Right" Width="auto">
