@@ -56,13 +56,15 @@ namespace MeditSmile2D.View
             }
 
             if (e.NewValue != null)
-                wrapPoints.SetRectData();
+            {
+                wrapPoints.SetLineRectData();
+            }
         }
 
         #endregion
 
 
-        void SetRectData()
+        void SetLineRectData()
         {
             if (Points == null) return;
             var points = new List<Point>();
@@ -81,7 +83,11 @@ namespace MeditSmile2D.View
             if (points.Count <= 1)
                 return;
 
-            AdjSize(points);
+            Point minP = GetMin(points);
+            Point maxP = GetMax(points);
+
+            DrawRect(minP, maxP);
+            DrawLineXY(minP, maxP);
         }
 
         private void RegisterCollectionItemPropertyChanged(IEnumerable collection)
@@ -105,65 +111,89 @@ namespace MeditSmile2D.View
             RegisterCollectionItemPropertyChanged(e.NewItems);
             UnRegisterCollectionItemPropertyChanged(e.OldItems);
 
-            SetRectData();
+            SetLineRectData();
         }
 
         private void OnPointPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "X" || e.PropertyName == "Y")
-                SetRectData();
+                SetLineRectData();
         }
 
         #region size&canvas 좌표
 
-        public double Top;
-        public double Left;
-
-        readonly double padding = 10;
-        private void AdjSize(List<Point> pts)
+        private Point GetMin(List<Point> pts)
         {
             double xMin = float.MaxValue;
-            double xMax = float.MinValue;
             double yMin = float.MaxValue;
+
+            foreach (var point in pts)
+            {
+                if (point.X < xMin)
+                    xMin = point.X;
+                if (point.Y < yMin)
+                    yMin = point.Y;
+            }
+            return new Point(xMin, yMin);
+        }
+
+        private Point GetMax(List<Point> pts)
+        {
+            double xMax = float.MinValue;
             double yMax = float.MinValue;
 
             foreach (var point in pts)
             {
                 if (point.X > xMax)
                     xMax = point.X;
-                if (point.X < xMin)
-                    xMin = point.X;
                 if (point.Y > yMax)
                     yMax = point.Y;
-                if (point.Y < yMin)
-                    yMin = point.Y;
             }
-            
+
+            return new Point(xMax, yMax);
+        }
+
+
+        public double Top;
+        public double Left;
+
+        readonly double padding = 0;
+        private void DrawRect(Point min, Point max)
+        {            
             // Grid의 크기 설정
-            innerWrap.Height = yMax - yMin + padding;
-            innerWrap.Width = xMax - xMin + padding;
+            innerWrap.Height = max.Y - min.Y + padding;
+            innerWrap.Width = max.X - min.X + padding;
 
-            Top = yMin - padding / 2;
-            Left = xMin - padding / 2;
-
-            // Grid의 좌표 보정
-            var points = new List<Point>();
-            foreach (var point in Points)
-            {
-                var pointProperties = point.GetType().GetProperties();
-                if (pointProperties.All(p => p.Name != "X") ||
-                pointProperties.All(p => p.Name != "Y"))
-                    continue;
-                var x = (float)point.GetType().GetProperty("X").GetValue(point, new object[] { }) - Left;
-                var y = (float)point.GetType().GetProperty("Y").GetValue(point, new object[] { }) - Top;
-                points.Add(new Point(x, y));
-            }
-
-            if (points.Count <= 1)
-                return;
+            Top = min.Y - padding / 2;
+            Left = min.X - padding / 2;
 
             Canvas.SetLeft(this, Left);
             Canvas.SetTop(this, Top);
+        }
+
+        private void DrawLineXY(Point min, Point max)
+        {
+            double widthRect = max.X - min.X;
+            double heightRect = max.Y - min.Y;
+            Point startHorizontal = new Point(min.X, min.Y + heightRect / 2);
+            Point endHorizontal = new Point(max.X, min.Y + heightRect / 2);
+            Point startVertical = new Point(min.X + widthRect / 2, min.Y);
+            Point endVertical = new Point(min.X + widthRect / 2, max.Y);
+
+            // point자체는 전체 canvas에 대한 좌표이므로 각 WrapTeeth를 감싸는 Grid에 대한 좌표로 변환
+            lineH.X1 = startHorizontal.X - Left;
+            lineH.Y1 = startHorizontal.Y - Top;
+            lineH.X2 = endHorizontal.X - Left;
+            lineH.Y2 = endHorizontal.Y - Top;
+
+            lineV.X1 = startVertical.X - Left;
+            lineV.Y1 = startVertical.Y - Top;
+            lineV.X2 = endVertical.X - Left;
+            lineV.Y2 = endVertical.Y - Top;
+
+
+            // infomation of line
+            //lengthX.Content = 
         }
 
         #endregion

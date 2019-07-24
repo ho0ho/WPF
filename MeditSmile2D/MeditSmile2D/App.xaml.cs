@@ -74,8 +74,8 @@ namespace MeditSmile2D
         public TemplatesType templates;
         public ToothType template;
 
-        public CheckBox cb_mirror;
-        public Canvas canvas;
+        //public CheckBox cb_mirror;
+        //public Canvas canvas;
 
         public Dictionary<string, int> dic;
 

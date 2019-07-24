@@ -1,4 +1,6 @@
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.CommandWpf;
+using MeditSmile2D.View;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Input;
 
 namespace MeditSmile2D.ViewModel
 {
@@ -21,12 +24,10 @@ namespace MeditSmile2D.ViewModel
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    using TemplateType = ObservableCollection<ObservableCollection<ObservableCollection<PointViewModel>>>;
-    using ToothType = ObservableCollection<ObservableCollection<PointViewModel>>;
-    using TeethType = ObservableCollection<PointViewModel>;
+    using ToothType = ObservableCollection<ObservableCollection<PointViewModel>>;    
 
     public class MainViewModel : ViewModelBase, INotifyPropertyChanged
-    {        
+    {
         public MainViewModel()
         {
             SelectedTemplates.Add(IsTemplate0 = false);
@@ -69,8 +70,8 @@ namespace MeditSmile2D.ViewModel
                 {
                     _IsTemplate0 = value;
                     SelectedTemplates[0] = value;
-                    RaisePropertyChanged("IsTemplate0");    
-                    RaisePropertyChanged("Points");                    
+                    RaisePropertyChanged("IsTemplate0");
+                    RaisePropertyChanged("Points");
                 }
             }
         }
@@ -326,6 +327,119 @@ namespace MeditSmile2D.ViewModel
             get { return _IsMirror; }
             set { _IsMirror = value; }
         }
+        #endregion
+
+        #region Data Members of Events
+
+        /// <summary>
+        /// Set to 'true' when the left mouse-button is down.
+        /// </summary>
+        private bool isLeftMouseButtonDownOnWindow = false;
+
+        /// <summary>
+        /// Set to 'true' when dragging the 'selection rectangle'.
+        /// Dragging of the selection rectangle only starts when the left mouse-button is held down and the mouse-cursor
+        /// is moved more than a threshold distance.
+        /// </summary>
+        private bool isDraggingSelectionRect = false;
+
+        /// <summary>
+        /// Records the location of the mouse (relative to the window) when the left-mouse button has pressed down.
+        /// </summary>
+        private Point origMouseDownPoint;
+
+        /// <summary>
+        /// The threshold distance the mouse-cursor must move before drag-selection begins.
+        /// </summary>
+        private static readonly double DragThreshold = 5;
+
+        /// <summary>
+        /// Set to 'true' when the left mouse-button is held down on a rectangle.
+        /// </summary>
+        private bool isLeftMouseDownOnRectangle = false;
+
+        /// <summary>
+        /// Set to 'true' when the left mouse-button and control are held down on a rectangle.
+        /// </summary>
+        private bool isLeftMouseAndControlDownOnRectangle = false;
+
+        /// <summary>
+        /// Set to 'true' when dragging a rectangle.
+        /// </summary>
+        private bool isDraggingRectangle = false;
+
+        #endregion Data Members
+
+        #region Event            
+
+        private bool IsCaptured = false;
+
+        private RelayCommand<object> _LeftDown;
+        public RelayCommand<object> LeftDown
+        {
+            get
+            {
+                if (_LeftDown == null)
+                    return _LeftDown = new RelayCommand<object>(param => ExecuteMouseLeftDown((MouseEventArgs)param));
+                return _LeftDown;
+            }
+            set { _LeftDown = value; }
+        }
+
+        private void ExecuteMouseLeftDown(MouseEventArgs e)
+        {
+            var sender = e.Source;
+            IsCaptured = true;
+            origMouseDownPoint = e.GetPosition((IInputElement)e.Source);
+            Mouse.Capture((IInputElement)e.Source);
+        }
+
+        private RelayCommand<object> _MouseMove;
+        public RelayCommand<object> MouseMove
+        {
+            get
+            {
+                if (_MouseMove == null) return _MouseMove = new RelayCommand<object>(param => ExecuteMouseMove((MouseEventArgs)param));
+                return _MouseMove;
+            }
+            set { _MouseMove = value; }
+        }
+
+        private void ExecuteMouseMove(MouseEventArgs e)
+        {
+
+            Teeth Test = (Teeth)e.Source;
+            if (IsCaptured == true)
+            {
+                Point curMouseDownPoint = e.GetPosition((IInputElement)e.Source);
+                var dragDelta = curMouseDownPoint - origMouseDownPoint;
+                origMouseDownPoint = curMouseDownPoint;
+
+                foreach (PointViewModel point in Test.Points)
+                {
+                    point.X += (float)dragDelta.X;
+                    point.Y += (float)dragDelta.Y;
+                }
+            }
+        }
+
+        private RelayCommand<object> _LeftUp;
+        public RelayCommand<object> LeftUp
+        {
+            get
+            {
+                if (_LeftUp == null) return _LeftUp = new RelayCommand<object>(param => ExecuteMouseLeftUp((MouseEventArgs)param));
+                return _LeftUp;
+            }
+            set { _LeftUp = value; }
+        }
+
+        private void ExecuteMouseLeftUp(MouseEventArgs e)
+        {
+            IsCaptured = false;
+            Mouse.Capture(null);
+        }
+
         #endregion
     }
 }

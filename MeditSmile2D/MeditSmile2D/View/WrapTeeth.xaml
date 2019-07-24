@@ -14,6 +14,11 @@
                     <SolidColorBrush Color="Black" Opacity="0"/>
                 </Rectangle.Fill>
             </Rectangle>
+            <Line x:Name="lineH" Stroke="Red" StrokeThickness="2" Visibility="Visible" StrokeDashCap="Round" StrokeEndLineCap="Round" StrokeStartLineCap="Round"></Line>
+            <Label x:Name="lengthX"></Label>
+            <Line x:Name="lineV" Stroke="Blue" StrokeThickness="2" Visibility="Visible" StrokeDashCap="Round" StrokeEndLineCap="Round" StrokeStartLineCap="Round"></Line>
+            <Label x:Name="lengthY"></Label>
+                                                  
         </Grid>
     </Border>
 </UserControl>

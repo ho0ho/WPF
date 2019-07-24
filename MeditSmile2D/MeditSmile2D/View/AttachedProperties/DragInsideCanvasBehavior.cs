@@ -113,13 +113,15 @@ namespace MeditSmile2D.View.AttachedProperties
                             //                                                          y = y + mouseDiffY;
                             //                                                          frameworkElement.SetValue(Canvas.LeftProperty, x);
                             //                                                          frameworkElement.SetValue(Canvas.TopProperty, y);
-                            //                                                      }
+                            //                                                     }
+
+                            MainWindow mw = ((MainWindow)Application.Current.MainWindow);
                             if (x + mouseDiffX >= 0 && mousePosition.X >= 0 && (containerWidth <= 0 || (x + mouseDiffX <= containerWidth) && (mousePosition.X <= containerWidth)))
                             {
                                 x = x + mouseDiffX;
                                 frameworkElement.SetValue(Canvas.LeftProperty, x);
 
-                                if (((App)Application.Current).cb_mirror.IsChecked == true)
+                                if (mw.mirror.IsChecked == true)
                                 {
                                     ListBoxItem sys = FindSymmetryPoint(frameworkElement);
                                     PointViewModel p_sys = (PointViewModel)(sys.Content);
@@ -132,7 +134,7 @@ namespace MeditSmile2D.View.AttachedProperties
                                 y = y + mouseDiffY;
                                 frameworkElement.SetValue(Canvas.TopProperty, y);
 
-                                if (((App)Application.Current).cb_mirror.IsChecked == true)
+                                if (mw.mirror.IsChecked == true)
                                 {
                                     ListBoxItem sys = FindSymmetryPoint(frameworkElement);
                                     PointViewModel p_sys = (PointViewModel)(sys.Content);

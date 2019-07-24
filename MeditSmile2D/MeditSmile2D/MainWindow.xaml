@@ -6,12 +6,13 @@
         xmlns:local="clr-namespace:MeditSmile2D"
         mc:Ignorable="d"
         xmlns:View="clr-namespace:MeditSmile2D.View"
-        Title="MeditSmile2D" MinHeight="600" MinWidth="1000" SizeToContent="WidthAndHeight">
+        Name="window"
+        Title="MeditSmile2D" Width="1920" Height="1280">
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -27,14 +28,13 @@
                 <RadioButton x:Name="radio3" Margin="10" IsChecked="{Binding IsTemplate3}">Template #3</RadioButton>
                 <RadioButton x:Name="radio4" Margin="10" IsChecked="{Binding IsTemplate4}">Template #4</RadioButton>
             </StackPanel>
-            
         </DockPanel>
 
-        <Canvas x:Name="canvas" Grid.Row="2" >
+        <Canvas x:Name="canvas" Grid.Row="2" Width="{Binding Path=Width, ElementName=window}">
             <Canvas.Background>
                 <ImageBrush x:Name="img"></ImageBrush>
             </Canvas.Background>
-            <View:Tooth/>
+            <View:Tooth></View:Tooth>
         </Canvas>
 
     </Grid>

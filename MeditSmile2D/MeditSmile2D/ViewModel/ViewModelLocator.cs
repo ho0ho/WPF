@@ -32,7 +32,7 @@ namespace MeditSmile2D.ViewModel
         /// Initializes a new instance of the ViewModelLocator class.
         /// </summary>
 
-        public ViewModelLocator(string name)
+        public ViewModelLocator()
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 

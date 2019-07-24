@@ -32,14 +32,9 @@ namespace MeditSmile2D
         public MainWindow()
         {
             InitializeComponent();
-
-            ((App)Application.Current).cb_mirror = mirror;
-            ((App)Application.Current).canvas = canvas;
-
             DataContext = new MainViewModel();
 
-            float canvasWidth = (float)(canvas.ActualWidth);
-            float canvasHeight = (float)(canvas.ActualHeight);
+            Point guideline = new Point(canvas.Width / 2, 300);
             TemplateType templates = ((App)Application.Current).templates;
             foreach (ToothType tooth in templates)
             {
@@ -47,8 +42,8 @@ namespace MeditSmile2D
                 {
                     foreach (PointViewModel point in teeth)
                     {
-                        point.X += canvasWidth / 2;
-                        point.Y += canvasHeight / 2;
+                        point.X += (float)guideline.X;
+                        point.Y += (float)guideline.Y;
                     }
                 }
             }
