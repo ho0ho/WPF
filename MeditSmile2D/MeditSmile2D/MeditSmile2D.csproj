@@ -95,6 +95,8 @@
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\PointViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="View\ArrowLine\ArrowLine.cs" />
+    <Compile Include="View\ArrowLine\ArrowLineBase.cs" />
     <Compile Include="View\AttachedProperties\DragInsideCanvasBehavior.cs" />
     <Compile Include="View\DrawTeeth.xaml.cs">
       <DependentUpon>DrawTeeth.xaml</DependentUpon>
