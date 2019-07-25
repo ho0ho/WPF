@@ -46,10 +46,8 @@ namespace MeditSmile2D.View.ArrowLine
         ///     Identifies the ArrowEnds dependency property.
         /// </summary>
         public static readonly DependencyProperty ArrowEndsProperty =
-            DependencyProperty.Register("ArrowEnds",
-                typeof(ArrowEnds), typeof(ArrowLineBase),
-                new FrameworkPropertyMetadata(ArrowEnds.End,
-                        FrameworkPropertyMetadataOptions.AffectsMeasure));
+            DependencyProperty.Register("ArrowEnds", typeof(ArrowEnds), typeof(ArrowLineBase), 
+                new FrameworkPropertyMetadata(ArrowEnds.End, FrameworkPropertyMetadataOptions.AffectsMeasure));
 
         public ArrowEnds ArrowEnds
         {
@@ -85,14 +83,12 @@ namespace MeditSmile2D.View.ArrowLine
             polysegHead2 = new PolyLineSegment();
             pathfigHead2.Segments.Add(polysegHead2);
         }
-
  
         protected override Geometry DefiningGeometry
         {
             get
             {
                 int count = polysegLine.Points.Count;
-
                 if (count > 0)
                 {
                     // Draw the arrow at the start of the line.
@@ -132,6 +128,8 @@ namespace MeditSmile2D.View.ArrowLine
             matx.Rotate(-ArrowAngle);
             polyseg.Points.Add(pt2 + vect * matx);
             pathfig.IsClosed = IsArrowClosed;
+
+            
 
             return pathfig;
         }

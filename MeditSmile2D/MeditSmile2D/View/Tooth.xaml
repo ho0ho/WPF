@@ -5,15 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MeditSmile2D.View"
              mc:Ignorable="d" 
+             
+             x:Name="UCtooth"
              d:DesignHeight="450" d:DesignWidth="800">
     <Canvas>
         <Grid Name="OutterWrap">
-            <local:Teeth x:Name="CanineL" Points="{Binding Points[5]}"/>
-            <local:Teeth x:Name="LateralIncisorL" Points="{Binding Points[4]}"/>
-            <local:Teeth x:Name="CentralIncisorL" Points="{Binding Points[3]}"/>
-            <local:Teeth x:Name="CentralIncisorR" Points="{Binding Points[0]}"/>
-            <local:Teeth x:Name="LateralIncisorR" Points="{Binding Points[1]}"/>
-            <local:Teeth x:Name="CanineR" Points="{Binding Points[2]}"/>
+            <local:Teeth x:Name="CanineL" Points="{Binding Points[5]}" ShowLengthXY="{Binding Path=ShowLengths, ElementName=UCtooth}"/>
+            <local:Teeth x:Name="LateralIncisorL" Points="{Binding Points[4]}" ShowLengthXY="{Binding Path=ShowLengths, ElementName=UCtooth}"/>
+            <local:Teeth x:Name="CentralIncisorL" Points="{Binding Points[3]}" ShowLengthXY="{Binding Path=ShowLengths, ElementName=UCtooth}"/>
+            <local:Teeth x:Name="CentralIncisorR" Points="{Binding Points[0]}" ShowLengthXY="{Binding Path=ShowLengths, ElementName=UCtooth}"/>
+            <local:Teeth x:Name="LateralIncisorR" Points="{Binding Points[1]}" ShowLengthXY="{Binding Path=ShowLengths, ElementName=UCtooth}"/>
+            <local:Teeth x:Name="CanineR" Points="{Binding Points[2]}" ShowLengthXY="{Binding Path=ShowLengths, ElementName=UCtooth}"/>
         </Grid>
     </Canvas>
 </UserControl>

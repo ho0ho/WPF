@@ -24,5 +24,14 @@ namespace MeditSmile2D.View
         {
             InitializeComponent();
         }
+
+        public static readonly DependencyProperty ShowLengthsProperty =
+            DependencyProperty.Register("ShowLengths", typeof(bool), typeof(Tooth));
+
+        public bool ShowLengths
+        {
+            get { return (bool)GetValue(ShowLengthsProperty); }
+            set { SetValue(ShowLengthsProperty, value); }
+        }
     }
 }

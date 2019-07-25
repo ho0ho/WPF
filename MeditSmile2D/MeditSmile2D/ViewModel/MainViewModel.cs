@@ -1,6 +1,7 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using MeditSmile2D.View;
+using Microsoft.Win32;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,6 +10,8 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace MeditSmile2D.ViewModel
 {
@@ -167,7 +170,7 @@ namespace MeditSmile2D.ViewModel
             int idx = Idx_Templates();
             if (idx < 0)
                 return null;
-            return ((App)Application.Current).templates[idx];
+            return ((MainWindow)Application.Current.MainWindow).templates[idx];
         }
 
         #region 개별치아 바인딩 코드
@@ -320,28 +323,83 @@ namespace MeditSmile2D.ViewModel
 
         #endregion
 
-        #region IsMirror
-        private bool _IsMirror;
-        public bool IsMirror
+        #region Image Load
+
+        public ImageSource Source
         {
-            get { return _IsMirror; }
-            set { _IsMirror = value; }
+            get { return orgImage; }
         }
-        #endregion
 
-        #region ShowLength
-        private bool _ShowLength;
-        public bool ShowLength
+        BitmapImage orgImage;
+        OpenFileDialog dlgOpen;
+        private void openFile()
         {
-            get { return _ShowLength; }
-            set
-            {
-                if (_ShowLength != value)
-                {
+            dlgOpen = new OpenFileDialog();
+            dlgOpen.InitialDirectory = "D:\\ho-ho\\WPF_\\MeditSmile2D\\MeditSmile2D\\images\\";
+            dlgOpen.Title = _Title + " - 이미지 불러오기";
+            dlgOpen.DefaultExt = ".bmp|.jpg|.jpeg|.png";
+            dlgOpen.Filter = "Image Files (*.bmp, *.jpg, *.jpeg, *.png) | *.bmp; *.jpg; *jpeg; *.png";
 
-                }
+            if (dlgOpen.ShowDialog() == true)
+            {
+                FaceDetector faceDetector = new FaceDetector(dlgOpen.FileName);
+                orgImage = faceDetector.face;
+
+                RaisePropertyChanged("Source");
+                this.fp = faceDetector.fp;
+
+                DrawFaceLine();
             }
         }
+
+        EllipseGeometry _eye_L = new EllipseGeometry();
+        EllipseGeometry _eye_R = new EllipseGeometry();
+        EllipseGeometry _mouth_L = new EllipseGeometry();
+        EllipseGeometry _mouth_R = new EllipseGeometry();
+
+        public EllipseGeometry EyeL
+        {
+            get { return _eye_L; }
+        }
+
+        public EllipseGeometry EyeR
+        {
+            get { return _eye_R; }
+        }
+
+        public EllipseGeometry MouthL
+        {
+            get { return _mouth_L; }
+        }
+
+        public EllipseGeometry MouthR
+        {
+            get { return _mouth_R; }
+        }
+
+        DrawFaceAlign drawFaceAlign;
+        public void DrawFaceLine()
+        {
+            ((MainWindow)Application.Current.MainWindow).UpdateLayout();
+            double height = ((MainWindow)Application.Current.MainWindow).dentalImg.ActualHeight;
+
+            drawFaceAlign = new DrawFaceAlign(fp, height);
+
+            // Dot
+            _eye_L = drawFaceAlign.eye_L;
+            _eye_R = drawFaceAlign.eye_R;
+            _mouth_L = drawFaceAlign.mouth_L;
+            _mouth_R = drawFaceAlign.mouth_R;
+
+            //선
+            _midline = drawFaceAlign.midline;
+            _noseline_L = drawFaceAlign.noseline_L;
+            _noseline_R = drawFaceAlign.noseline_R;
+            _eyeline = drawFaceAlign.eyeline;
+            _lipline = drawFaceAlign.lipline;
+        }
+
+
 
         #endregion
 

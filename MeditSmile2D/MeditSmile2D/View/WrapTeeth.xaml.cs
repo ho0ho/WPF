@@ -68,6 +68,59 @@ namespace MeditSmile2D.View
 
         #endregion
 
+        #region ShowLength
+
+        public bool ShowLength
+        {
+            get { return (bool)GetValue(ShowLengthProperty); }
+            set { SetValue(ShowLengthProperty, value); }
+        }
+
+        public static readonly DependencyProperty ShowLengthProperty
+            = DependencyProperty.Register("ShowLength", typeof(bool), typeof(WrapTeeth),
+                                          new PropertyMetadata(false, ShowLengthPropertyChangedCallback));
+
+        private static void ShowLengthPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var wrapPoints = d as WrapTeeth;
+            if (wrapPoints == null)
+                return;
+
+            if (e.NewValue != null)               
+                 wrapPoints.SetLineRectData();                
+        }
+
+        //private bool _ShowLength = false;
+        //public bool ShowLength
+        //{
+        //    get { return _ShowLength; }
+        //    set
+        //    {
+        //        if (_ShowLength == value)
+        //            return;
+
+        //        _ShowLength = value;
+        //        if (_ShowLength)
+        //        {
+        //            // Visible
+        //            // SetLineRectData();
+        //            lineH.Visibility = Visibility.Visible;
+        //            lineV.Visibility = Visibility.Visible;
+        //            lengthH.Visibility = Visibility.Visible;
+        //            lengthV.Visibility = Visibility.Visible;
+        //        }
+        //        else
+        //        {
+        //            // Hide
+        //            lineH.Visibility = Visibility.Hidden;
+        //            lineV.Visibility = Visibility.Hidden;
+        //            lengthH.Visibility = Visibility.Hidden;
+        //            lengthV.Visibility = Visibility.Hidden;
+        //        }
+        //    }
+        //}
+
+        #endregion
 
         void SetLineRectData()
         {
@@ -91,8 +144,7 @@ namespace MeditSmile2D.View
             Point minP = GetMin(points);
             Point maxP = GetMax(points);
 
-            DrawRect(minP, maxP);
-            
+            DrawRect(minP, maxP);  
             DrawLineXY(minP, maxP);
         }
 
@@ -162,7 +214,7 @@ namespace MeditSmile2D.View
         public double Top;
         public double Left;
 
-        readonly double padding = 0;
+        readonly double padding = 2;
         private void DrawRect(Point min, Point max)
         {            
             // Grid의 크기 설정
@@ -175,7 +227,7 @@ namespace MeditSmile2D.View
             Canvas.SetLeft(this, Left);
             Canvas.SetTop(this, Top);
         }
-
+        
         private void DrawLineXY(Point min, Point max)
         {
             double widthRect = max.X - min.X;
@@ -222,14 +274,20 @@ namespace MeditSmile2D.View
             Canvas.SetLeft(lengthV, leftV);
             Canvas.SetTop(lengthV, topV);
 
-            if (((MainWindow)Application.Current.MainWindow).lengthTeeth.IsChecked == true)
+            if (ShowLength == true)
             {
                 lineH.Visibility = Visibility.Visible;
                 lineV.Visibility = Visibility.Visible;
                 lengthH.Visibility = Visibility.Visible;
                 lengthV.Visibility = Visibility.Visible;
+            } else
+            {
+                lineH.Visibility = Visibility.Hidden;
+                lineV.Visibility = Visibility.Hidden;
+                lengthH.Visibility = Visibility.Hidden;
+                lengthV.Visibility = Visibility.Hidden;
             }
-                
+
         }
 
         #endregion

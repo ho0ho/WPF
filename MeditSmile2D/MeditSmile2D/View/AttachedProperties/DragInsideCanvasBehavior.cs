@@ -125,7 +125,10 @@ namespace MeditSmile2D.View.AttachedProperties
                                 {
                                     ListBoxItem sys = FindSymmetryPoint(frameworkElement);
                                     PointViewModel p_sys = (PointViewModel)(sys.Content);
-                                    var mouseDiffX2 = - mouseDiffX;
+
+                                    var mouseDiffX2 = -mouseDiffX;
+                                    //var diffX = 
+                                    //p_sys.X = 
                                     sys.SetValue(Canvas.LeftProperty, p_sys.X + mouseDiffX2);
                                 }
                             }
@@ -167,7 +170,7 @@ namespace MeditSmile2D.View.AttachedProperties
 
         private static ListBoxItem FindSymmetryPoint(FrameworkElement frameworkElement)
         {
-            var dic = ((App)Application.Current).dic;
+            var dic = ((MainWindow)Application.Current.MainWindow).dic;
 
             PointViewModel dot = (PointViewModel)(((ListBoxItem)frameworkElement).Content);
 

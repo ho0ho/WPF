@@ -37,5 +37,15 @@ namespace MeditSmile2D.View
             get { return (IEnumerable)GetValue(PointsProperty); }
             set { SetValue(PointsProperty, value); }
         }
+
+        public static readonly DependencyProperty ShowLengthXYProperty
+            = DependencyProperty.Register("ShowLengthXY", typeof(bool), typeof(Teeth));
+
+        public bool ShowLengthXY
+        {
+            get { return (bool)GetValue(ShowLengthXYProperty); }
+            set { SetValue(ShowLengthXYProperty, value); }
+        }
+
     }
 }

@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         xmlns:View="clr-namespace:MeditSmile2D.View"
         Name="window"
-        Title="MeditSmile2D" Width="1920" Height="1280">
+        Title="MeditSmile2D" Width="1280" Height="1920">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -18,10 +18,11 @@
 
         <TextBlock Grid.Row="0" HorizontalAlignment="Center" TextWrapping="Wrap" Text="{Binding Title}" VerticalAlignment="Center" FontWeight="Bold" FontSize="18.667"/>
         <DockPanel Grid.Row="1" LastChildFill="False">
-            <CheckBox Name="mirror" Margin="10" DockPanel.Dock="Left" IsChecked="{Binding IsMirror}">대칭모드</CheckBox>
-            <CheckBox Name="lengthTeeth" Margin="10" DockPanel.Dock="Left" IsChecked="{Binding ShowLength}">치아길이</CheckBox>
-            <Button Name="open" Margin="10" Width="100" Click="Open_Click">열기</Button>
+            <CheckBox Name="mirror" Margin="10" DockPanel.Dock="Left">대칭모드</CheckBox>
+            <CheckBox Name="lengthTeeth" Margin="10" DockPanel.Dock="Left">치아길이</CheckBox>
+            <Button Name="open" Margin="10" Width="100" Click="Open_Click" Command="{Binding openFileClicked}">열기</Button>
             <Button Name="save" Margin="10" Width="100" Click="Save_Click">저장</Button>
+            <Slider x:Name="slider_value" Margin="10" Value="0.2" Maximum="3" Minimum="0.3" Width="100"/>
             <StackPanel x:Name="radios" Orientation="Horizontal" DockPanel.Dock="Right" Width="auto">
                 <RadioButton x:Name="radio0" Margin="10" IsChecked="{Binding IsTemplate0}">Template #0</RadioButton>
                 <RadioButton x:Name="radio1" Margin="10" IsChecked="{Binding IsTemplate1}">Template #1</RadioButton>
@@ -35,7 +36,7 @@
             <Canvas.Background>
                 <ImageBrush x:Name="img"></ImageBrush>
             </Canvas.Background>
-            <View:Tooth></View:Tooth>
+            <View:Tooth x:Name="tooth" ShowLengths="{Binding Path=IsChecked, ElementName=lengthTeeth}"></View:Tooth>
         </Canvas>
 
     </Grid>
