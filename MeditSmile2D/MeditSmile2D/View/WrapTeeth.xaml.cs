@@ -88,37 +88,7 @@ namespace MeditSmile2D.View
 
             if (e.NewValue != null)               
                  wrapPoints.SetLineRectData();                
-        }
-
-        //private bool _ShowLength = false;
-        //public bool ShowLength
-        //{
-        //    get { return _ShowLength; }
-        //    set
-        //    {
-        //        if (_ShowLength == value)
-        //            return;
-
-        //        _ShowLength = value;
-        //        if (_ShowLength)
-        //        {
-        //            // Visible
-        //            // SetLineRectData();
-        //            lineH.Visibility = Visibility.Visible;
-        //            lineV.Visibility = Visibility.Visible;
-        //            lengthH.Visibility = Visibility.Visible;
-        //            lengthV.Visibility = Visibility.Visible;
-        //        }
-        //        else
-        //        {
-        //            // Hide
-        //            lineH.Visibility = Visibility.Hidden;
-        //            lineV.Visibility = Visibility.Hidden;
-        //            lengthH.Visibility = Visibility.Hidden;
-        //            lengthV.Visibility = Visibility.Hidden;
-        //        }
-        //    }
-        //}
+        }        
 
         #endregion
 
@@ -178,7 +148,7 @@ namespace MeditSmile2D.View
                 SetLineRectData();
         }
 
-        #region size&canvas 좌표
+        #region DrawRect & DrawLine 
 
         private Point GetMin(List<Point> pts)
         {
@@ -263,7 +233,6 @@ namespace MeditSmile2D.View
             Canvas.SetLeft(lengthH, leftH);
             Canvas.SetTop(lengthH, topH);
 
-
             // for length of Vertical Line
             lengthV.Content = heightRect.ToString();
             value = lineV.X1 + padding;
@@ -287,118 +256,9 @@ namespace MeditSmile2D.View
                 lengthH.Visibility = Visibility.Hidden;
                 lengthV.Visibility = Visibility.Hidden;
             }
-
         }
 
         #endregion
 
-        //#region events
-        //private Point origMouseDownPoint;
-        //private bool isLeftMouseAndControlDownOnRectangle;
-        //private bool isLeftMouseDownOnRectangle;
-        //private bool isDraggingRectangle;
-        //private readonly double DragThreshold = 5;
-
-
-        //private void ToothTemplate_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        //{
-
-        //    if (e.ChangedButton != MouseButton.Left)
-        //    {
-        //        return;
-        //    }
-
-        //    var rectangle = (FrameworkElement)sender;
-
-        //    isLeftMouseDownOnRectangle = true;
-
-        //    if ((Keyboard.Modifiers & ModifierKeys.Control) != 0)
-        //    {
-        //        //
-        //        // Control key was held down.
-        //        // This means that the rectangle is being added to or removed from the existing selection.
-        //        // Don't do anything yet, we will act on this later in the MouseUp event handler.
-        //        //
-        //        isLeftMouseAndControlDownOnRectangle = true;
-        //    }
-
-
-        //    rectangle.CaptureMouse();
-        //    origMouseDownPoint = e.GetPosition(this);
-
-        //    e.Handled = true;
-        //}
-
-        //private void ToothTemplate_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        //{
-        //    MessageBox.Show("눌림ㅋ");
-
-        //    if (isLeftMouseDownOnRectangle)
-        //    {
-        //        var rectangle = (FrameworkElement)sender;
-
-        //        if (!isDraggingRectangle)
-        //        {
-        //            //
-        //            // Execute mouse up selection logic only if there was no drag operation.
-        //            //
-
-        //        }
-        //        else
-        //        {
-        //            //
-        //            // Control key was not held down.
-        //            //
-
-        //        }
-
-
-        //        rectangle.ReleaseMouseCapture();
-        //        isLeftMouseDownOnRectangle = false;
-        //        isLeftMouseAndControlDownOnRectangle = false;
-
-        //        e.Handled = true;
-        //    }
-
-        //    isDraggingRectangle = false;
-        //}
-
-        //private void ToothTemplate_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
-        //{
-        //    if (isDraggingRectangle)
-        //    {
-        //        //
-        //        // Drag-move selected rectangles.
-        //        //
-        //        Point curMouseDownPoint = e.GetPosition(this);
-        //        var dragDelta = curMouseDownPoint - origMouseDownPoint;
-
-        //        origMouseDownPoint = curMouseDownPoint;
-
-
-        //    }
-        //    else if (isLeftMouseDownOnRectangle)
-        //    {
-        //        //
-        //        // The user is left-dragging the rectangle,
-        //        // but don't initiate the drag operation until
-        //        // the mouse cursor has moved more than the threshold value.
-        //        //
-        //        Point curMouseDownPoint = e.GetPosition(this);
-        //        var dragDelta = curMouseDownPoint - origMouseDownPoint;
-        //        double dragDistance = System.Math.Abs(dragDelta.Length);
-        //        if (dragDistance > DragThreshold)
-        //        {
-        //            //
-        //            // When the mouse has been dragged more than the threshold value commence dragging the rectangle.
-        //            //
-        //            isDraggingRectangle = true;
-        //        }
-
-        //        e.Handled = true;
-        //    }
-        //}
-
-        //#endregion
     }
 }

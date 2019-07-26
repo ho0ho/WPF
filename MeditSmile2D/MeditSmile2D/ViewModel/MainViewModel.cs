@@ -332,6 +332,7 @@ namespace MeditSmile2D.ViewModel
 
         BitmapImage orgImage;
         OpenFileDialog dlgOpen;
+        
         private void openFile()
         {
             dlgOpen = new OpenFileDialog();
@@ -352,30 +353,68 @@ namespace MeditSmile2D.ViewModel
             }
         }
 
-        EllipseGeometry _eye_L = new EllipseGeometry();
-        EllipseGeometry _eye_R = new EllipseGeometry();
-        EllipseGeometry _mouth_L = new EllipseGeometry();
-        EllipseGeometry _mouth_R = new EllipseGeometry();
 
+
+        #region FaceInfo(mark)
+
+        EllipseGeometry _eye_L = new EllipseGeometry();
         public EllipseGeometry EyeL
         {
             get { return _eye_L; }
         }
 
+        EllipseGeometry _eye_R = new EllipseGeometry();
         public EllipseGeometry EyeR
         {
             get { return _eye_R; }
         }
 
+        EllipseGeometry _mouth_L = new EllipseGeometry();
         public EllipseGeometry MouthL
         {
             get { return _mouth_L; }
         }
 
+        EllipseGeometry _mouth_R = new EllipseGeometry();
         public EllipseGeometry MouthR
         {
             get { return _mouth_R; }
         }
+
+        #endregion
+
+        #region FaceInfo(line)
+        LineGeometry _midline = new LineGeometry();
+        public LineGeometry MidLine
+        {
+            get { return _midline; }
+        }
+
+        LineGeometry _noseline_L = new LineGeometry();
+        public LineGeometry NoseLineL
+        {
+            get { return _noseline_L; }
+        }
+
+        LineGeometry _noseline_R = new LineGeometry();
+        public LineGeometry NoseLineR
+        {
+            get { return _noseline_R; }
+        }
+
+        LineGeometry _eyeline = new LineGeometry();
+        public LineGeometry EyeLine
+        {
+            get { return _eyeline; }
+        }
+
+        LineGeometry _lipline = new LineGeometry();
+        public LineGeometry LipLine
+        {
+            get { return _lipline; }
+        }
+        #endregion
+
 
         DrawFaceAlign drawFaceAlign;
         public void DrawFaceLine()
@@ -385,18 +424,29 @@ namespace MeditSmile2D.ViewModel
 
             drawFaceAlign = new DrawFaceAlign(fp, height);
 
-            // Dot
+            // mark
             _eye_L = drawFaceAlign.eye_L;
             _eye_R = drawFaceAlign.eye_R;
             _mouth_L = drawFaceAlign.mouth_L;
             _mouth_R = drawFaceAlign.mouth_R;
 
-            //¼±
+            // line
             _midline = drawFaceAlign.midline;
             _noseline_L = drawFaceAlign.noseline_L;
             _noseline_R = drawFaceAlign.noseline_R;
             _eyeline = drawFaceAlign.eyeline;
             _lipline = drawFaceAlign.lipline;
+
+            RaisePropertyChanged("EyeL");
+            RaisePropertyChanged("EyeR");
+            RaisePropertyChanged("MouthL");
+            RaisePropertyChanged("MouthR");
+            
+            RaisePropertyChanged("MidLine");
+            RaisePropertyChanged("NoseLineL");
+            RaisePropertyChanged("NoseLineR");
+            RaisePropertyChanged("EyeLine");
+            RaisePropertyChanged("LipLine");
         }
 
 

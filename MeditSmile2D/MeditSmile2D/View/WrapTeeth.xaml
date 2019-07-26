@@ -17,17 +17,11 @@
                     <SolidColorBrush Color="Black" Opacity="0"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <!--<Line x:Name="lineH" Stroke="Red" StrokeThickness="2" Visibility="Visible" StrokeDashCap="Round" StrokeEndLineCap="Round" StrokeStartLineCap="Round"></Line>
-            <Label x:Name="lengthX"></Label>
-            <Line x:Name="lineV" Stroke="Blue" StrokeThickness="2" Visibility="Visible" StrokeDashCap="Round" StrokeEndLineCap="Round" StrokeStartLineCap="Round"></Line>
-            <Label x:Name="lengthY"></Label>-->
 
             <ar:ArrowLine x:Name="lineH" Stroke="Red" StrokeThickness="3" ArrowEnds="Both"></ar:ArrowLine>
             <Label x:Name="lengthH"></Label>
             <ar:ArrowLine x:Name="lineV" Stroke="Blue" StrokeThickness="3" ArrowEnds="Both"></ar:ArrowLine>
             <Label x:Name="lengthV"></Label>
-            
-            
                                                   
         </Canvas>
     </Border>

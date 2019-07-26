@@ -102,6 +102,16 @@ namespace MeditSmile2D.ViewModel.Command
 
         #region MouseLeftButtonDown
 
+        public static ICommand GetMouseLeftButtonDownCommand(UIElement element)
+        {
+            return (ICommand)element.GetValue(MouseLeftButtonDownCommandProperty);
+        }
+
+        public static void SetMouseLeftButtonDownCommand(UIElement element, ICommand value)
+        {
+            element.SetValue(MouseLeftButtonDownCommandProperty, value);
+        }
+
         public static readonly DependencyProperty MouseLeftButtonDownCommandProperty =
             DependencyProperty.RegisterAttached("MouseLeftButtonDownCommand", typeof(ICommand), typeof(MouseBehaviors), new FrameworkPropertyMetadata(new PropertyChangedCallback(MouseLeftButtonDownCommandChanged)));
 
@@ -116,16 +126,6 @@ namespace MeditSmile2D.ViewModel.Command
             FrameworkElement element = sender as FrameworkElement;
             ICommand command = GetMouseLeftButtonDownCommand(element);
             command.Execute(e);
-        }
-
-        public static void SetMouseLeftButtonDownCommand(UIElement element, ICommand value)
-        {
-            element.SetValue(MouseLeftButtonDownCommandProperty, value);
-        }
-
-        public static ICommand GetMouseLeftButtonDownCommand(UIElement element)
-        {
-            return (ICommand)element.GetValue(MouseLeftButtonDownCommandProperty);
         }
 
         #endregion
