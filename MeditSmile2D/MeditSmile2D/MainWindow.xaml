@@ -5,9 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MeditSmile2D"
         mc:Ignorable="d"
+        
         xmlns:View="clr-namespace:MeditSmile2D.View"
+        xmlns:MouseBehaviors="clr-namespace:MeditSmile2D.View.Utils"
+        
         Name="window"
-        Title="MeditSmile2D" Width="1280" Height="1920">
+        Title="MeditSmile2D" Width="1300" Height="800">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -20,8 +23,10 @@
         <DockPanel Grid.Row="1" LastChildFill="False">
             <CheckBox Name="mirror" Margin="10" DockPanel.Dock="Left">대칭모드</CheckBox>
             <CheckBox Name="lengthTeeth" Margin="10" DockPanel.Dock="Left">치아길이</CheckBox>
-            <Button Name="open" Margin="10" Width="100" Click="Open_Click" Command="{Binding openFileClicked}">열기</Button>
+            
+            <Button Name="open" Margin="10" Width="100" Command="{Binding OpenFileClicked}">열기</Button>
             <Button Name="save" Margin="10" Width="100" Click="Save_Click">저장</Button>
+            
             <Slider x:Name="slider_value" Margin="10" Value="0.2" Maximum="3" Minimum="0.3" Width="100"/>
             <StackPanel x:Name="radios" Orientation="Horizontal" DockPanel.Dock="Right" Width="auto">
                 <RadioButton x:Name="radio0" Margin="10" IsChecked="{Binding IsTemplate0}">Template #0</RadioButton>
@@ -32,12 +37,53 @@
             </StackPanel>
         </DockPanel>
 
-        <Canvas x:Name="canvas" Grid.Row="2" Width="{Binding Path=Width, ElementName=window}">
-            <Canvas.Background>
-                <ImageBrush x:Name="img"></ImageBrush>
-            </Canvas.Background>
-            <View:Tooth x:Name="tooth" ShowLengths="{Binding Path=IsChecked, ElementName=lengthTeeth}"></View:Tooth>
-        </Canvas>
+        <Border Grid.Row="2">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                <Grid x:Name="canvas">
+                    <!--Width="{Binding Path=Width, ElementName=window}"-->
+                    <Image x:Name="dental_img" HorizontalAlignment="Left" VerticalAlignment="Top"
+                           Source="{Binding Path=Source}"/>
+
+                    <Canvas>
+                        <View:Tooth x:Name="tooth" ShowLengths="{Binding Path=IsChecked, ElementName=lengthTeeth}"></View:Tooth>
+                        
+                        <!-- line -->
+                        <Path Name="midline" Data="{Binding MidLine}" Stroke="Black" StrokeThickness="3" Fill="Black"
+                              MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForFaceAlign}"
+                              MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForFaceAlign}"
+                              MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForFaceAlign}"/>
+                        <Path Name="noseline_L" Data="{Binding NoseLineL}" Stroke="Black" StrokeThickness="3" Fill="Black"
+                              MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForFaceAlign}"
+                              MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForFaceAlign}"
+                              MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForFaceAlign}"/>
+                        <Path Name="noseline_R" Data="{Binding NoseLineR}" Stroke="Black" StrokeThickness="3" Fill="Black"
+                              MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForFaceAlign}"
+                              MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForFaceAlign}"
+                              MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForFaceAlign}"/>
+                        <Path Name="eyeline" Data="{Binding EyeLine}" Stroke="Black" StrokeThickness="2" Fill="Black"/>
+                        <Path Name="lipline" Data="{Binding LipLine}" Stroke="Black" StrokeThickness="2" Fill="Black"/>
+
+                        <!-- mark -->
+                        <Path Name="eye_L" Data="{Binding EyeL}" Stroke="DeepSkyBlue" StrokeThickness="10" Fill="DeepSkyBlue"
+                              MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForFaceAlign}"
+                              MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForFaceAlign}"
+                              MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForFaceAlign}"/>
+                        <Path Name="eye_R" Data="{Binding EyeR}" Stroke="DeepSkyBlue" StrokeThickness="10" Fill="DeepSkyBlue"
+                              MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForFaceAlign}"
+                              MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForFaceAlign}"
+                              MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForFaceAlign}"/>
+                        <Path Name="mouth_L" Data="{Binding MouthL}" Stroke="DeepSkyBlue" StrokeThickness="10" Fill="DeepSkyBlue"
+                              MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForFaceAlign}"
+                              MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForFaceAlign}"
+                              MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForFaceAlign}"/>
+                        <Path Name="mouth_R" Data="{Binding MouthR}" Stroke="DeepSkyBlue" StrokeThickness="10" Fill="DeepSkyBlue"
+                              MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForFaceAlign}"
+                              MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForFaceAlign}"
+                              MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForFaceAlign}"/>
+                    </Canvas>
+                </Grid>
+            </ScrollViewer>
+        </Border>
 
     </Grid>
 </Window>

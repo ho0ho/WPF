@@ -33,5 +33,6 @@ namespace MeditSmile2D.View
             get { return (bool)GetValue(ShowLengthsProperty); }
             set { SetValue(ShowLengthsProperty, value); }
         }
+
     }
 }

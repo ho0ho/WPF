@@ -103,8 +103,8 @@ namespace MeditSmile2D.View
                 if (pointProperties.All(p => p.Name != "X") ||
                 pointProperties.All(p => p.Name != "Y"))
                     continue;
-                var x = (float)point.GetType().GetProperty("X").GetValue(point, new object[] { });
-                var y = (float)point.GetType().GetProperty("Y").GetValue(point, new object[] { });
+                var x = (double)point.GetType().GetProperty("X").GetValue(point, new object[] { });
+                var y = (double)point.GetType().GetProperty("Y").GetValue(point, new object[] { });
                 points.Add(new Point(x, y));
             }
 
@@ -152,8 +152,8 @@ namespace MeditSmile2D.View
 
         private Point GetMin(List<Point> pts)
         {
-            double xMin = float.MaxValue;
-            double yMin = float.MaxValue;
+            double xMin = double.MaxValue;
+            double yMin = double.MaxValue;
 
             foreach (var point in pts)
             {
@@ -167,8 +167,8 @@ namespace MeditSmile2D.View
 
         private Point GetMax(List<Point> pts)
         {
-            double xMax = float.MinValue;
-            double yMax = float.MinValue;
+            double xMax = double.MinValue;
+            double yMax = double.MinValue;
 
             foreach (var point in pts)
             {

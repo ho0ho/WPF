@@ -100,8 +100,8 @@ namespace MeditSmile2D.View
                 var pointProperties = point.GetType().GetProperties();
                 if (pointProperties.All(p => p.Name != "X") || pointProperties.All(p => p.Name != "Y"))
                     continue;
-                var x = (float)point.GetType().GetProperty("X").GetValue(point, new object[] { });
-                var y = (float)point.GetType().GetProperty("Y").GetValue(point, new object[] { });
+                var x = (double)point.GetType().GetProperty("X").GetValue(point, new object[] { });
+                var y = (double)point.GetType().GetProperty("Y").GetValue(point, new object[] { });
                 points.Add(new Point(x, y));
             }
 

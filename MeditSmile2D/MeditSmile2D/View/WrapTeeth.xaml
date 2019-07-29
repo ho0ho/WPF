@@ -4,15 +4,19 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MeditSmile2D.View"
+             
              xmlns:ar="clr-namespace:MeditSmile2D.View.ArrowLine"
-             xmlns:mv="clr-namespace:MeditSmile2D"
+             xmlns:cmd="clr-namespace:MeditSmile2D.View.Utils"
              
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     
     <Border x:Name="wrapbor"  BorderThickness="1" BorderBrush="SteelBlue" >
         <Canvas x:Name="innerWrap" >
-            <Rectangle Cursor="Hand" Visibility="Visible">
+            <Rectangle Cursor="Hand" Visibility="Visible"
+                       cmd:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForDragDropTeeth}"
+                       cmd:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForDragAndDropTeeth}"
+                       cmd:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpDragAndDropTeeth}">
                 <Rectangle.Fill>
                     <SolidColorBrush Color="Black" Opacity="0"/>
                 </Rectangle.Fill>
@@ -22,7 +26,56 @@
             <Label x:Name="lengthH"></Label>
             <ar:ArrowLine x:Name="lineV" Stroke="Blue" StrokeThickness="3" ArrowEnds="Both"></ar:ArrowLine>
             <Label x:Name="lengthV"></Label>
-                                                  
+
+            <Border x:Name="Border_Top" Cursor="SizeNS" Background="Aqua"
+                    cmd:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForResize}"
+                    cmd:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForResize}"
+                    cmd:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForResize}"
+                    Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{StaticResource BorderStyle}"/>
+
+            <Border x:Name="Border_Bottom" Cursor="SizeNS" Background="DarkCyan"
+                    cmd:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForResize}"
+                    cmd:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForResize}"
+                    cmd:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForResize}"
+                    Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{StaticResource BorderStyle}"/>
+
+            <Border x:Name="Border_Left" Cursor="SizeWE" Background="LightCoral"
+                    cmd:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForResize}"
+                    cmd:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForResize}"
+                    cmd:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForResize}"
+                    Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{StaticResource BorderStyle}"/>
+
+            <Border x:Name="Border_Right" Cursor="SizeWE" Background="Olive"
+                    cmd:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForResize}"
+                    cmd:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForResize}"
+                    cmd:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForResize}"
+                    Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{StaticResource BorderStyle}"/>
+
+
+            <Border x:Name="Border_TopLeft" Cursor="SizeNWSE" Background="DarkSalmon"
+                    cmd:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForResize}"
+                    cmd:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForResize}"
+                    cmd:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForResize}"
+                    Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{StaticResource BorderStyle}"/>
+
+            <Border x:Name="Border_TopRight" Cursor="SizeNESW" Background="AliceBlue"
+                    cmd:MouseBehaviors.MouseLeftButtonDownCommand="{Binding SizeTopRightMouseDown}"
+                    cmd:MouseBehaviors.MouseLeftButtonUpCommand="{Binding SizeTopRightMouseUp}"
+                    cmd:MouseBehaviors.MouseMoveCommand="{Binding SizeTopRightMouseMove}"
+                    Height="5" Width="5" HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource BorderStyle}"/>
+
+            <Border x:Name="Border_BottomLeft" Cursor="SizeNESW" Background="DarkViolet"
+                    cmd:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForResize}"
+                    cmd:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForResize}"
+                    cmd:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForResize}"
+                    Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{StaticResource BorderStyle}"/>
+
+            <Border x:Name="Border_BottomRight" Cursor="SizeNWSE" Background="Orange"                                  
+                    cmd:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForResize}"
+                    cmd:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForResize}"
+                    cmd:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForResize}"
+                    Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{StaticResource BorderStyle}"/>
+
         </Canvas>
     </Border>
 </UserControl>

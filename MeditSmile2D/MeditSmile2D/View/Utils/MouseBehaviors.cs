@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace MeditSmile2D.ViewModel.Command
+namespace MeditSmile2D.View.Utils
 {
-    class MouseBehaviors
+    public class MouseBehaviors
     {
         #region MouseUp
 
@@ -43,7 +43,8 @@ namespace MeditSmile2D.ViewModel.Command
         #region MouseDown
 
         public static readonly DependencyProperty MouseDownCommandProperty =
-            DependencyProperty.RegisterAttached("MouseDownCommand", typeof(ICommand), typeof(MouseBehaviors), new FrameworkPropertyMetadata(new PropertyChangedCallback(MouseDownCommandChanged)));
+            DependencyProperty.RegisterAttached("MouseDownCommand", typeof(ICommand), typeof(MouseBehaviors), 
+                new FrameworkPropertyMetadata(new PropertyChangedCallback(MouseDownCommandChanged)));
 
         private static void MouseDownCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

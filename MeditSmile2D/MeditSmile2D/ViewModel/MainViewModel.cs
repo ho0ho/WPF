@@ -1,6 +1,8 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using MeditSmile2D.View;
+using MeditSmile2D.View.Utils;
+using MeditSmile2D.ViewModel.Command;
 using Microsoft.Win32;
 using System;
 using System.Collections;
@@ -8,31 +10,48 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace MeditSmile2D.ViewModel
 {
-    /// <summary>
-    /// This class contains properties that the main View can data bind to.
-    /// <para>
-    /// Use the <strong>mvvminpc</strong> snippet to add bindable properties to this ViewModel.
-    /// </para>
-    /// <para>
-    /// You can also use Blend to data bind with the tool's support.
-    /// </para>
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
-    /// </summary>
-    using ToothType = ObservableCollection<ObservableCollection<PointViewModel>>;    
+    using ToothType = ObservableCollection<ObservableCollection<PointViewModel>>;
 
     public class MainViewModel : ViewModelBase, INotifyPropertyChanged
     {
+        public FaceDetector.FacePoint facePoint;
+       
+        public MainViewCommand OpenFileClicked { get; set; }
+        public MainViewCommand RedoCommand { get; set; }
+        public MainViewCommand UndoCommand { get; set; }
+
+        Point guideMark = new Point(400, 200);
+
         public MainViewModel()
         {
+            dlgOpen = new OpenFileDialog();
+
+            facePoint = new FaceDetector.FacePoint();
+            SelectedTemplates = new List<bool>();
+
+            OpenFileClicked = new MainViewCommand(openFile);
+            RedoCommand = new MainViewCommand(redo);
+            UndoCommand = new MainViewCommand(undo);
+
+            UndoStack = new Stack<Path>();
+            RedoStack = new Stack<Path>();
+
+            captured_teeth = false;
+            captured_face = false;
+
+            isSizing = false;
+            isFirstTimeMovedOnSizing = true;
+            //anchor = new Point();
+
             SelectedTemplates.Add(IsTemplate0 = false);
             SelectedTemplates.Add(IsTemplate1 = false);
             SelectedTemplates.Add(IsTemplate2 = false);
@@ -61,7 +80,7 @@ namespace MeditSmile2D.ViewModel
 
         #region SelectedTemplate
 
-        private List<bool> SelectedTemplates = new List<bool>();
+        private List<bool> SelectedTemplates;
 
         private bool _IsTemplate0;
         public bool IsTemplate0
@@ -71,6 +90,8 @@ namespace MeditSmile2D.ViewModel
             {
                 if (_IsTemplate0 != value)
                 {
+                    if (value == false)
+                        flag = false;
                     _IsTemplate0 = value;
                     SelectedTemplates[0] = value;
                     RaisePropertyChanged("IsTemplate0");
@@ -88,6 +109,8 @@ namespace MeditSmile2D.ViewModel
             {
                 if (_IsTemplate1 != value)
                 {
+                    if (value == false)
+                        flag = false;
                     _IsTemplate1 = value;
                     SelectedTemplates[1] = value;
                     RaisePropertyChanged("Points");
@@ -105,6 +128,8 @@ namespace MeditSmile2D.ViewModel
             {
                 if (_IsTemplate2 != value)
                 {
+                    if (value == false)
+                        flag = false;
                     _IsTemplate2 = value;
                     SelectedTemplates[2] = value;
                     RaisePropertyChanged(IsTemplate2Name);
@@ -122,6 +147,8 @@ namespace MeditSmile2D.ViewModel
             {
                 if (_IsTemplate3 != value)
                 {
+                    if (value == false)
+                        flag = false;
                     _IsTemplate3 = value;
                     SelectedTemplates[3] = value;
                     RaisePropertyChanged(IsTemplate3Name);
@@ -138,12 +165,13 @@ namespace MeditSmile2D.ViewModel
             {
                 if (_IsTemplate4 != value)
                 {
+                    if (value == true)
+                        flag = false;
                     _IsTemplate4 = value;
                     SelectedTemplates[4] = value;
                     RaisePropertyChanged(IsTemplate4Name);
                     RaisePropertyChanged("Points");
                 }
-
             }
         }
 
@@ -154,133 +182,31 @@ namespace MeditSmile2D.ViewModel
         private ToothType _Points;
         public ToothType Points
         {
-            /// 2.
-            // 템플릿이 선택되지 않은 초기상태에서는 GetAllPoints()에서 null값이 리턴
-            //      이 경우 Teeth.Points가 변경되지 않음 => 각 PointViewModel객체들의 OnPropertyChanged가 발생하지 않음
-            // 템플릿이 선택되어 GetAllPoints()에서 non-null이 리턴된 경우 
-            // (리턴된 후) Teeth.Points 프로퍼티가 Set 되기 때문에 Teeth.PropertyChangedCallback()로 넘어감
-            // 넘어가는 데이터는 ToothType(즉 10개의 점 세트가 6개 있는 Tooth로 넘겨지나, 
-            // <Teeth Points="{Binding Points[0]}"> ... 이므로 
-            // Teeth.Points 가 받는 실제 데이터는 TeethType의 Points[n]으로 넘어감
             get { return _Points = GetAllPoints(); }
         }
 
+        private bool flag = true;
         private ToothType GetAllPoints()
         {
             int idx = Idx_Templates();
             if (idx < 0)
                 return null;
-            return ((MainWindow)Application.Current.MainWindow).templates[idx];
+
+            _Points = ((MainWindow)Application.Current.MainWindow).templates[idx];
+            if (flag)
+            {
+                for (int i = 0; i < 6; i++)
+                {
+                    for (int j = 0; j < 10; j++)
+                    {
+                        _Points[i][j].X += guideMark.X;                        
+                        _Points[i][j].Y += guideMark.Y;
+                    }
+                }
+            }
+
+            return _Points;
         }
-
-        #region 개별치아 바인딩 코드
-        //private ToothType _Points;
-        //public ToothType Points
-        //{
-        //    get { return _Points = GetAllPoints(); }
-        //}
-
-        //private ToothType GetAllPoints()
-        //{
-        //    int rb_idx = Idx_Templates();
-        //    if (rb_idx < 0)
-        //        return null;
-        //    else
-        //    {
-        //        ToothType tooth = new ToothType();
-        //        tooth.Add(_CanineL);
-        //        tooth.Add(_LateralIncisorL);
-        //        tooth.Add(_CentralIncisorL);
-        //        tooth.Add(_CentralIncisorR);
-        //        tooth.Add(_LateralIncisorR);
-        //        tooth.Add(_CanineR);
-        //        return tooth;
-        //    }
-        //}
-
-        //private TeethType _CanineL;
-        //public TeethType CanineL
-        //{
-        //    get {
-        //        int idx = Idx_Templates();
-        //        if (idx < 0)
-        //            return null;
-        //        _CanineL = ((App)Application.Current).templates[idx][5];
-        //        RaisePropertyChanged("Points");
-        //        return _CanineL;
-        //    }
-        //}
-
-        //private TeethType _LateralIncisorL;
-        //public TeethType LateralIncisorL
-        //{
-        //    get
-        //    {
-        //        int idx = Idx_Templates();
-        //        if (idx < 0)
-        //            return null;
-        //        _LateralIncisorL = ((App)Application.Current).templates[idx][4];
-        //        RaisePropertyChanged("Points");
-        //        return _LateralIncisorL;
-        //    }
-        //}
-
-        //private TeethType _CentralIncisorL;
-        //public TeethType CentralIncisorL
-        //{
-        //    get
-        //    {
-        //        int idx = Idx_Templates();
-        //        if (idx < 0)
-        //            return null;
-        //        _CentralIncisorL = ((App)Application.Current).templates[idx][3];
-        //        RaisePropertyChanged("Points");
-        //        return _CentralIncisorL;
-        //    }
-        //}
-
-        //private TeethType _CentralIncisorR;
-        //public TeethType CentralIncisorR
-        //{
-        //    get
-        //    {
-        //        int idx = Idx_Templates();
-        //        if (idx < 0)
-        //            return null;
-        //        _CentralIncisorR = ((App)Application.Current).templates[idx][0];
-        //        RaisePropertyChanged("Points");
-        //        return _CentralIncisorR;
-        //    }
-        //}
-
-        //private TeethType _LateralIncisorR;
-        //public TeethType LateralIncisorR
-        //{
-        //    get
-        //    {
-        //        int idx = Idx_Templates();
-        //        if (idx < 0)
-        //            return null;
-        //        _LateralIncisorR = ((App)Application.Current).templates[idx][1];
-        //        RaisePropertyChanged("Points");
-        //        return _LateralIncisorR;
-        //    }
-        //}
-
-        //private TeethType _CanineR;
-        //public TeethType CanineR
-        //{
-        //    get
-        //    {
-        //        int idx = Idx_Templates();
-        //        if (idx < 0)
-        //            return null;
-        //        _CanineR = ((App)Application.Current).templates[idx][2];
-        //        RaisePropertyChanged("Points");
-        //        return _CanineR;
-        //    }
-        //}
-        #endregion
 
         private int Idx_Templates()
         {
@@ -331,11 +257,10 @@ namespace MeditSmile2D.ViewModel
         }
 
         BitmapImage orgImage;
-        OpenFileDialog dlgOpen;
+        OpenFileDialog dlgOpen = new OpenFileDialog();
         
         private void openFile()
         {
-            dlgOpen = new OpenFileDialog();
             dlgOpen.InitialDirectory = "D:\\ho-ho\\WPF_\\MeditSmile2D\\MeditSmile2D\\images\\";
             dlgOpen.Title = _Title + " - 이미지 불러오기";
             dlgOpen.DefaultExt = ".bmp|.jpg|.jpeg|.png";
@@ -344,16 +269,14 @@ namespace MeditSmile2D.ViewModel
             if (dlgOpen.ShowDialog() == true)
             {
                 FaceDetector faceDetector = new FaceDetector(dlgOpen.FileName);
-                orgImage = faceDetector.face;
+                orgImage = faceDetector.faceImg;
 
                 RaisePropertyChanged("Source");
-                this.fp = faceDetector.fp;
+                this.facePoint = faceDetector.facePoint;
 
                 DrawFaceLine();
             }
         }
-
-
 
         #region FaceInfo(mark)
 
@@ -420,22 +343,25 @@ namespace MeditSmile2D.ViewModel
         public void DrawFaceLine()
         {
             ((MainWindow)Application.Current.MainWindow).UpdateLayout();
-            double height = ((MainWindow)Application.Current.MainWindow).dentalImg.ActualHeight;
+            double height = ((MainWindow)Application.Current.MainWindow).dental_img.ActualHeight;
 
-            drawFaceAlign = new DrawFaceAlign(fp, height);
+            drawFaceAlign = new DrawFaceAlign(facePoint, height);
 
             // mark
-            _eye_L = drawFaceAlign.eye_L;
-            _eye_R = drawFaceAlign.eye_R;
-            _mouth_L = drawFaceAlign.mouth_L;
-            _mouth_R = drawFaceAlign.mouth_R;
+            _eye_L = drawFaceAlign.eyeL;
+            _eye_R = drawFaceAlign.eyeR;            
+            //nose
+            _mouth_L = drawFaceAlign.mouthEndL;
+            _mouth_R = drawFaceAlign.mouthEndR;
 
             // line
             _midline = drawFaceAlign.midline;
-            _noseline_L = drawFaceAlign.noseline_L;
-            _noseline_R = drawFaceAlign.noseline_R;
+            _noseline_L = drawFaceAlign.noselineL;
+            _noseline_R = drawFaceAlign.noselineR;
             _eyeline = drawFaceAlign.eyeline;
             _lipline = drawFaceAlign.lipline;
+
+            GetGuideMark();
 
             RaisePropertyChanged("EyeL");
             RaisePropertyChanged("EyeR");
@@ -449,120 +375,979 @@ namespace MeditSmile2D.ViewModel
             RaisePropertyChanged("LipLine");
         }
 
+        public void GetGuideMark()
+        {
+            Point midStart = _midline.StartPoint;
+            Point midEnd = _midline.EndPoint;
+            Point lipStart = _lipline.StartPoint;
+            Point lipEnd = _lipline.EndPoint;
 
+            double _slope_mid = (midStart.Y - midEnd.Y) / (midStart.X - midEnd.X);
+            double b_mid = -1.0 * (_slope_mid * midStart.X) + midStart.Y;
+
+            double _slope_lip = (lipStart.Y - lipEnd.Y) / (lipStart.X - lipEnd.X);
+            double b_lip = -1.0 * (_slope_lip * lipStart.X) + lipStart.Y;
+
+            guideMark.X = (b_lip - b_mid) / (_slope_mid - _slope_lip);
+            guideMark.Y = guideMark.X * _slope_mid + b_mid;
+        }
 
         #endregion
 
-        #region Data Members of Events
+        #region Redo & Undo
 
-        /// <summary>
-        /// Set to 'true' when the left mouse-button is down.
-        /// </summary>
-        private bool isLeftMouseButtonDownOnWindow = false;
+        Stack<Path> UndoStack, RedoStack;
+        private void redo()
+        {
+            if (RedoStack.Count <= 0)
+                return;
 
-        /// <summary>
-        /// Set to 'true' when dragging the 'selection rectangle'.
-        /// Dragging of the selection rectangle only starts when the left mouse-button is held down and the mouse-cursor
-        /// is moved more than a threshold distance.
-        /// </summary>
-        private bool isDraggingSelectionRect = false;
+            Path redoPath = RedoStack.Pop();
+            // for mark
+            if (redoPath.Name.Equals("EyeL"))
+            {
+                EyeL.Center = (redoPath.Data as EllipseGeometry).Center;
+                EyeLine.StartPoint = EyeL.Center;
+            }
+            else if (redoPath.Name.Equals("EyeR"))
+            {
+                EyeR.Center = (redoPath.Data as EllipseGeometry).Center;
+                EyeLine.EndPoint = EyeR.Center;
+            }
+            else if (redoPath.Name.Equals("MouthL"))
+            {
+                MouthL.Center = (redoPath.Data as EllipseGeometry).Center;
+                LipLine.StartPoint = MouthL.Center;
+            }
+            else if (redoPath.Name.Equals("MouthR"))
+            {
+                MouthR.Center = (redoPath.Data as EllipseGeometry).Center;
+                LipLine.EndPoint = MouthR.Center;
+            }
 
-        /// <summary>
-        /// Records the location of the mouse (relative to the window) when the left-mouse button has pressed down.
-        /// </summary>
-        private Point origMouseDownPoint;
+            // for line
+            else if (redoPath.Name.Equals("MidLine"))
+            {
+                MidLine.StartPoint = (redoPath.Data as LineGeometry).StartPoint;
+                MidLine.EndPoint = (redoPath.Data as LineGeometry).EndPoint;
+            }
+            else if (redoPath.Name.Equals("NoseLineL"))
+            {
+                NoseLineL.StartPoint = (redoPath.Data as LineGeometry).StartPoint;
+                NoseLineL.EndPoint = (redoPath.Data as LineGeometry).EndPoint;
+            }
+            else if (redoPath.Name.Equals("NoseLineR"))
+            {
+                NoseLineR.StartPoint = (redoPath.Data as LineGeometry).StartPoint;
+                NoseLineR.EndPoint = (redoPath.Data as LineGeometry).EndPoint;
+            }
 
-        /// <summary>
-        /// The threshold distance the mouse-cursor must move before drag-selection begins.
-        /// </summary>
-        private static readonly double DragThreshold = 5;
+            UndoStack.Push(redoPath);
+        }
 
-        /// <summary>
-        /// Set to 'true' when the left mouse-button is held down on a rectangle.
-        /// </summary>
-        private bool isLeftMouseDownOnRectangle = false;
+        private void undo()
+        {
+            if (UndoStack.Count <= 0)
+                return;
 
-        /// <summary>
-        /// Set to 'true' when the left mouse-button and control are held down on a rectangle.
-        /// </summary>
-        private bool isLeftMouseAndControlDownOnRectangle = false;
+            Path undoPath = UndoStack.Pop();
+            // for mark
+            if (undoPath.Name.Equals("EyeL"))
+            {
+                EyeL.Center = (undoPath.Data as EllipseGeometry).Center;
+                EyeLine.StartPoint = EyeL.Center;
+            }
+            else if (undoPath.Name.Equals("EyeR"))
+            {
+                EyeR.Center = (undoPath.Data as EllipseGeometry).Center;
+                EyeLine.EndPoint = EyeR.Center;
+            }
+            else if (undoPath.Name.Equals("MouthL"))
+            {
+                MouthL.Center = (undoPath.Data as EllipseGeometry).Center;
+                LipLine.StartPoint = MouthL.Center;
+            }
+            else if (undoPath.Name.Equals("MouthR"))
+            {
+                MouthR.Center = (undoPath.Data as EllipseGeometry).Center;
+                LipLine.EndPoint = MouthR.Center;
+            }
 
-        /// <summary>
-        /// Set to 'true' when dragging a rectangle.
-        /// </summary>
-        private bool isDraggingRectangle = false;
+            // for line
+            else if (undoPath.Name.Equals("MidLine"))
+            {
+                MidLine.StartPoint = (undoPath.Data as LineGeometry).StartPoint;
+                MidLine.EndPoint = (undoPath.Data as LineGeometry).EndPoint;
+            }
+            else if (undoPath.Name.Equals("NoseLineL"))
+            {
+                NoseLineL.StartPoint = (undoPath.Data as LineGeometry).StartPoint;
+                NoseLineL.EndPoint = (undoPath.Data as LineGeometry).EndPoint;
+            }
+            else if (undoPath.Name.Equals("NoseLineR"))
+            {
+                NoseLineR.StartPoint = (undoPath.Data as LineGeometry).StartPoint;
+                NoseLineR.EndPoint = (undoPath.Data as LineGeometry).EndPoint;
+            }
 
-        #endregion Data Members
+            RedoStack.Push(undoPath);
+        }
 
-        #region Event            
+        #endregion
 
-        private bool IsCaptured = false;
+        #region DragDrop for Face Align
 
-        private RelayCommand<object> _LeftDown;
-        public RelayCommand<object> LeftDown
+        private bool captured_face;
+        private double originalX;
+
+        // Command - MouseMove For FaceAlign
+        private RelayCommand<object> _mouseLeftDownForFaceAlign;
+        public RelayCommand<object> MouseLeftDownForFaceAlign
         {
             get
             {
-                if (_LeftDown == null)
-                    return _LeftDown = new RelayCommand<object>(param => ExecuteMouseLeftDown((MouseEventArgs)param));
-                return _LeftDown;
+                if (_mouseLeftDownForFaceAlign == null)
+                    return _mouseLeftDownForFaceAlign
+                        = new RelayCommand<object>(param => ExecuteMouseLeftDownForFaceAlign((MouseEventArgs)param));
+                return _mouseLeftDownForFaceAlign;
             }
-            set { _LeftDown = value; }
+            set { _mouseLeftDownForFaceAlign = value; }
         }
 
-        private void ExecuteMouseLeftDown(MouseEventArgs e)
+        private void ExecuteMouseLeftDownForFaceAlign(MouseEventArgs e)
         {
-            var sender = e.Source;
-            IsCaptured = true;
-            origMouseDownPoint = e.GetPosition((IInputElement)e.Source);
+            Path originalPath = e.Source as Path;
+            IInputElement i = e.Source as IInputElement;
+
+            // Save(for Undo)
+            Path savePath = new Path();
+            savePath.Name = originalPath.Name;
+            savePath.Data = originalPath.Data.CloneCurrentValue();
+
+            // 
+            captured_face = true;
+            originalX = e.GetPosition(i).X;
+            Mouse.Capture(i);
+
+            if (originalPath.Data.GetType() == Type.GetType(originalPath.Name))
+                originalPath.Stroke = Brushes.OrangeRed;
+            else
+                originalPath.Stroke = Brushes.Violet;
+        }
+
+        private RelayCommand<object> _mouseMoveForFaceAlign;
+        public RelayCommand<object> MouseMoveForFaceAlign
+        {
+            get
+            {
+                if (_mouseMoveForFaceAlign == null)
+                    return _mouseMoveForFaceAlign
+                        = new RelayCommand<object>(param => ExecuteMouseMoveForFaceAlign((MouseEventArgs)param));
+                return _mouseMoveForFaceAlign;
+            }
+            set { _mouseMoveForFaceAlign = value; }
+        }
+
+        private void ExecuteMouseMoveForFaceAlign(MouseEventArgs e)
+        {
+            if (captured_face == true)
+            {
+                Path p = e.Source as Path;
+                IInputElement i = e.Source as IInputElement;
+
+                // for mark
+                if (p.Data == EyeL)
+                {
+                    _eye_L.Center = e.GetPosition(i);
+                    RaisePropertyChanged("EyeL");
+                    _eyeline.StartPoint = _eye_L.Center;
+                    RaisePropertyChanged("EyeLine");
+                }
+                else if (p.Data == EyeR)
+                {
+                    _eye_R.Center = e.GetPosition(i);
+                    RaisePropertyChanged("EyeR");
+                    _eyeline.EndPoint = _eye_R.Center;
+                    RaisePropertyChanged("EyeLine");
+                }
+                else if (p.Data == MouthL)
+                {
+                    _mouth_L.Center = e.GetPosition(i);
+                    RaisePropertyChanged("MouthL");
+                    _lipline.StartPoint = _mouth_L.Center;
+                    RaisePropertyChanged("LipLine");
+                }
+                else if (p.Data == MouthR)
+                {
+                    _mouth_R.Center = e.GetPosition(i);
+                    RaisePropertyChanged("MouthR");
+                    _lipline.EndPoint = _mouth_R.Center;
+                    RaisePropertyChanged("LipLine");
+                }
+                // for line - 좌우로만 움직임 가능
+                else if (p.Data == MidLine)
+                {
+                    double dx = e.GetPosition(i).X - originalX;
+                    _midline.StartPoint = new Point(_midline.StartPoint.X + dx, _midline.StartPoint.Y);
+                    _midline.EndPoint = new Point(_midline.EndPoint.X + dx, _midline.EndPoint.Y);
+                    RaisePropertyChanged("MidLine");
+
+                    originalX = e.GetPosition(i).X;
+                }
+                else if (p.Data == NoseLineL)
+                {
+                    double dx = e.GetPosition(i).X - originalX;
+                    _noseline_L.StartPoint = new Point(_noseline_L.StartPoint.X + dx, _noseline_L.StartPoint.Y);
+                    _noseline_L.EndPoint = new Point(_noseline_L.EndPoint.X + dx, _noseline_L.EndPoint.Y);
+                    RaisePropertyChanged("NoseLineL");
+
+                    originalX = e.GetPosition(i).X;
+                }
+                else if (p.Data == NoseLineR)
+                {
+                    double dx = e.GetPosition(i).X - originalX;
+                    _noseline_R.StartPoint = new Point(_noseline_R.StartPoint.X + dx, _noseline_R.StartPoint.Y);
+                    _noseline_R.EndPoint = new Point(_noseline_R.EndPoint.X + dx, _noseline_R.EndPoint.Y);
+                    RaisePropertyChanged("NoseLineR");
+
+                    originalX = e.GetPosition(i).X;
+                }
+            }
+
+        }
+
+        private RelayCommand<object> _mouseLeftUpForFaceAlign;
+        public RelayCommand<object> MouseLeftUpForFaceAlign
+        {
+            get
+            {
+                if (_mouseLeftUpForFaceAlign == null)
+                    return _mouseLeftUpForFaceAlign
+                         = new RelayCommand<object>(param => ExecuteMouseLeftUpForFaceAlign((MouseEventArgs)param));
+                return _mouseLeftUpForFaceAlign;
+            }
+            set { _mouseLeftUpForFaceAlign = value; }
+        }
+
+        private void ExecuteMouseLeftUpForFaceAlign(MouseEventArgs e)
+        {
+            Path moved = e.Source as Path;
+
+            captured_face = false;
+            if (moved.Data.GetType() == Type.GetType(moved.Name))
+                moved.Stroke = Brushes.DeepSkyBlue;
+            else
+                moved.Stroke = Brushes.Black;
+            Mouse.Capture(null);
+        }
+
+        #endregion
+
+        #region DragDrop for Teeth 
+
+        private bool captured_teeth;
+        private Point originalPoint;
+
+        private RelayCommand<object> _mouseLeftDownForDragAndDropTeeth;
+        public RelayCommand<object> MouseLeftDownForDragAndDropTeeth
+        {
+            get
+            {
+                if (_mouseLeftDownForDragAndDropTeeth == null)
+                    return _mouseLeftDownForDragAndDropTeeth = new RelayCommand<object>(param => ExecuteMouseLeftDownForDragAndDropTeeth((MouseEventArgs)param));
+                return _mouseLeftDownForDragAndDropTeeth;
+            }
+            set { _mouseLeftDownForDragAndDropTeeth = value; }
+        }
+        public void ExecuteMouseLeftDownForDragAndDropTeeth(MouseEventArgs e)
+        {
+            Rectangle rect = e.Source as Rectangle;
+            //Grid grid = (Grid)rect.Parent;
+            //Border border = (Border)grid.Parent;
+            //WrapTeeth teeth = (WrapTeeth)border.Parent;
+            originalPoint = e.GetPosition((IInputElement)e.Source);
+
+            // padding
+            originalPoint.X += 5;
+            originalPoint.Y += 5;
+
+            captured_teeth = true;
             Mouse.Capture((IInputElement)e.Source);
         }
 
-        private RelayCommand<object> _MouseMove;
-        public RelayCommand<object> MouseMove
+        private RelayCommand<object> _mouseMoveForDragAndDropTeeth;
+        public RelayCommand<object> MouseMoveForDragAndDropTeeth
         {
             get
             {
-                if (_MouseMove == null) return _MouseMove = new RelayCommand<object>(param => ExecuteMouseMove((MouseEventArgs)param));
-                return _MouseMove;
+                if (_mouseMoveForDragAndDropTeeth == null)
+                    return _mouseMoveForDragAndDropTeeth = new RelayCommand<object>(param => ExecuteMouseMoveForDragAndDropTeeth((MouseEventArgs)param));
+                return _mouseMoveForDragAndDropTeeth;
             }
-            set { _MouseMove = value; }
+            set { _mouseMoveForDragAndDropTeeth = value; }
         }
 
-        private void ExecuteMouseMove(MouseEventArgs e)
+        public void ExecuteMouseMoveForDragAndDropTeeth(MouseEventArgs e)
         {
+            Rectangle rect = (Rectangle)e.Source;
+            Grid grid = (Grid)rect.Parent;
+            Border border = (Border)grid.Parent;
+            WrapTeeth wrap = (WrapTeeth)border.Parent;
 
-            Teeth Test = (Teeth)e.Source;
-            if (IsCaptured == true)
+            if (captured_teeth == true)
             {
-                Point curMouseDownPoint = e.GetPosition((IInputElement)e.Source);
-                var dragDelta = curMouseDownPoint - origMouseDownPoint;
-                origMouseDownPoint = curMouseDownPoint;
+                Point curPoint = e.GetPosition((IInputElement)e.Source);
+                var dragDelta = curPoint - originalPoint;
 
-                foreach (PointViewModel point in Test.Points)
+                foreach (PointViewModel point in wrap.Points)
                 {
-                    point.X += (float)dragDelta.X;
-                    point.Y += (float)dragDelta.Y;
+                    point.X += dragDelta.X;
+                    point.Y += dragDelta.Y;
                 }
             }
         }
 
-        private RelayCommand<object> _LeftUp;
-        public RelayCommand<object> LeftUp
+        private RelayCommand<object> _mouseLeftUpForDragAndDropTeeth;
+        public RelayCommand<object> MouseLeftUpForDragAndDropTeeth
         {
             get
             {
-                if (_LeftUp == null) return _LeftUp = new RelayCommand<object>(param => ExecuteMouseLeftUp((MouseEventArgs)param));
-                return _LeftUp;
+                if (_mouseLeftUpForDragAndDropTeeth == null)
+                    return _mouseLeftUpForDragAndDropTeeth = new RelayCommand<object>(param => ExecuteMouseLeftUpForDragAndDropTeeth((MouseEventArgs)param));
+                return _mouseLeftUpForDragAndDropTeeth;
             }
-            set { _LeftUp = value; }
+            set { _mouseLeftUpForDragAndDropTeeth = value; }
         }
 
-        private void ExecuteMouseLeftUp(MouseEventArgs e)
+        public void ExecuteMouseLeftUpForDragAndDropTeeth(MouseEventArgs e)
         {
-            IsCaptured = false;
+            captured_teeth = false;
             Mouse.Capture(null);
         }
+
+        #endregion
+
+        #region Resize for Teeth
+
+
+        private bool isSizing;
+        private Point anchorPoint;
+
+        private bool isFirstTimeMovedOnSizing;
+        private readonly double sizeThreshold = 50;
+
+        private Point anchorMin, anchorMax;
+
+        private void SetSizing(MouseEventArgs e)
+        {
+            if (!isSizing)
+                return;
+
+            Border border = (Border)e.Source;
+            Grid grid = (Grid)border.Parent;
+            Border borderSecond = (Border)grid.Parent;
+            WrapTeeth wrapTeeth = (WrapTeeth)borderSecond.Parent;
+
+            Point maxPoint = GetMaxPoint(wrapTeeth);
+            Point minPoint = GetMinPoint(wrapTeeth);
+
+            if (isFirstTimeMovedOnSizing)
+            {
+                anchorMin = new Point(minPoint.X, minPoint.Y);
+                anchorMax = new Point(maxPoint.X, maxPoint.Y);
+                isFirstTimeMovedOnSizing = false;
+            }
+
+            if (e.LeftButton != MouseButtonState.Pressed)
+                return;
+
+            double actualWidth1 = minPoint.X + wrapTeeth.ActualWidth;
+            double actualHeight1 = minPoint.Y + wrapTeeth.ActualHeight;
+            double actualWidth2 = maxPoint.X - wrapTeeth.ActualWidth;
+            double actualHeight2 = maxPoint.X - wrapTeeth.ActualHeight;
+
+            Point curPoint = e.GetPosition((IInputElement)e.Source);
+            double dx = Math.Abs((actualWidth1 + curPoint.X) - anchorMin.X);
+            double dy = Math.Abs((actualHeight1 + curPoint.Y) - anchorMin.Y);
+
+            if (border.Name.Equals("Border_Top"))
+            {
+                foreach (PointViewModel point in wrapTeeth.Points)
+                {
+                    point.Y = point.Y * ((actualHeight2 - curPoint.Y) / actualHeight2);
+                }
+            }
+            else if (border.Name.Equals("Border_Bottom"))
+            {
+                foreach (PointViewModel point in wrapTeeth.Points)
+                {
+                    point.Y = point.Y * ((actualHeight1 + curPoint.Y) / actualHeight1) - (minPoint.Y - anchorMin.Y);
+                }
+            }
+            else if (border.Name.Equals("Border_Left"))
+            {
+                foreach (PointViewModel point in wrapTeeth.Points)
+                {
+                    point.X = point.X * ((actualWidth2 - curPoint.X) / actualWidth2);
+                }
+            }
+            else if (border.Name.Equals("Border_Right"))
+            {
+                foreach (PointViewModel point in wrapTeeth.Points)
+                {
+                    point.X = point.X * ((actualWidth1 + curPoint.X) / actualWidth1) - (minPoint.X - anchorMin.X);
+                }
+            }
+            else if (border.Name.Equals("Border_TopLeft"))
+            {
+                foreach (PointViewModel point in wrapTeeth.Points)
+                {
+                    point.X = point.X * ((actualWidth2 - curPoint.X) / actualWidth2);
+                    point.Y = point.Y * ((actualHeight2 - curPoint.Y) / actualHeight2);
+                }
+            }
+            else if (border.Name.Equals("Border_TopRight"))
+            {
+                foreach (PointViewModel point in wrapTeeth.Points)
+                {
+                    point.X = point.X * ((actualWidth2 + curPoint.X) / actualWidth2);
+                    point.Y = point.Y * ((actualHeight2 - curPoint.Y) / actualHeight2);
+                }
+            }
+            else if (border.Name.Equals("Border_BottomLeft"))
+            {
+                foreach (PointViewModel point in wrapTeeth.Points)
+                {
+                    point.X = point.X * ((actualWidth2 - curPoint.X) / actualWidth2);
+                    point.Y = point.Y * ((actualHeight2 + curPoint.Y) / actualHeight2);
+                }
+            }
+            else if (border.Name.Equals("Border_BottomRight"))
+            {
+                foreach (PointViewModel point in wrapTeeth.Points)
+                {
+                    point.X = point.X * ((actualWidth1 + curPoint.X) / actualWidth1) - (minPoint.X - anchorMin.X);
+                    point.Y = point.Y * ((actualHeight1 + curPoint.Y) / actualHeight1) - (minPoint.Y - anchorMin.Y);
+                }
+            }
+        }
+
+        private Point GetMaxPoint(WrapTeeth t)
+        {
+            double maxX = double.MinValue;
+            double maxY = double.MinValue;
+            foreach (PointViewModel point in t.Points)
+            {
+                if (point.X > maxX)
+                    maxX = point.X;
+                if (point.Y > maxY)
+                    maxY = point.Y;
+            }
+            return new Point(maxX, maxY);
+        }
+
+        private Point GetMinPoint(WrapTeeth t)
+        {
+            double minX = double.MaxValue;
+            double minY = double.MaxValue;
+            foreach (PointViewModel point in t.Points)
+            {
+                if (point.X < minX)
+                    minX = point.X;
+                if (point.Y < minY)
+                    minY = point.Y;
+            }
+            return new Point(minX, minY);
+        }
+
+
+        #region Resize for CommandProperties
+
+
+        private RelayCommand<object> _mouseLeftDownForResize;
+        public RelayCommand<object> MouseLeftDownForResize
+        {
+            get
+            {
+                if (_mouseLeftDownForResize == null)
+                    return _mouseLeftDownForResize = new RelayCommand<object>(param => ExecuteMouseLeftDownForResize((MouseEventArgs)param));
+                return _mouseLeftDownForResize;
+            }
+            set { _mouseLeftDownForResize = value; }
+        }
+
+        public void ExecuteMouseLeftDownForResize(MouseEventArgs e)
+        {
+            isSizing = true;
+            anchorPoint = e.GetPosition((IInputElement)e.Source);
+            Mouse.Capture((IInputElement)e.Source);
+        }
+
+        private RelayCommand<object> _mouseMoveForResize;
+        public RelayCommand<object> MouseMoveForResize
+        {
+            get
+            {
+                if (_mouseMoveForResize == null)
+                    return _mouseMoveForResize = new RelayCommand<object>(param => ExecuteMouseMoveForResize((MouseEventArgs)param));
+                return _mouseMoveForResize;
+            }
+            set { _mouseMoveForResize = value; }
+        }
+
+        public void ExecuteMouseMoveForResize(MouseEventArgs e)
+        {
+            SetSizing(e);
+        }
+
+        private RelayCommand<object> _mouseLeftUpForResize;
+        public RelayCommand<object> MouseLeftUpForResize
+        {
+            get
+            {
+                if (_mouseLeftUpForResize == null)
+                    return _mouseLeftUpForResize = new RelayCommand<object>(param => ExecuteMouseLeftUpForResize((MouseEventArgs)param));
+                return _mouseLeftUpForResize;
+            }
+            set { _mouseLeftUpForResize = value; }
+        }
+
+        public void ExecuteMouseLeftUpForResize(MouseEventArgs e)
+        {
+            isSizing = false;
+            Mouse.Capture(null);
+            isFirstTimeMovedOnSizing = true;
+        }
+
+
+
+
+
+
+
+        
+
+        //private RelayCommand<object> _mouseLeftDownForResizeTop;
+        //public RelayCommand<object> MouseLeftDownForResizeTop
+        //{
+        //    get
+        //    {
+        //        if (_mouseLeftDownForResizeTop == null)
+        //            return _mouseLeftDownForResizeTop = new RelayCommand<object>(param => ExecuteMouseLeftDownForResizeTop((MouseEventArgs)param));
+        //        return _mouseLeftDownForResizeTop;
+        //    }
+        //    set { _mouseLeftDownForResizeTop = value; }
+        //}
+
+        //// Resize Top
+        //public void ExecuteMouseLeftDownForResizeTop(MouseEventArgs e)
+        //{
+        //    isSizing = true;
+        //    anchorPoint = e.GetPosition((IInputElement)e.Source);
+        //    Mouse.Capture((IInputElement)e.Source);
+        //}
+
+        //private RelayCommand<object> _mouseMoveForResizeTop;
+        //public RelayCommand<object> MouseMoveForResizeTop
+        //{
+        //    get
+        //    {
+        //        if (_mouseMoveForResizeTop == null)
+        //            return _mouseMoveForResizeTop = new RelayCommand<object>(param => ExecuteMouseMoveForResizeTop((MouseEventArgs)param));
+        //        return _mouseMoveForResizeTop;
+        //    }
+        //    set { _mouseMoveForResizeTop = value; }
+        //}
+
+        //public void ExecuteMouseMoveForResizeTop(MouseEventArgs e)
+        //{
+        //    SetSizing(e);
+        //}
+
+        //private RelayCommand<object> _mouseLeftUpForResizeTop;
+        //public RelayCommand<object> MouseLeftUpForResizeTop
+        //{
+        //    get
+        //    {
+        //        if (_mouseLeftUpForResizeTop == null)
+        //            return _mouseLeftUpForResizeTop = new RelayCommand<object>(param => ExecuteMouseLeftUpForResizeTop((MouseEventArgs)param));
+        //        return _mouseLeftUpForResizeTop;
+        //    }
+        //    set { _mouseLeftUpForResizeTop = value; }
+        //}
+
+        //public void ExecuteMouseLeftUpForResizeTop(MouseEventArgs e)
+        //{
+        //    isSizing = false;
+        //    Mouse.Capture(null);
+        //    isFirstTimeMovedOnSizing = true;
+        //}
+
+        //// Resize Bottom
+        //private RelayCommand<object> _mouseLeftDownForResizeBottom;
+        //public RelayCommand<object> MouseLeftDownForResizeBottom
+        //{
+        //    get
+        //    {
+        //        if (_mouseLeftDownForResizeBottom == null)
+        //            return _mouseLeftDownForResizeBottom = new RelayCommand<object>(param => ExecuteMouseLeftDownForResizeBottom((MouseEventArgs)param));
+        //        return _mouseLeftDownForResizeBottom;
+        //    }
+        //    set { _mouseLeftDownForResizeBottom = value; }
+        //}
+
+        //public void ExecuteMouseLeftDownForResizeBottom(MouseEventArgs e)
+        //{
+
+        //}
+
+        //private RelayCommand<object> _mouseMoveForResizeBottom;
+        //public RelayCommand<object> MouseMoveForResizeBottom
+        //{
+        //    get
+        //    {
+        //        if (_mouseMoveForResizeBottom == null)
+        //            return _mouseMoveForResizeBottom = new RelayCommand<object>(param => ExecuteMouseMoveForResizeBottom((MouseEventArgs)param));
+        //        return _mouseMoveForResizeBottom;
+        //    }
+        //    set { _mouseMoveForResizeBottom = value; }
+        //}
+
+        //public void ExecuteMouseMoveForResizeBottom(MouseEventArgs e)
+        //{
+
+        //}
+
+        //private RelayCommand<object> _mouseLeftUpForResizeBottom;
+        //public RelayCommand<object> MouseLeftUpForResizeBottom
+        //{
+        //    get
+        //    {
+        //        if (_mouseLeftUpForResizeBottom == null)
+        //            return _mouseLeftUpForResizeBottom = new RelayCommand<object>(param => ExecuteMouseLeftUpForResizeBottom((MouseEventArgs)param));
+        //        return _mouseLeftUpForResizeBottom;
+        //    }
+        //    set { _mouseLeftUpForResizeBottom = value; }
+        //}
+
+        //public void ExecuteMouseLeftUpForResizeBottom(MouseEventArgs e)
+        //{
+
+        //}
+
+        //// Resize Left
+        //private RelayCommand<object> _mouseLeftDownForResizeLeft;
+        //public RelayCommand<object> MouseLeftDownForResizeLeft
+        //{
+        //    get
+        //    {
+        //        if (_mouseLeftDownForResizeLeft == null)
+        //            return _mouseLeftDownForResizeLeft = new RelayCommand<object>(param => ExecuteMouseLeftDownForResizeLeft((MouseEventArgs)param));
+        //        return _mouseLeftDownForResizeLeft;
+        //    }
+        //    set { _mouseLeftDownForResizeLeft = value; }
+        //}
+
+        //public void ExecuteMouseLeftDownForResizeLeft(MouseEventArgs e)
+        //{
+
+        //}
+
+        //private RelayCommand<object> _mouseMoveForResizeLeft;
+        //public RelayCommand<object> MouseMoveForResizeLeft
+        //{
+        //    get
+        //    {
+        //        if (_mouseMoveForResizeLeft == null)
+        //            return _mouseMoveForResizeLeft = new RelayCommand<object>(param => ExecuteMouseMoveForResizeLeft((MouseEventArgs)param));
+        //        return _mouseMoveForResizeLeft;
+        //    }
+        //    set { _mouseMoveForResizeLeft = value; }
+        //}
+
+        //public void ExecuteMouseMoveForResizeLeft(MouseEventArgs e)
+        //{
+
+        //}
+
+        //private RelayCommand<object> _mouseLeftUpForResizeLeft;
+        //public RelayCommand<object> MouseLeftUpForResizeLeft
+        //{
+        //    get
+        //    {
+        //        if (_mouseLeftUpForResizeLeft == null)
+        //            return _mouseLeftUpForResizeLeft = new RelayCommand<object>(param => ExecuteMouseLeftUpForResizeLeft((MouseEventArgs)param));
+        //        return _mouseLeftUpForResizeLeft;
+        //    }
+        //    set { _mouseLeftUpForResizeLeft = value; }
+        //}
+
+        //public void ExecuteMouseLeftUpForResizeLeft(MouseEventArgs e)
+        //{
+
+        //}
+
+        //// Resize Right
+        //private RelayCommand<object> _mouseLeftDownForResizeRight;
+        //public RelayCommand<object> MouseLeftDownForResizeRight
+        //{
+        //    get
+        //    {
+        //        if (_mouseLeftDownForResizeRight == null)
+        //            return _mouseLeftDownForResizeRight = new RelayCommand<object>(param => ExecuteMouseLeftDownForResizeRight((MouseEventArgs)param));
+        //        return _mouseLeftDownForResizeRight;
+        //    }
+        //    set { _mouseLeftDownForResizeLeft = value; }
+        //}
+
+        //public void ExecuteMouseLeftDownForResizeRight(MouseEventArgs e)
+        //{
+
+        //}
+
+        //private RelayCommand<object> _mouseMoveForResizeRight;
+        //public RelayCommand<object> MouseMoveForResizeRight
+        //{
+        //    get
+        //    {
+        //        if (_mouseMoveForResizeRight == null)
+        //            return _mouseMoveForResizeRight = new RelayCommand<object>(param => ExecuteMouseMoveForResizeRight((MouseEventArgs)param));
+        //        return _mouseMoveForResizeRight;
+        //    }
+        //    set { _mouseMoveForResizeRight = value; }
+        //}
+
+        //public void ExecuteMouseMoveForResizeRight(MouseEventArgs e)
+        //{
+
+        //}
+
+        //private RelayCommand<object> _mouseLeftUpForResizeRight;
+        //public RelayCommand<object> MouseLeftUpForResizeRight
+        //{
+        //    get
+        //    {
+        //        if (_mouseLeftUpForResizeRight == null)
+        //            return _mouseLeftUpForResizeRight = new RelayCommand<object>(param => ExecuteMouseLeftUpForResizeRight((MouseEventArgs)param));
+        //        return _mouseLeftUpForResizeRight;
+        //    }
+        //    set { _mouseLeftUpForResizeRight = value; }
+        //}
+
+        //public void ExecuteMouseLeftUpForResizeRight(MouseEventArgs e)
+        //{
+
+        //}
+
+        //// Resize TopLeft
+        //private RelayCommand<object> _mouseLeftDownForResizeTopLeft;
+        //public RelayCommand<object> MouseLeftDownForResizeTopLeft
+        //{
+        //    get
+        //    {
+        //        if (_mouseLeftDownForResizeTopLeft == null)
+        //            return _mouseLeftDownForResizeTopLeft = new RelayCommand<object>(param => ExecuteMouseLeftDownForResizeTopLeft((MouseEventArgs)param));
+        //        return _mouseLeftDownForResizeTopLeft;
+        //    }
+        //    set { _mouseLeftDownForResizeTopLeft = value; }
+        //}
+
+        //public void ExecuteMouseLeftDownForResizeTopLeft(MouseEventArgs e)
+        //{
+
+        //}
+
+        //private RelayCommand<object> _mouseMoveForResizeTopLeft;
+        //public RelayCommand<object> MouseMoveForResizeTopLeft
+        //{
+        //    get
+        //    {
+        //        if (_mouseMoveForResizeTopLeft == null)
+        //            return _mouseMoveForResizeTopLeft = new RelayCommand<object>(param => ExecuteMouseMoveForResizeTopLeft((MouseEventArgs)param));
+        //        return _mouseMoveForResizeTopLeft;
+        //    }
+        //    set { _mouseMoveForResizeTopLeft = value; }
+        //}
+
+        //public void ExecuteMouseMoveForResizeTopLeft(MouseEventArgs e)
+        //{
+
+        //}
+
+        //private RelayCommand<object> _mouseLeftUpForResizeTopLeft;
+        //public RelayCommand<object> MouseLeftUpForResizeTopLeft
+        //{
+        //    get
+        //    {
+        //        if (_mouseLeftUpForResizeTopLeft == null)
+        //            return _mouseLeftUpForResizeTopLeft = new RelayCommand<object>(param => ExecuteMouseLeftUpForResizeTopLeft((MouseEventArgs)param));
+        //        return _mouseLeftUpForResizeTopLeft;
+        //    }
+        //    set { _mouseLeftUpForResizeTopLeft = value; }
+        //}
+
+        //public void ExecuteMouseLeftUpForResizeTopLeft(MouseEventArgs e)
+        //{
+
+        //}
+
+        //// Resize TopRight
+        //private RelayCommand<object> _mouseLeftDownForResizeTopRight;
+        //public RelayCommand<object> MouseLeftDownForResizeTopRight
+        //{
+        //    get
+        //    {
+        //        if (_mouseLeftDownForResizeTopRight == null)
+        //            return _mouseLeftDownForResizeTopRight = new RelayCommand<object>(param => ExecuteMouseLeftDownForResizeTopRight((MouseEventArgs)param));
+        //        return _mouseLeftDownForResizeTopRight;
+        //    }
+        //    set { _mouseLeftDownForResizeTopRight = value; }
+        //}
+
+        //public void ExecuteMouseLeftDownForResizeTopRight(MouseEventArgs e)
+        //{
+
+        //}
+
+        //private RelayCommand<object> _mouseMoveForResizeTopRight;
+        //public RelayCommand<object> MouseMoveForResizeTopRight
+        //{
+        //    get
+        //    {
+        //        if (_mouseMoveForResizeTopRight == null)
+        //            return _mouseMoveForResizeTopRight = new RelayCommand<object>(param => ExecuteMouseMoveForResizeTopRight((MouseEventArgs)param));
+        //        return _mouseMoveForResizeTopRight;
+        //    }
+        //    set { _mouseMoveForResizeTopRight = value; }
+        //}
+
+        //public void ExecuteMouseMoveForResizeTopRight(MouseEventArgs e)
+        //{
+
+        //}
+
+        //private RelayCommand<object> _mouseLeftUpForResizeTopRight;
+        //public RelayCommand<object> MouseLeftUpForResizeTopRight
+        //{
+        //    get
+        //    {
+        //        if (_mouseLeftUpForResizeTopRight == null)
+        //            return _mouseLeftUpForResizeTopRight = new RelayCommand<object>(param => ExecuteMouseLeftUpForResizeTopRight((MouseEventArgs)param));
+        //        return _mouseLeftUpForResizeTopRight;
+        //    }
+        //    set { _mouseLeftUpForResizeTopRight = value; }
+        //}
+
+        //public void ExecuteMouseLeftUpForResizeTopRight(MouseEventArgs e)
+        //{
+
+        //}
+
+        //// Resize BottomLeft
+        //private RelayCommand<object> _mouseLeftDownForResizeBottomLeft;
+        //public RelayCommand<object> MouseLeftDownForResizeBottomLeft
+        //{
+        //    get
+        //    {
+        //        if (_mouseLeftDownForResizeBottomLeft == null)
+        //            return _mouseLeftDownForResizeBottomLeft = new RelayCommand<object>(param => ExecuteMouseLeftDownForResizeBottomLeft((MouseEventArgs)param));
+        //        return _mouseLeftDownForResizeBottomLeft;
+        //    }
+        //    set { _mouseLeftDownForResizeBottomLeft = value; }
+        //}
+
+        //public void ExecuteMouseLeftDownForResizeBottomLeft(MouseEventArgs e)
+        //{
+
+        //}
+
+        //private RelayCommand<object> _mouseMoveForResizeBottomLeft;
+        //public RelayCommand<object> MouseMoveForResizeTopBottomLeft
+        //{
+        //    get
+        //    {
+        //        if (_mouseMoveForResizeBottomLeft == null)
+        //            return _mouseMoveForResizeBottomLeft = new RelayCommand<object>(param => ExecuteMouseMoveForResizeBottomLeft((MouseEventArgs)param));
+        //        return _mouseMoveForResizeBottomLeft;
+        //    }
+        //    set { _mouseMoveForResizeBottomLeft = value; }
+        //}
+
+        //public void ExecuteMouseMoveForResizeBottomLeft(MouseEventArgs e)
+        //{
+
+        //}
+
+        //private RelayCommand<object> _mouseLeftUpForResizeBottomLeft;
+        //public RelayCommand<object> MouseLeftUpForResizeBottomLeft
+        //{
+        //    get
+        //    {
+        //        if (_mouseLeftUpForResizeBottomLeft == null)
+        //            return _mouseLeftUpForResizeBottomLeft = new RelayCommand<object>(param => ExecuteMouseLeftUpForResizeBottomLeft((MouseEventArgs)param));
+        //        return _mouseLeftUpForResizeBottomLeft;
+        //    }
+        //    set { _mouseLeftUpForResizeBottomLeft = value; }
+        //}
+
+        //public void ExecuteMouseLeftUpForResizeBottomLeft(MouseEventArgs e)
+        //{
+
+        //}
+
+        //// Resize BottomRight
+        //private RelayCommand<object> _mouseLeftDownForResizeBottomRight;
+        //public RelayCommand<object> MouseLeftDownForResizeBottomRight
+        //{
+        //    get
+        //    {
+        //        if (_mouseLeftDownForResizeBottomRight == null)
+        //            return _mouseLeftDownForResizeBottomRight = new RelayCommand<object>(param => ExecuteMouseLeftDownForResizeBottomRight((MouseEventArgs)param));
+        //        return _mouseLeftDownForResizeBottomRight;
+        //    }
+        //    set { _mouseLeftDownForResizeBottomRight = value; }
+        //}
+
+        //public void ExecuteMouseLeftDownForResizeBottomRight(MouseEventArgs e)
+        //{
+
+        //}
+
+        //private RelayCommand<object> _mouseMoveForResizeBottomRight;
+        //public RelayCommand<object> MouseMoveForResizeTopBottomRight
+        //{
+        //    get
+        //    {
+        //        if (_mouseMoveForResizeBottomRight == null)
+        //            return _mouseMoveForResizeBottomRight = new RelayCommand<object>(param => ExecuteMouseMoveForResizeBottomRight((MouseEventArgs)param));
+        //        return _mouseMoveForResizeBottomRight;
+        //    }
+        //    set { _mouseMoveForResizeBottomRight = value; }
+        //}
+
+        //public void ExecuteMouseMoveForResizeBottomRight(MouseEventArgs e)
+        //{
+
+        //}
+
+        //private RelayCommand<object> _mouseLeftUpForResizeBottomRight;
+        //public RelayCommand<object> MouseLeftUpForResizeBottomRight
+        //{
+        //    get
+        //    {
+        //        if (_mouseLeftUpForResizeBottomRight == null)
+        //            return _mouseLeftUpForResizeBottomRight = new RelayCommand<object>(param => ExecuteMouseLeftUpForResizeBottomRight((MouseEventArgs)param));
+        //        return _mouseLeftUpForResizeBottomRight;
+        //    }
+        //    set { _mouseLeftUpForResizeBottomRight = value; }
+        //}
+
+        //public void ExecuteMouseLeftUpForResizeBottomRight(MouseEventArgs e)
+        //{
+
+        //}
+
+        #endregion
 
         #endregion
     }

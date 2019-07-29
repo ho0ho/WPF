@@ -10,9 +10,9 @@
              d:DesignHeight="450" d:DesignWidth="800">
 
     <Path x:Name="path" Stroke="{Binding PathColor, ElementName=DrawTeethControl}" StrokeThickness="1">
-        <Path.Fill>
+        <!--<Path.Fill>
             <ImageBrush ImageSource="" TileMode=""/>
-        </Path.Fill>
+        </Path.Fill>-->
     </Path>
     
 </UserControl>

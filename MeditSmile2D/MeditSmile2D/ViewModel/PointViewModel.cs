@@ -10,7 +10,7 @@ namespace MeditSmile2D.ViewModel
 {
     public class PointViewModel : ViewModelBase
     {
-        public PointViewModel(float x, float y, int s)
+        public PointViewModel(double x, double y, int s)
         {
             this.x = x;
             this.y = y;
@@ -19,13 +19,13 @@ namespace MeditSmile2D.ViewModel
 
         #region X
 
-        private float x;
-        public float X
+        private double x;
+        public double X
         {
             get { return x; }
             set
             {
-                if (Numerics.FloatEquals(x, value)) return;
+                if (Numerics.DoubleEquals(x, value)) return;
                 x = value;
                 RaisePropertyChanged("X");
             }
@@ -35,13 +35,13 @@ namespace MeditSmile2D.ViewModel
 
         #region Y
 
-        private float y;
-        public float Y
+        private double y;
+        public double Y
         {
             get { return y; }
             set
             {
-                if (Numerics.FloatEquals(y, value)) return;
+                if (Numerics.DoubleEquals(y, value)) return;
                 y = value;
                 RaisePropertyChanged("Y");
             }

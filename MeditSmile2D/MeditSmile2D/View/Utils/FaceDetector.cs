@@ -13,7 +13,7 @@ using Point = OpenCvSharp.Point;
 
 namespace MeditSmile2D.View.Utils
 {
-    class FaceDetector
+    public class FaceDetector
     {
         #region class FacePoint
 
@@ -21,7 +21,7 @@ namespace MeditSmile2D.View.Utils
         public class FacePoint
         {
             public List<Point> eye;
-            public List<Point> mouse;
+            public List<Point> mouth;
             public List<Point> midline;
             public List<Point> nose;
 
@@ -30,7 +30,7 @@ namespace MeditSmile2D.View.Utils
             public FacePoint()
             {
                 eye = new List<Point>();
-                mouse = new List<Point>();
+                mouth = new List<Point>();
                 midline = new List<Point>();
                 nose = new List<Point>();
             }
@@ -69,6 +69,26 @@ namespace MeditSmile2D.View.Utils
                 var shape = shapePredictor.Detect(arrayImg, face);
 
                 // Draw the landmark points on this image
+                // Mouth
+                var mouth1 = shape.GetPart((uint)48);
+                Point mouthLeftEndPoint;
+                mouthLeftEndPoint.X = mouth1.X;
+                mouthLeftEndPoint.Y = mouth1.Y;
+                facePoint.mouth.Add(mouthLeftEndPoint);
+
+                var mouth2 = shape.GetPart((uint)54);
+                Point mouthRightEndPoint;
+                mouthRightEndPoint.X = mouth2.X;
+                mouthRightEndPoint.Y = mouth2.Y;
+                facePoint.mouth.Add(mouthRightEndPoint);
+
+                // Midline : from midPointOfEyes to midPointOfMouth
+                // MidPoint of Mouth
+                Point midPointOfMouth;
+                midPointOfMouth.X = (mouthLeftEndPoint.X + mouthRightEndPoint.X) / 2;
+                midPointOfMouth.Y = (mouthLeftEndPoint.Y + mouthRightEndPoint.Y) / 2;
+                facePoint.midline.Add(midPointOfMouth);
+
                 // Central point of Eye
                 var centralEyeL1 = shape.GetPart((uint)36);
                 var centralEyeL2 = shape.GetPart((uint)39);
@@ -77,8 +97,8 @@ namespace MeditSmile2D.View.Utils
                 centralPointOfEyeL.Y = (centralEyeL1.Y + centralEyeL2.Y) / 2;
                 facePoint.eye.Add(centralPointOfEyeL);
 
-                var centralEyeR1 = shape.GetPart((uint)36);
-                var centralEyeR2 = shape.GetPart((uint)39);
+                var centralEyeR1 = shape.GetPart((uint)42);
+                var centralEyeR2 = shape.GetPart((uint)45);
                 Point centralPointOfEyeR;
                 centralPointOfEyeR.X = (centralEyeR1.X + centralEyeR2.X) / 2;
                 centralPointOfEyeR.Y = (centralEyeR1.Y + centralEyeR2.Y) / 2;
@@ -89,26 +109,6 @@ namespace MeditSmile2D.View.Utils
                 midPointOfEyes.X = (centralPointOfEyeL.X + centralPointOfEyeR.X) / 2;
                 midPointOfEyes.Y = (centralPointOfEyeL.Y + centralPointOfEyeR.Y) / 2;
                 facePoint.midline.Add(midPointOfEyes);
-
-                // Mouth
-                var mouth1 = shape.GetPart((uint)48);
-                Point mouthLeftEndPoint;
-                mouthLeftEndPoint.X = mouth1.X;
-                mouthLeftEndPoint.Y = mouth1.Y;
-                facePoint.mouse.Add(mouthLeftEndPoint);
-
-                var mouth2 = shape.GetPart((uint)48);
-                Point mouthRightEndPoint;
-                mouthRightEndPoint.X = mouth2.X;
-                mouthRightEndPoint.Y = mouth2.Y;
-                facePoint.mouse.Add(mouthRightEndPoint);
-
-                // Midline : from midPointOfEyes to midPointOfMouth
-                // MidPoint of Mouth
-                Point midPointOfMouth;
-                midPointOfMouth.X = (mouthLeftEndPoint.X + mouthRightEndPoint.X) / 2;
-                midPointOfMouth.Y = (mouthLeftEndPoint.Y + mouthRightEndPoint.Y) / 2;
-                facePoint.midline.Add(midPointOfMouth);
 
                 // Nose
                 var noseEndL = shape.GetPart((uint)39);

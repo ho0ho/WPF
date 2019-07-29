@@ -66,4 +66,10 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="BorderStyle" TargetType="Border" >
+        <Setter Property="Opacity" Value="0.3"/>
+        <Setter Property="Background" Value="Red"/>
+
+    </Style>
 </ResourceDictionary>
