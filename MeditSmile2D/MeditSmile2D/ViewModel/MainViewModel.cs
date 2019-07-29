@@ -19,6 +19,7 @@ using System.Windows.Shapes;
 
 namespace MeditSmile2D.ViewModel
 {
+    
     using ToothType = ObservableCollection<ObservableCollection<PointViewModel>>;
 
     public class MainViewModel : ViewModelBase, INotifyPropertyChanged
@@ -31,8 +32,10 @@ namespace MeditSmile2D.ViewModel
 
         Point guideMark = new Point(400, 200);
 
+        MainWindow main;
         public MainViewModel()
         {
+            main = Application.Current.MainWindow as MainWindow;
             dlgOpen = new OpenFileDialog();
 
             facePoint = new FaceDetector.FacePoint();
@@ -90,10 +93,11 @@ namespace MeditSmile2D.ViewModel
             {
                 if (_IsTemplate0 != value)
                 {
-                    if (value == false)
-                        flag = false;
+                    
                     _IsTemplate0 = value;
                     SelectedTemplates[0] = value;
+                    if (value == false)
+                        flag = false;
                     RaisePropertyChanged("IsTemplate0");
                     RaisePropertyChanged("Points");
                 }
@@ -109,10 +113,10 @@ namespace MeditSmile2D.ViewModel
             {
                 if (_IsTemplate1 != value)
                 {
-                    if (value == false)
-                        flag = false;
                     _IsTemplate1 = value;
                     SelectedTemplates[1] = value;
+                    if (value == false)
+                        flag = false;
                     RaisePropertyChanged("Points");
                     RaisePropertyChanged(IsTemplate1Name);
                 }
@@ -128,10 +132,10 @@ namespace MeditSmile2D.ViewModel
             {
                 if (_IsTemplate2 != value)
                 {
-                    if (value == false)
-                        flag = false;
                     _IsTemplate2 = value;
                     SelectedTemplates[2] = value;
+                    if (value == false)
+                        flag = false;
                     RaisePropertyChanged(IsTemplate2Name);
                     RaisePropertyChanged("Points");
                 }
@@ -147,10 +151,10 @@ namespace MeditSmile2D.ViewModel
             {
                 if (_IsTemplate3 != value)
                 {
-                    if (value == false)
-                        flag = false;
                     _IsTemplate3 = value;
                     SelectedTemplates[3] = value;
+                    if (value == false)
+                        flag = false;
                     RaisePropertyChanged(IsTemplate3Name);
                     RaisePropertyChanged("Points");
                 }
@@ -165,10 +169,10 @@ namespace MeditSmile2D.ViewModel
             {
                 if (_IsTemplate4 != value)
                 {
-                    if (value == true)
-                        flag = false;
                     _IsTemplate4 = value;
                     SelectedTemplates[4] = value;
+                    if (value == false)
+                        flag = false;
                     RaisePropertyChanged(IsTemplate4Name);
                     RaisePropertyChanged("Points");
                 }
@@ -191,21 +195,7 @@ namespace MeditSmile2D.ViewModel
             int idx = Idx_Templates();
             if (idx < 0)
                 return null;
-
-            _Points = ((MainWindow)Application.Current.MainWindow).templates[idx];
-            if (flag)
-            {
-                for (int i = 0; i < 6; i++)
-                {
-                    for (int j = 0; j < 10; j++)
-                    {
-                        _Points[i][j].X += guideMark.X;                        
-                        _Points[i][j].Y += guideMark.Y;
-                    }
-                }
-            }
-
-            return _Points;
+            return main.templates[idx];
         }
 
         private int Idx_Templates()
@@ -219,7 +209,6 @@ namespace MeditSmile2D.ViewModel
                     break;
                 }
             }
-
             return indexOfTemplates;
         }
 
@@ -361,8 +350,6 @@ namespace MeditSmile2D.ViewModel
             _eyeline = drawFaceAlign.eyeline;
             _lipline = drawFaceAlign.lipline;
 
-            GetGuideMark();
-
             RaisePropertyChanged("EyeL");
             RaisePropertyChanged("EyeR");
             RaisePropertyChanged("MouthL");
@@ -373,6 +360,20 @@ namespace MeditSmile2D.ViewModel
             RaisePropertyChanged("NoseLineR");
             RaisePropertyChanged("EyeLine");
             RaisePropertyChanged("LipLine");
+
+            GetGuideMark();
+            var data = ((MainWindow)Application.Current.MainWindow).templates;
+            for(int a = 0; a < 5; a++)
+            {
+                for(int b = 0; b < 6; b++)
+                {
+                    for (int c = 0; c < 10; c++)
+                    {
+                        data[a][b][c].X += guideMark.X;
+                        data[a][b][c].Y += guideMark.Y;
+                    }
+                }
+            }
         }
 
         public void GetGuideMark()
