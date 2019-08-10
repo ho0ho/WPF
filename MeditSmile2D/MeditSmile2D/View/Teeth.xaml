@@ -7,22 +7,22 @@
              mc:Ignorable="d" 
              
              xmlns:MouseCommand="clr-namespace:MeditSmile2D.View.Utils" 
+                       
              
-             MouseCommand:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForDragAndDrop}"
-             MouseCommand:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForDragAndDrop}"
-             MouseCommand:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForDragAndDrop}"
-             
-             
-             x:Name="UCteeth"
-             d:DesignHeight="450" d:DesignWidth="800">
+             x:Name="TeethControl"
+             d:DesignHeight="860" d:DesignWidth="1280">
     <Canvas>
-        <local:DrawTeeth 
+        <!--<Slider x:Name="slider" Width="100"
+                Value="0.3" Minimum="0.1" Maximum="1.0"/>-->
+
+        <local:DrawTeeth x:Name="drawTeeth"
+            OpacitySlider="{Binding Path=Value, ElementName=slider}"
             Points="{Binding Points, RelativeSource={RelativeSource AncestorType=UserControl}}"
             IsClosedCurve="{Binding IsClosedCurve}"/>
 
-        <local:WrapTeeth
+        <local:WrapTeeth x:Name="AreaTeeth" 
             Points="{Binding Points, RelativeSource={RelativeSource AncestorType=UserControl}}"
-            ShowLength="{Binding Path=ShowLengthXY, ElementName=UCteeth}"/>
+            ShowLength="{Binding Path=ShowLengthXY, ElementName=TeethControl}"/>
 
         <ListBox
             ItemsSource="{Binding Points, RelativeSource={RelativeSource AncestorType=UserControl}}"

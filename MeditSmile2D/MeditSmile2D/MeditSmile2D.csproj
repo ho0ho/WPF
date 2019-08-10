@@ -219,7 +219,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="images\tooth.jpg" />
+    <Resource Include="images\th1.PNG" />
+    <Resource Include="images\th2.PNG" />
+    <Resource Include="images\th3.PNG" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

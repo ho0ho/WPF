@@ -16,8 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace MeditSmile2D.ViewModel
-{
-    
+{    
     using ToothType = ObservableCollection<ObservableCollection<PointViewModel>>;
 
     public class MainViewModel : ViewModelBase, INotifyPropertyChanged

@@ -1,35 +1,19 @@
 ﻿using MeditSmile2D.ViewModel;
-using Microsoft.Win32;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MeditSmile2D
 {
-    /// <summary>
-    /// MainWindow.xaml에 대한 상호 작용 논리
-    /// </summary>
-    /// 
     using ToothList = ObservableCollection<ObservableCollection<ObservableCollection<PointViewModel>>>;
     using ToothType = ObservableCollection<ObservableCollection<PointViewModel>>;
     using TeethType = ObservableCollection<PointViewModel>;
 
     public partial class MainWindow : Window
     {
-
         #region PointsData
 
         double[,,] UpperX = {{{ 64.333333, 88.500336, 101.167, 109.16659, 100.49974, 15.167815,3.1676365 , 5.1672837, 13.833865, 34.500329 },
@@ -82,27 +66,21 @@ namespace MeditSmile2D
         double[,,] LowerY = { { { 12.333333, 15.167, 27.831844, 111.15751, 167.15161, 171.15087, 163.15137, 110.49016, 24.499073, 13.166913 },
                                 { 10.333333, 10.333333, 19.167, 98.497008, 149.82841, 157.82847, 149.82906, 81.16466, 26.499799, 11.166972 } } };
 
+
         #endregion 
 
-        public ToothList initList, templates;
+        public ToothList UpperTooth, LowerTooth;
         public Dictionary<string, int> dic;
+        public Point UpperGuide, LowerGuide;
 
         public MainWindow()
         {
             InitializeComponent();
             DataContext = new MainViewModel();
 
-            dic = new Dictionary<string, int>();
-            dic.Add("CanineL", 5);
-            dic.Add("LateralIncisorL", 4);
-            dic.Add("CentralIncisorL", 3);
-            dic.Add("CentralIncisorR", 0);
-            dic.Add("LateralIncisorR", 1);
-            dic.Add("CanineR", 2);
-
-            //Point guideline = new Point(canvas.Width / 2, 300);
-            initList = new ToothList();
-            templates = new ToothList();
+            // Set data for UpperTooth.
+            UpperTooth = new ToothList();
+            UpperGuide = new Point(450, 100);
             for (int k = 0; k < 5; k++)
             {
                 ToothType template = new ToothType();
@@ -111,36 +89,59 @@ namespace MeditSmile2D
                     TeethType teeth = new TeethType();
                     for (int j = 0; j < 10; j++)
                     {
-                        PointViewModel dot;
                         if (i >= 0 && i < 3)
-                        {
-                            dot = new PointViewModel(fx[k, i, j], fy[k, i, j], j);
-                        }
+                            teeth.Add(new PointViewModel(UpperX[k, i, j] + UpperGuide.X, UpperY[k, i, j] + UpperGuide.Y, j));
                         else
-                        {
-                            dot = new PointViewModel(-1 * fx[k, i - 3, j], fy[k, i - 3, j], j);
-                        }
-                        teeth.Add(dot);
+                            teeth.Add(new PointViewModel(-1 * UpperX[k, i - 3, j] + UpperGuide.X, UpperY[k, i - 3, j] + UpperGuide.Y, j));
                     }
                     template.Add(teeth);
                 }
-                templates.Add(template);
-                initList.Add(template);
+                UpperTooth.Add(template);
             }
 
+            // Set data for LowerTooth.
+            LowerTooth = new ToothList();
+            LowerGuide = new Point(450, 300);
+            for (int k = 0; k < 1; k++)
+            {
+                ToothType tooth = new ToothType();
+                for (int i = 0; i < 4; i++)
+                {
+                    TeethType teeth = new TeethType();
+                    for (int j = 0; j < 10; j++)
+                    {
+                        if (i >= 0 && i < 2)
+                            teeth.Add(new PointViewModel(LowerX[k, i, j] + LowerGuide.X, LowerY[k, i, j] + LowerGuide.Y, j));
+                        else
+                            teeth.Add(new PointViewModel(-1 * LowerX[k, i - 2, j] + LowerGuide.X, LowerY[k, i - 2, j] + LowerGuide.Y, j));
+                    }
+                    tooth.Add(teeth);
+                }
+                LowerTooth.Add(tooth);
+            }
 
+            // Set global dictionary.
+            dic = new Dictionary<string, int>();
+            dic.Add("CanineL", 5);
+            dic.Add("LateralIncisorL", 4);
+            dic.Add("CentralIncisorL", 3);
+            dic.Add("CentralIncisorR", 0);
+            dic.Add("LateralIncisorR", 1);
+            dic.Add("CanineR", 2);
         }
 
+        #region Save
+
         private static int i = 0;
-        private string fileName = " capture_img.jpeg";        
+        private string fileName = " capture_img.jpeg";
         private string savePath = "../../results/";
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            var rect = new Rect(canvas.RenderSize);
+            var rect = new Rect(Book.RenderSize);
             var visual = new DrawingVisual();
             using (var dc = visual.RenderOpen())
             {
-                dc.DrawRectangle(new VisualBrush(canvas), null, rect);
+                dc.DrawRectangle(new VisualBrush(Book), null, rect);
             }
 
             RenderTargetBitmap renderBitmap = new RenderTargetBitmap(
@@ -155,5 +156,7 @@ namespace MeditSmile2D
 
             MessageBox.Show($"{i++} : 결과가 저장되었습니다.");
         }
+
+        #endregion
     }
 }
