@@ -1,0 +1,31 @@
+﻿<UserControl x:Class="MeditSmile2D.View.UpperTooth"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MeditSmile2D.View"
+             mc:Ignorable="d" 
+             
+             x:Name="UpperToothControl"
+             d:DesignHeight="860" d:DesignWidth="1280">
+    <Canvas x:Name="UpperCanvas">
+        <local:WrapTooth x:Name="UpperWrapTooth" 
+                         Points="{Binding UpperPoints}"
+                         Fill="{Binding Path=Fill, ElementName=UpperToothControl}"/>
+
+        <Grid Name="UpperGrid">
+            <local:Teeth x:Name="CanineL" Points="{Binding UpperPoints[5]}" 
+                         ShowLengthXY="{Binding Path=ShowLengths, ElementName=UpperToothControl}"/>
+            <local:Teeth x:Name="CanineR" Points="{Binding UpperPoints[2]}" 
+                         ShowLengthXY="{Binding Path=ShowLengths, ElementName=UpperToothControl}"/>
+            <local:Teeth x:Name="LateralIncisorL" Points="{Binding UpperPoints[4]}" 
+                         ShowLengthXY="{Binding Path=ShowLengths, ElementName=UpperToothControl}"/>
+            <local:Teeth x:Name="LateralIncisorR" Points="{Binding UpperPoints[1]}" 
+                         ShowLengthXY="{Binding Path=ShowLengths, ElementName=UpperToothControl}"/>
+            <local:Teeth x:Name="CentralIncisorL" Points="{Binding UpperPoints[3]}" 
+                         ShowLengthXY="{Binding Path=ShowLengths, ElementName=UpperToothControl}"/>
+            <local:Teeth x:Name="CentralIncisorR" Points="{Binding UpperPoints[0]}" 
+                         ShowLengthXY="{Binding Path=ShowLengths, ElementName=UpperToothControl}"/>
+        </Grid>
+    </Canvas>
+</UserControl>

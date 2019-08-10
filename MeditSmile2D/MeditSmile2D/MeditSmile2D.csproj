@@ -123,11 +123,17 @@
     <Compile Include="View\DrawTeeth.xaml.cs">
       <DependentUpon>DrawTeeth.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\LowerTooth.xaml.cs">
+      <DependentUpon>LowerTooth.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Teeth.xaml.cs">
       <DependentUpon>Teeth.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Tooth.xaml.cs">
       <DependentUpon>Tooth.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UpperTooth.xaml.cs">
+      <DependentUpon>UpperTooth.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Utils\DrawFaceAlign.cs" />
     <Compile Include="View\Utils\FaceDetector.cs" />
@@ -157,11 +163,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\LowerTooth.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Teeth.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Tooth.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UpperTooth.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
