@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MeditSmile2D.Common;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -17,17 +18,12 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace MeditSmile2D.View
-{ 
+{
     public partial class WrapTeeth : UserControl
     {
         public WrapTeeth()
         {
             InitializeComponent();
-
-            lineH.Visibility = Visibility.Hidden;
-            lineV.Visibility = Visibility.Hidden;
-            lengthH.Visibility = Visibility.Hidden;
-            lengthV.Visibility = Visibility.Hidden;
         }
 
         #region Points
@@ -62,7 +58,7 @@ namespace MeditSmile2D.View
 
             if (e.NewValue != null)
             {
-                wrapPoints.SetLineRectData();
+                wrapPoints.SetWrapTeethRectAndLine();
             }
         }
 
@@ -82,20 +78,53 @@ namespace MeditSmile2D.View
 
         private static void ShowLengthPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var wrapPoints = d as WrapTeeth;
-            if (wrapPoints == null)
+            var wrap = d as WrapTeeth;
+            if (wrap == null)
                 return;
 
-            if (e.NewValue != null)               
-                 wrapPoints.SetLineRectData();                
-        }        
+            if (e.NewValue != null)
+            {
+                if (wrap.ShowLength == true)
+                {
+                    wrap.lineH.Visibility = Visibility.Visible;
+                    wrap.lineV.Visibility = Visibility.Visible;
+                    wrap.lengthH.Visibility = Visibility.Visible;
+                    wrap.lengthV.Visibility = Visibility.Visible;
+                    wrap.RatioHV.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    wrap.lineH.Visibility = Visibility.Hidden;
+                    wrap.lineV.Visibility = Visibility.Hidden;
+                    wrap.lengthH.Visibility = Visibility.Hidden;
+                    wrap.lengthV.Visibility = Visibility.Hidden;
+                    wrap.RatioHV.Visibility = Visibility.Hidden;
+                }
+            }
+        }
 
         #endregion
 
-        void SetLineRectData()
+        #region OpacitySlider
+
+        private static readonly DependencyProperty OpacitySliderProperty =
+            DependencyProperty.Register("OpacitySlider", typeof(double), typeof(WrapTeeth));
+
+        public double OpacitySlider
+        {
+            get { return (double)GetValue(OpacitySliderProperty); }
+            set { SetValue(OpacitySliderProperty, value); }
+        }
+
+        #endregion
+
+        void SetWrapTeethRectAndLine()
         {
             if (Points == null) return;
             var points = new List<Point>();
+
+            wrapbor.Visibility = Visibility.Visible;
+            innerWrap.Visibility = Visibility.Visible;
 
             foreach (var point in Points)
             {
@@ -111,13 +140,14 @@ namespace MeditSmile2D.View
             if (points.Count <= 1)
                 return;
 
-            Point minP = GetMin(points);
-            Point maxP = GetMax(points);
+            Point minP = new Point(Numerics.GetMinX_Teeth(points).X, Numerics.GetMinY_Teeth(points).Y);
+            Point maxP = new Point(Numerics.GetMaxX_Teeth(points).X, Numerics.GetMaxY_Teeth(points).Y);
 
-            DrawRect(minP, maxP);  
+            DrawRect(minP, maxP);
             DrawLineXY(minP, maxP);
         }
 
+        #region PropertyChanged
         private void RegisterCollectionItemPropertyChanged(IEnumerable collection)
         {
             if (collection == null)
@@ -139,54 +169,24 @@ namespace MeditSmile2D.View
             RegisterCollectionItemPropertyChanged(e.NewItems);
             UnRegisterCollectionItemPropertyChanged(e.OldItems);
 
-            SetLineRectData();
+            SetWrapTeethRectAndLine();
         }
 
         private void OnPointPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "X" || e.PropertyName == "Y")
-                SetLineRectData();
+                SetWrapTeethRectAndLine();
         }
+        #endregion
 
-        #region DrawRect & DrawLine 
-
-        private Point GetMin(List<Point> pts)
-        {
-            double xMin = double.MaxValue;
-            double yMin = double.MaxValue;
-
-            foreach (var point in pts)
-            {
-                if (point.X < xMin)
-                    xMin = point.X;
-                if (point.Y < yMin)
-                    yMin = point.Y;
-            }
-            return new Point(xMin, yMin);
-        }
-
-        private Point GetMax(List<Point> pts)
-        {
-            double xMax = double.MinValue;
-            double yMax = double.MinValue;
-
-            foreach (var point in pts)
-            {
-                if (point.X > xMax)
-                    xMax = point.X;
-                if (point.Y > yMax)
-                    yMax = point.Y;
-            }
-
-            return new Point(xMax, yMax);
-        }
+        #region DrawRect
 
         public double Top;
         public double Left;
 
-        readonly double padding = 2;
+        readonly double padding = 8;
         private void DrawRect(Point min, Point max)
-        {            
+        {
             // Grid의 크기 설정
             innerWrap.Height = max.Y - min.Y + padding;
             innerWrap.Width = max.X - min.X + padding;
@@ -196,8 +196,29 @@ namespace MeditSmile2D.View
 
             Canvas.SetLeft(this, Left);
             Canvas.SetTop(this, Top);
+
+            //Canvas cv = this.Parent as Canvas;
+            //Slider slider = null;
+            //foreach (var ctrl in cv.Children)
+            //{
+            //    if (ctrl is Slider)
+            //    {
+            //        slider = ctrl as Slider;
+            //        break;
+            //    }
+            //}
+
+            //if (slider != null)
+            //{
+            //    Canvas.SetLeft(slider, Left);
+            //    Canvas.SetTop(slider, Top);
+            //}
         }
-        
+
+        #endregion
+
+        #region DrawLine
+
         private void DrawLineXY(Point min, Point max)
         {
             double widthRect = max.X - min.X;
@@ -219,46 +240,34 @@ namespace MeditSmile2D.View
             lineV.Y2 = endVertical.Y - Top;
 
             // infomation of length
-            double value;
             double leftH, topH, leftV, topV;
             double padding = 10;
 
             // for length of Horizontal Line
-            lengthH.Content = widthRect.ToString();
-            value = lineH.X1 + widthRect / 2 - padding;
-            double.TryParse(value.ToString("N2"), out leftH);
-            value = lineV.Y1 + padding;
-            double.TryParse(value.ToString("N2"), out topH);
+            lengthH.Content = widthRect.ToString("N2");
+            leftH = lineH.X1 + widthRect / 2 + padding / 2;
+            topH = lineH.Y1 + padding / 2;
 
             Canvas.SetLeft(lengthH, leftH);
             Canvas.SetTop(lengthH, topH);
 
             // for length of Vertical Line
-            lengthV.Content = heightRect.ToString();
-            value = lineV.X1 + padding;
-            double.TryParse(value.ToString("N2"), out leftV);
-            value = lineV.Y1 + heightRect / 2 - padding;
-            double.TryParse(value.ToString("N2"), out topV);
+            lengthV.Content = heightRect.ToString("N2");
+            leftV = lineV.X1 + padding / 2;
+            topV = lineV.Y1 + heightRect / 2 - (padding * 3);
 
             Canvas.SetLeft(lengthV, leftV);
             Canvas.SetTop(lengthV, topV);
 
-            if (ShowLength == true)
-            {
-                lineH.Visibility = Visibility.Visible;
-                lineV.Visibility = Visibility.Visible;
-                lengthH.Visibility = Visibility.Visible;
-                lengthV.Visibility = Visibility.Visible;
-            } else
-            {
-                lineH.Visibility = Visibility.Hidden;
-                lineV.Visibility = Visibility.Hidden;
-                lengthH.Visibility = Visibility.Hidden;
-                lengthV.Visibility = Visibility.Hidden;
-            }
+            var ratio = (widthRect / heightRect) * 100;
+            RatioHV.Content = ratio.ToString("N0") + "%";
+            var leftRatio = min.X - Left + (widthRect / 8);
+            var topRatio = min.Y - Top + (heightRect / 5);
+            Canvas.SetLeft(RatioHV, leftRatio);
+            Canvas.SetTop(RatioHV, topRatio);
         }
 
         #endregion
-
     }
 }
+

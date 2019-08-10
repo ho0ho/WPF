@@ -1,21 +1,14 @@
 ﻿using MeditSmile2D.View.Utils;
+using MeditSmile2D.ViewModel;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MeditSmile2D.View
 {
@@ -42,23 +35,23 @@ namespace MeditSmile2D.View
 
         private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var teeth = d as DrawTeeth;
-            if (teeth == null) return;
+            var draw = d as DrawTeeth;
+            if (draw == null) return;
 
             if (e.NewValue is INotifyCollectionChanged)
             {
-                (e.NewValue as INotifyCollectionChanged).CollectionChanged += teeth.OnPointCollectionChanged;
-                teeth.RegisterCollectionItemPropertyChanged(e.NewValue as IEnumerable);
+                (e.NewValue as INotifyCollectionChanged).CollectionChanged += draw.OnPointCollectionChanged;
+                draw.RegisterCollectionItemPropertyChanged(e.NewValue as IEnumerable);
             }
 
             if (e.OldValue is INotifyCollectionChanged)
             {
-                (e.OldValue as INotifyCollectionChanged).CollectionChanged -= teeth.OnPointCollectionChanged;
-                teeth.UnRegisterCollectionItemPropertyChanged(e.OldValue as IEnumerable);
+                (e.OldValue as INotifyCollectionChanged).CollectionChanged -= draw.OnPointCollectionChanged;
+                draw.UnRegisterCollectionItemPropertyChanged(e.OldValue as IEnumerable);
             }
 
             if (e.NewValue != null)
-                teeth.SetPathData();
+                draw.SetPathData();
         }
 
         #endregion
@@ -72,7 +65,7 @@ namespace MeditSmile2D.View
         }
 
         public static readonly DependencyProperty PathColorProperty =
-            DependencyProperty.Register("PathColor", typeof(Brush), typeof(Teeth), new PropertyMetadata(Brushes.Black));
+            DependencyProperty.Register("PathColor", typeof(Brush), typeof(Teeth), new PropertyMetadata(Brushes.Coral));
 
         #endregion
 
@@ -90,11 +83,25 @@ namespace MeditSmile2D.View
 
         #endregion
 
+        #region OpacitySlider
+
+        private static readonly DependencyProperty OpacitySliderProperty =
+            DependencyProperty.Register("OpacitySlider", typeof(double), typeof(DrawTeeth));
+
+        public double OpacitySlider
+        {
+            get { return (double)GetValue(OpacitySliderProperty); }
+            set { SetValue(OpacitySliderProperty, value); }
+        }
+
+        #endregion
+
         private void SetPathData()
         {
-            if (Points == null) return;
-            var points = new List<Point>();
+            if (Points == null)
+                return;
 
+            var points = new List<Point>();
             foreach (var point in Points)
             {
                 var pointProperties = point.GetType().GetProperties();
@@ -139,6 +146,8 @@ namespace MeditSmile2D.View
             path.Data = Teeth_PathGeometry;
         }
 
+        #region PropertyChanged
+
         private void RegisterCollectionItemPropertyChanged(IEnumerable collection)
         {
             if (collection == null) return;
@@ -165,5 +174,7 @@ namespace MeditSmile2D.View
             if (e.PropertyName == "X" || e.PropertyName == "Y")
                 SetPathData();
         }
+
+        #endregion  
     }
 }
