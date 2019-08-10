@@ -20,70 +20,135 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" HorizontalAlignment="Center" TextWrapping="Wrap" Text="{Binding Title}" VerticalAlignment="Center" FontWeight="Bold" FontSize="18.667"/>
-        <DockPanel Grid.Row="1" LastChildFill="False">
-            <CheckBox Name="mirror" Margin="10" DockPanel.Dock="Left">대칭모드</CheckBox>
-            <CheckBox Name="lengthTeeth" Margin="10" DockPanel.Dock="Left">치아길이</CheckBox>
-            
-            <Button Name="open" Margin="10" Width="100" Command="{Binding OpenFileClicked}">열기</Button>
-            <Button Name="save" Margin="10" Width="100" Click="Save_Click">저장</Button>
-            
-            <Slider x:Name="slider_value" Margin="10" Value="0.2" Maximum="3" Minimum="0.3" Width="100"/>
-            <StackPanel x:Name="radios" Orientation="Horizontal" DockPanel.Dock="Right" Width="auto">
-                <RadioButton x:Name="radio0" Margin="10" IsChecked="{Binding IsTemplate0}">Template #0</RadioButton>
-                <RadioButton x:Name="radio1" Margin="10" IsChecked="{Binding IsTemplate1}">Template #1</RadioButton>
-                <RadioButton x:Name="radio2" Margin="10" IsChecked="{Binding IsTemplate2}">Template #2</RadioButton>
-                <RadioButton x:Name="radio3" Margin="10" IsChecked="{Binding IsTemplate3}">Template #3</RadioButton>
-                <RadioButton x:Name="radio4" Margin="10" IsChecked="{Binding IsTemplate4}">Template #4</RadioButton>
-            </StackPanel>
-        </DockPanel>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+
+            <DockPanel Grid.RowSpan="2" LastChildFill="False">
+                <CheckBox Name="mirror" Margin="3" VerticalAlignment="Center" DockPanel.Dock="Left">대칭모드</CheckBox>
+                <CheckBox Name="lengthTeeth" Margin="3" VerticalAlignment="Center" DockPanel.Dock="Left">치아길이</CheckBox>
+                <CheckBox Name="ColorTeeth" Margin="3" VerticalAlignment="Center" DockPanel.Dock="Left">치아색</CheckBox>
+
+                <Button Name="open" Margin="3" Width="50" VerticalAlignment="Center" Command="{Binding OpenFileClicked}">열기</Button>
+                <Button Name="save" Margin="3" Width="50" VerticalAlignment="Center" Click="Save_Click">저장</Button>
+                <Slider x:Name="slider_value" Margin="3" VerticalAlignment="Center" Value="0.2" Maximum="3" Minimum="1" Width="80"/>
+            </DockPanel>
+
+            <GroupBox Grid.Row="0" Grid.Column="1" Header=" Upper ">
+                <GroupItem>
+                    <Grid x:Name="radios" Width="auto">
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <RadioButton x:Name="Upper_no" Margin="10" IsChecked="{Binding UpperTmpNo}">No Upper</RadioButton>
+                        <RadioButton x:Name="radioUpper0" Grid.Column="1" Margin="10" IsChecked="{Binding UpperTmp1}">Upper Template #1</RadioButton>
+                        <RadioButton x:Name="radioUpper1" Grid.Column="2" Margin="10" IsChecked="{Binding UpperTmp2}">Upper Template #2</RadioButton>
+                        <RadioButton x:Name="radioUpper2" Grid.Column="3" Margin="10" IsChecked="{Binding UpperTmp3}">Upper Template #3</RadioButton>
+                        <RadioButton x:Name="radioUpper3" Grid.Column="4" Margin="10" IsChecked="{Binding UpperTmp4}">Upper Template #4</RadioButton>
+                        <RadioButton x:Name="radioUpper4" Grid.Column="5" Margin="10" IsChecked="{Binding UpperTmp5}">Upper Template #5</RadioButton>
+                    </Grid>
+                </GroupItem>
+            </GroupBox>
+            <GroupBox Grid.Row="1" Grid.Column="1" Header=" Lower ">
+                <GroupItem>
+                    <Grid Width="auto">
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <RadioButton x:Name="Lower_no" Grid.Column="0" Margin="10" IsChecked="{Binding LowerTmpNo}">No Lower</RadioButton>
+                        <RadioButton x:Name="radioLower0" Grid.Column="1" Margin="10" IsChecked="{Binding LowerTmp1}">Lower Template #1</RadioButton>
+                        <!--<RadioButton x:Name="radioLower1" Grid.Column="2" Margin="10" IsChecked="{Binding LowerTmp1}" IsEnabled="{Binding Path=IsChecked, ElementName=Check_LowerTooth}">Lower Template #1</RadioButton>-->
+                        <!--<RadioButton x:Name="radioLower2" Grid.Column="3" Margin="10" IsChecked="{Binding LowerTmp2}" IsEnabled="{Binding Path=IsChecked, ElementName=Check_LowerTooth}">Lower Template #2</RadioButton>
+                        <RadioButton x:Name="radioLower3" Grid.Column="4" Margin="10" IsChecked="{Binding LowerTmp3}" IsEnabled="{Binding Path=IsChecked, ElementName=Check_LowerTooth}">Lower Template #3</RadioButton>
+                        <RadioButton x:Name="radioLower4" Grid.Column="5" Margin="10" IsChecked="{Binding LowerTmp4}" IsEnabled="{Binding Path=IsChecked, ElementName=Check_LowerTooth}">Lower Template #4</RadioButton>-->
+                    </Grid>
+                </GroupItem>
+            </GroupBox>
+        </Grid>
 
         <Border Grid.Row="2">
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                <Grid x:Name="canvas">
-                    <!--Width="{Binding Path=Width, ElementName=window}"-->
-                    <Image x:Name="dental_img" HorizontalAlignment="Left" VerticalAlignment="Top"
+            <Grid x:Name="Book" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                <Image x:Name="dental_img" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="None"
                            Source="{Binding Path=Source}"/>
 
-                    <Canvas>
-                        <View:Tooth x:Name="tooth" ShowLengths="{Binding Path=IsChecked, ElementName=lengthTeeth}"></View:Tooth>
-                        
-                        <!-- line -->
-                        <Path Name="midline" Data="{Binding MidLine}" Stroke="Black" StrokeThickness="3" Fill="Black"
-                              MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForFaceAlign}"
-                              MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForFaceAlign}"
-                              MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForFaceAlign}"/>
-                        <Path Name="noseline_L" Data="{Binding NoseLineL}" Stroke="Black" StrokeThickness="3" Fill="Black"
-                              MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForFaceAlign}"
-                              MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForFaceAlign}"
-                              MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForFaceAlign}"/>
-                        <Path Name="noseline_R" Data="{Binding NoseLineR}" Stroke="Black" StrokeThickness="3" Fill="Black"
-                              MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForFaceAlign}"
-                              MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForFaceAlign}"
-                              MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForFaceAlign}"/>
-                        <Path Name="eyeline" Data="{Binding EyeLine}" Stroke="Black" StrokeThickness="2" Fill="Black"/>
-                        <Path Name="lipline" Data="{Binding LipLine}" Stroke="Black" StrokeThickness="2" Fill="Black"/>
+                <!-- Tooth Templates -->
+                <Canvas>
+                    <View:UpperTooth x:Name="toothUpper" 
+                                     ShowLengths="{Binding Path=IsChecked, ElementName=lengthTeeth}" 
+                                     Fill="{Binding Path=IsChecked, ElementName=ColorTeeth}"></View:UpperTooth>
+                    <View:LowerTooth x:Name="toothLower" 
+                                     ShowLengths="{Binding Path=IsChecked, ElementName=lengthTeeth}" 
+                                     Fill="{Binding Path=IsChecked, ElementName=ColorTeeth}"></View:LowerTooth>
+                </Canvas>
 
-                        <!-- mark -->
-                        <Path Name="eye_L" Data="{Binding EyeL}" Stroke="DeepSkyBlue" StrokeThickness="10" Fill="DeepSkyBlue"
+                <!-- Face Align -->
+                <Canvas>
+                    <!-- line -->
+                    <Path Name="midline" Data="{Binding MidLine}" Stroke="Black" StrokeThickness="3" Fill="Black"
                               MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForFaceAlign}"
                               MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForFaceAlign}"
                               MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForFaceAlign}"/>
-                        <Path Name="eye_R" Data="{Binding EyeR}" Stroke="DeepSkyBlue" StrokeThickness="10" Fill="DeepSkyBlue"
+                    <Path Name="noseline_L" Data="{Binding NoseLineL}" Stroke="Black" StrokeThickness="3" Fill="Black"
                               MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForFaceAlign}"
                               MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForFaceAlign}"
                               MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForFaceAlign}"/>
-                        <Path Name="mouth_L" Data="{Binding MouthL}" Stroke="DeepSkyBlue" StrokeThickness="10" Fill="DeepSkyBlue"
+                    <Path Name="noseline_R" Data="{Binding NoseLineR}" Stroke="Black" StrokeThickness="3" Fill="Black"
                               MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForFaceAlign}"
                               MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForFaceAlign}"
                               MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForFaceAlign}"/>
-                        <Path Name="mouth_R" Data="{Binding MouthR}" Stroke="DeepSkyBlue" StrokeThickness="10" Fill="DeepSkyBlue"
+                    <Path Name="eyeline" Data="{Binding EyeLine}" Stroke="Black" StrokeThickness="2" Fill="Black"/>
+                    <Path Name="lipline" Data="{Binding LipLine}" Stroke="Black" StrokeThickness="2" Fill="Black"/>
+
+                    <!-- mark -->
+                    <Path Name="eye_L" Data="{Binding EyeL}" Stroke="DeepSkyBlue" StrokeThickness="10" Fill="DeepSkyBlue"
                               MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForFaceAlign}"
                               MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForFaceAlign}"
                               MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForFaceAlign}"/>
-                    </Canvas>
-                </Grid>
-            </ScrollViewer>
+                    <Path Name="eye_R" Data="{Binding EyeR}" Stroke="DeepSkyBlue" StrokeThickness="10" Fill="DeepSkyBlue"
+                              MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForFaceAlign}"
+                              MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForFaceAlign}"
+                              MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForFaceAlign}"/>
+                    <Path Name="mouth_L" Data="{Binding MouthL}" Stroke="DeepSkyBlue" StrokeThickness="10" Fill="DeepSkyBlue"
+                              MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForFaceAlign}"
+                              MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForFaceAlign}"
+                              MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForFaceAlign}"/>
+                    <Path Name="mouth_R" Data="{Binding MouthR}" Stroke="DeepSkyBlue" StrokeThickness="10" Fill="DeepSkyBlue"
+                              MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForFaceAlign}"
+                              MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForFaceAlign}"
+                              MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForFaceAlign}"/>
+                </Canvas>
+
+                <!-- Image Scale -->
+                <Grid.LayoutTransform>
+                    <ScaleTransform ScaleX="{Binding Path=Value, ElementName=slider_value}"
+                                        ScaleY="{Binding Path=Value, ElementName=slider_value}"/>
+                </Grid.LayoutTransform>
+            </Grid>
         </Border>
-
     </Grid>
 </Window>
