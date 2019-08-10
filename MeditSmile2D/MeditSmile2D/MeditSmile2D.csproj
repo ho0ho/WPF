@@ -143,6 +143,9 @@
     <Compile Include="View\WrapTeeth.xaml.cs">
       <DependentUpon>WrapTeeth.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\WrapTooth.xaml.cs">
+      <DependentUpon>WrapTooth.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -180,6 +183,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\WrapTeeth.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WrapTooth.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
