@@ -5,13 +5,11 @@ using MeditSmile2D.View.Utils;
 using MeditSmile2D.ViewModel.Command;
 using Microsoft.Win32;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -24,11 +22,7 @@ namespace MeditSmile2D.ViewModel
 
     public class MainViewModel : ViewModelBase, INotifyPropertyChanged
     {
-        public FaceDetector.FacePoint facePoint;
-       
-        public MainViewCommand OpenFileClicked { get; set; }
-        public MainViewCommand RedoCommand { get; set; }
-        public MainViewCommand UndoCommand { get; set; }
+        public FaceDetector.FacePoint facePoint;       
 
         Point guideMark = new Point(400, 200);
 
@@ -53,7 +47,6 @@ namespace MeditSmile2D.ViewModel
 
             isSizing = false;
             isFirstTimeMovedOnSizing = true;
-            //anchor = new Point();
 
             SelectedTemplates.Add(IsTemplate0 = false);
             SelectedTemplates.Add(IsTemplate1 = false);
@@ -248,6 +241,8 @@ namespace MeditSmile2D.ViewModel
         BitmapImage orgImage;
         OpenFileDialog dlgOpen = new OpenFileDialog();
         
+        // Command for OpenFile
+        public MainViewCommand OpenFileClicked { get; set; }
         private void openFile()
         {
             dlgOpen.InitialDirectory = "D:\\ho-ho\\WPF_\\MeditSmile2D\\MeditSmile2D\\images\\";
@@ -327,7 +322,6 @@ namespace MeditSmile2D.ViewModel
         }
         #endregion
 
-
         DrawFaceAlign drawFaceAlign;
         public void DrawFaceLine()
         {
@@ -398,6 +392,8 @@ namespace MeditSmile2D.ViewModel
         #region Redo & Undo
 
         Stack<Path> UndoStack, RedoStack;
+
+        public MainViewCommand RedoCommand { get; set; }
         private void redo()
         {
             if (RedoStack.Count <= 0)
@@ -446,6 +442,7 @@ namespace MeditSmile2D.ViewModel
             UndoStack.Push(redoPath);
         }
 
+        public MainViewCommand UndoCommand { get; set; }
         private void undo()
         {
             if (UndoStack.Count <= 0)
