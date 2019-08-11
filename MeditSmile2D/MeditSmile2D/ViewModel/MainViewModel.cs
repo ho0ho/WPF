@@ -1459,26 +1459,26 @@ namespace MeditSmile2D.ViewModel
                 return;
 
             Ellipse me = e.Source as Ellipse;
-            FrameworkElement fr = me.Parent as FrameworkElement;
-            while (1)
-            {
-                if (fr.Name.Equals("UpperCanvas"))
-            }
-            if (captured_arc == true)
-            {
-                Point curMouseDownPoint = e.GetPosition((IInputElement)e.Source);
-                var dragDelta = curMouseDownPoint - originalPoint;
+            //FrameworkElement fr = me.Parent as FrameworkElement;
+            //while (1)
+            //{
+            //    if (fr.Name.Equals("UpperCanvas"))
+            //}
+            //if (captured_arc == true)
+            //{
+            //    Point curMouseDownPoint = e.GetPosition((IInputElement)e.Source);
+            //    var dragDelta = curMouseDownPoint - originalPoint;
 
-                foreach (TeethType points in tooth.Points)
-                {
-                    if ()
-                        foreach (PointViewModel point in points)
-                        {
-                            point.X += dragDelta.X;
-                            point.Y += dragDelta.Y;
-                        }
-                }
-            }
+            //    foreach (TeethType points in tooth.Points)
+            //    {
+            //        if ()
+            //            foreach (PointViewModel point in points)
+            //            {
+            //                point.X += dragDelta.X;
+            //                point.Y += dragDelta.Y;
+            //            }
+            //    }
+            //}
 
         }
 

@@ -284,5 +284,18 @@ namespace MeditSmile2D.View.Utils
 
         #endregion
 
+        #region MouseLeftButtonDoubleDown
+
+        public static readonly DependencyProperty MouseLeftButtonDoubleDownProperty =
+            DependencyProperty.RegisterAttached("MouseLeftButtonDoubleDownProperty", typeof(ICommand), typeof(MouseBehaviors), new FrameworkPropertyMetadata(new PropertyChangedCallback(MouseLeftButtonDoubleDownCommandChanged)));
+
+        private static void MouseLeftButtonDownCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            UIElement element = d as UIElement;
+            element.
+        }
+
+        #endregion
+
     }
 }

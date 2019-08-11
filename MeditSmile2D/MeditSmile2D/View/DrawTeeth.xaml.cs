@@ -12,9 +12,6 @@ using System.Windows.Media;
 
 namespace MeditSmile2D.View
 {
-    /// <summary>
-    /// DrawTeeth.xaml에 대한 상호 작용 논리
-    /// </summary>
     public partial class DrawTeeth : UserControl
     {
         public DrawTeeth()
