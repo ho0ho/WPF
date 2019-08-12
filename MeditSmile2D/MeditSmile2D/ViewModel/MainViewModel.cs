@@ -968,12 +968,12 @@ namespace MeditSmile2D.ViewModel
             Border borderSecond = (Border)grid.Parent;
             WrapTeeth wrapTeeth = (WrapTeeth)borderSecond.Parent;
 
-            //Canvas cv = wrapTeeth.Parent as Canvas;
-            //Teeth teeth = cv.Parent as Teeth;
-            //var wrap = Numerics.TeethToList(teeth);
+            Canvas cv = wrapTeeth.Parent as Canvas;
+            Teeth teeth = cv.Parent as Teeth;
+            var wrap = Numerics.TeethToList(teeth);
 
-            Point maxPoint = new Point(Numerics.GetMaxX_Teeth(wrapTeeth.Points).X, Numerics.GetMaxY_Teeth(wrapTeeth.Points).Y);
-            Point minPoint = new Point(Numerics.GetMinX_Teeth(wrapTeeth.Points).X, Numerics.GetMinY_Teeth(wrapTeeth.Points).Y);
+            Point maxPoint = new Point(Numerics.GetMaxX_Teeth(wrap).X, Numerics.GetMaxY_Teeth(wrap).Y);
+            Point minPoint = new Point(Numerics.GetMinX_Teeth(wrap).X, Numerics.GetMinY_Teeth(wrap).Y);
 
             if (isFirstTimeMovedOnSizing)
             {
@@ -1562,6 +1562,7 @@ namespace MeditSmile2D.ViewModel
                 return;
 
             RotateTeeth me = e.Source as RotateTeeth;
+            List<Point> rotate = Numerics.TeethToList(me.Points);
             Point min = new Point(Numerics.GetMinX_Teeth(me.Points).X, Numerics.GetMinY_Teeth(me.Points).Y);
             Point max = new Point(Numerics.GetMaxX_Teeth(me.Points).X, Numerics.GetMaxY_Teeth(me.Points).Y);
 

@@ -182,12 +182,13 @@ namespace MeditSmile2D.View
             if (pointses.Count <= 1)
                 return;
 
-            DrawRect(pointses);
+            DrawRect();
             if (this.Name.Equals("WrapTooth_UpperTooth"))
             {
                 DrawSmileLine(pointses);
                 DrawTeethBetweenLine(pointses);
             }
+
         }
 
         #region DrawRect
@@ -196,7 +197,7 @@ namespace MeditSmile2D.View
         public double Left;
         readonly double padding = 100;
 
-        private void DrawRect(List<List<Point>> Points)
+        private void DrawRect()
         {
             Point MinPoint = Numerics.GetMinXY_Tooth(Points);
             Point MaxPoint = Numerics.GetMaxXY_Tooth(Points);
@@ -213,17 +214,17 @@ namespace MeditSmile2D.View
 
         #endregion
 
-        private void DrawTeethBetweenLine(List<List<Point>> Points)
+        private void DrawTeethBetweenLine(List<List<Point>> points)
         {
             List<double> listX1 = new List<double>();
 
             double coorX;
-            foreach (List<Point> teeth in Points)
+            foreach (var teeth in points)
             {
                 coorX = Numerics.GetMaxX_Teeth(teeth).X - Left;
                 listX1.Add(coorX);
             }
-            List<Point> lastTeeth = Points[5];  // CanineL
+            IEnumerable lastTeeth = points[5];  // CanineL
             coorX = Numerics.GetMinX_Teeth(lastTeeth).X - Left;
             listX1.Add(coorX);
 
