@@ -10,6 +10,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -416,6 +418,11 @@ namespace MeditSmile2D.ViewModel
             _eyeline = drawFaceAlign.eyeline;
             _lipline = drawFaceAlign.lipline;
 
+            main.eye_L.Visibility = Visibility.Visible;
+            main.eye_R.Visibility = Visibility.Visible;
+            main.mouth_L.Visibility = Visibility.Visible;
+            main.mouth_R.Visibility = Visibility.Visible;
+
             RaisePropertyChanged("EyeL");
             RaisePropertyChanged("EyeR");
             RaisePropertyChanged("MouthL");
@@ -745,6 +752,7 @@ namespace MeditSmile2D.ViewModel
 
             Grid grid = (Grid)rect.Parent;
             border = (Border)grid.Parent;
+
             bef_rect = rect;
             bef_border = border;
             rect.Opacity = 1;
@@ -777,20 +785,48 @@ namespace MeditSmile2D.ViewModel
         }
         public void ExecuteMouseMoveForDragAndDropTeeth(MouseEventArgs e)
         {
-            Rectangle rect = (Rectangle)e.Source;
-            Grid grid = (Grid)rect.Parent;
-            Border border = (Border)grid.Parent;
-            WrapTeeth wrap = (WrapTeeth)border.Parent;
-
             if (captured == true)
             {
+                Rectangle rect = e.Source as Rectangle;
+                var findWrap = ViewUtils.FindParent(rect, Type.GetType("MeditSmile2D.View.WrapTeeth"));
+                Debug.Assert(findWrap != null);
+
+                //var find = ViewUtils.GetParent(rect, );
+
+                WrapTeeth wrap = findWrap as WrapTeeth;
+                Teeth you = null;
+                if (main.mirror.IsChecked == true)
+                {
+                    var findTeeth = ViewUtils.FindParent(wrap, (new Teeth()).GetType());
+                    var findGrid = ViewUtils.FindParent(wrap, (new Grid()).GetType());
+                    Debug.Assert(findTeeth != null && findGrid != null);
+                    //var findTeeth = FindUpElement(wrap, Type.GetType("MeditSmile2D.View.Teeth"));
+                    //var findGrid = FindUpElement(wrap, Type.GetType("System.Windows.Controls.Grid"));
+
+                    Teeth me = findTeeth as Teeth;
+                    Grid upper = findGrid as Grid;
+
+                    int idx_me = main.dic[me.Name];
+                    int idx_you = idx_me + (idx_me >= 0 && idx_me < 3 ? +3 : -3);
+                    var myKey = main.dic.FirstOrDefault(p => p.Value == idx_you).Key;
+                    you = upper.FindName(myKey) as Teeth;
+                }
+
                 Point curPoint = e.GetPosition((IInputElement)e.Source);
                 var dragDelta = curPoint - originalPoint;
-
                 foreach (PointViewModel point in wrap.Points)
                 {
                     point.X += dragDelta.X;
                     point.Y += dragDelta.Y;
+                }
+
+                if (you != null)
+                {
+                    foreach (PointViewModel point in you.Points)
+                    {
+                        point.X -= dragDelta.X;
+                        point.Y += dragDelta.Y;
+                    }
                 }
             }
         }
@@ -932,8 +968,12 @@ namespace MeditSmile2D.ViewModel
             Border borderSecond = (Border)grid.Parent;
             WrapTeeth wrapTeeth = (WrapTeeth)borderSecond.Parent;
 
-            Point maxPoint = GetMaxPoint(wrapTeeth);
-            Point minPoint = GetMinPoint(wrapTeeth);
+            //Canvas cv = wrapTeeth.Parent as Canvas;
+            //Teeth teeth = cv.Parent as Teeth;
+            //var wrap = Numerics.TeethToList(teeth);
+
+            Point maxPoint = new Point(Numerics.GetMaxX_Teeth(wrapTeeth.Points).X, Numerics.GetMaxY_Teeth(wrapTeeth.Points).Y);
+            Point minPoint = new Point(Numerics.GetMinX_Teeth(wrapTeeth.Points).X, Numerics.GetMinY_Teeth(wrapTeeth.Points).Y);
 
             if (isFirstTimeMovedOnSizing)
             {
@@ -1071,34 +1111,6 @@ namespace MeditSmile2D.ViewModel
                     //point.Y = point.Y * ((actualHeight1 + curPoint.Y) / actualHeight1) - (minPoint.Y - anchorMin.Y);
                 }
             }
-        }
-
-        private Point GetMaxPoint(WrapTeeth t)
-        {
-            double maxX = double.MinValue;
-            double maxY = double.MinValue;
-            foreach (PointViewModel point in t.Points)
-            {
-                if (point.X > maxX)
-                    maxX = point.X;
-                if (point.Y > maxY)
-                    maxY = point.Y;
-            }
-            return new Point(maxX, maxY);
-        }
-
-        private Point GetMinPoint(WrapTeeth t)
-        {
-            double minX = double.MaxValue;
-            double minY = double.MaxValue;
-            foreach (PointViewModel point in t.Points)
-            {
-                if (point.X < minX)
-                    minX = point.X;
-                if (point.Y < minY)
-                    minY = point.Y;
-            }
-            return new Point(minX, minY);
         }
 
         #region Resize for CommandProperties
@@ -1496,6 +1508,108 @@ namespace MeditSmile2D.ViewModel
         private void ExecuteMouseLeftUpForSmileLine(MouseEventArgs e)
         {
             captured_arc = false;
+            Mouse.Capture(null);
+        }
+
+        #endregion
+
+
+        List<Teeth> SelectedList = new List<Teeth>();
+
+        #region Rotate for Teeth
+
+        private bool captured_rotate = false;
+        private List<bool> isFirstTimeMovedOnRotating = new List<bool>();
+        //private bool[] iif = new bool[10];
+        private double accAlangle = 0;
+        private List<Point> RotateAnchor = new List<Point>();
+
+        private RelayCommand<object> _mouseLeftDownForRotateTeeth;
+        public RelayCommand<object> MouseLeftDownForRotateTeeth
+        {
+            get
+            {
+                if (_mouseLeftDownForRotateTeeth == null)
+                    return _mouseLeftDownForRotateTeeth = new RelayCommand<object>(param => ExecuteMouseLeftDownForRotateTeeth(param as MouseEventArgs));
+                return _mouseLeftDownForRotateTeeth;
+            }
+            set { _mouseLeftDownForRotateTeeth = value; }
+        }
+
+        private void ExecuteMouseLeftDownForRotateTeeth(MouseEventArgs e)
+        {
+            if (captured_rotate)
+                return;
+            captured_rotate = true;
+            Mouse.Capture(e.Source as IInputElement);
+        }
+
+        private RelayCommand<object> _mouseMoveForRotateTeeth;
+        public RelayCommand<object> MouseMoveForRotateTeeth
+        {
+            get
+            {
+                if (_mouseMoveForRotateTeeth == null)
+                    return _mouseMoveForRotateTeeth = new RelayCommand<object>(param => ExecuteMouseMoveForRotateTeeth(param as MouseEventArgs));
+                return _mouseMoveForRotateTeeth;
+            }
+            set { _mouseMoveForRotateTeeth = value; }
+        }
+
+        private void ExecuteMouseMoveForRotateTeeth(MouseEventArgs e)
+        {
+            if (!captured_rotate)
+                return;
+
+            RotateTeeth me = e.Source as RotateTeeth;
+            Point min = new Point(Numerics.GetMinX_Teeth(me.Points).X, Numerics.GetMinY_Teeth(me.Points).Y);
+            Point max = new Point(Numerics.GetMaxX_Teeth(me.Points).X, Numerics.GetMaxY_Teeth(me.Points).Y);
+
+            Point ctrl = new Point((max.X + min.X) / 2, (max.Y + min.Y) / 2);
+            Point cur = e.GetPosition(e.Source as IInputElement);
+
+            for(int i = 0; i < SelectedList.Count; i++)
+            {
+                if (isFirstTimeMovedOnRotating[i])
+                {
+                    RotateAnchor.Add(ctrl);
+                    isFirstTimeMovedOnRotating[i] = false;
+                }
+            }
+
+            double rad = Math.Atan2(cur.Y - ctrl.Y, cur.X - ctrl.X);
+            double deg = rad * 180.0 / Math.PI;
+            deg += accAlangle + 90;
+            if (deg <= -30 || deg >= 30)
+                return;
+
+            int j = 0; 
+            foreach(Teeth teeth in SelectedList)
+            {
+                RotateTransform rotate = new RotateTransform(deg, RotateAnchor[j].X, RotateAnchor[j].Y);
+                teeth.RenderTransform = rotate;
+                accAlangle = deg;
+                j++;
+            }
+        }
+
+        private RelayCommand<object> _mouseLeftUpForRotateTeeth;
+        public RelayCommand<object> MouseLeftUpForRotateTeeth
+        {
+            get
+            {
+                if (_mouseLeftUpForRotateTeeth == null)
+                    return _mouseLeftUpForRotateTeeth = new RelayCommand<object>(param => ExecuteMouseLeftUpForRotateTeeth(param as MouseEventArgs));
+                return _mouseLeftUpForRotateTeeth;
+            }
+            set { _mouseLeftUpForRotateTeeth = value; }
+        }
+        
+        private void ExecuteMouseLeftUpForRotateTeeth(MouseEventArgs e)
+        {
+            captured_rotate = false;
+            for (int i = 0; i < isFirstTimeMovedOnRotating.Count; i++)
+                isFirstTimeMovedOnRotating[i] = true;
             Mouse.Capture(null);
         }
 

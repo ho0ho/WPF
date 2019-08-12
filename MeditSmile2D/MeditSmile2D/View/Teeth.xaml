@@ -4,10 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MeditSmile2D.View"
-             mc:Ignorable="d" 
-             
-             xmlns:MouseCommand="clr-namespace:MeditSmile2D.View.Utils" 
-                       
+             mc:Ignorable="d"                        
              
              x:Name="TeethControl"
              d:DesignHeight="860" d:DesignWidth="1280">
@@ -15,12 +12,14 @@
         <!--<Slider x:Name="slider" Width="100"
                 Value="0.3" Minimum="0.1" Maximum="1.0"/>-->
 
+        <local:RotateTeeth Points="{Binding Points, RelativeSource={RelativeSource AncestorType=UserControl}}"/>        
+            
         <local:DrawTeeth x:Name="drawTeeth"
-            OpacitySlider="{Binding Path=Value, ElementName=slider}"
             Points="{Binding Points, RelativeSource={RelativeSource AncestorType=UserControl}}"
             IsClosedCurve="{Binding IsClosedCurve}"/>
+            <!--OpacitySlider="{Binding Path=Value, ElementName=slider}"-->
 
-        <local:WrapTeeth x:Name="AreaTeeth" 
+        <local:WrapTeeth
             Points="{Binding Points, RelativeSource={RelativeSource AncestorType=UserControl}}"
             ShowLength="{Binding Path=ShowLengthXY, ElementName=TeethControl}"/>
 

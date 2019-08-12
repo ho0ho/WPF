@@ -1,6 +1,7 @@
 ﻿using MeditSmile2D.View;
 using MeditSmile2D.ViewModel;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -9,6 +10,7 @@ namespace MeditSmile2D.Common
 {
     class Numerics
     {
+
         public const double Epsilon = 0.00001;
 
         public static bool FloatEquals(float f1, float f2) { return Math.Abs(f1 - f2) < Epsilon; }
@@ -38,15 +40,52 @@ namespace MeditSmile2D.Common
             return (degree * Math.PI) / 180;
         }
 
+        #region Get Points for Tooth
 
-        public static Point GetMinXY_Tooth(List<List<Point>> pts)
+        // for Tooth.
+        //public static Point GetMinXY_Tooth(List<List<Point>> pts)
+        //{
+        //    double xMin = double.MaxValue;
+        //    double yMin = double.MaxValue;
+
+        //    foreach (var points in pts)
+        //    {
+        //        foreach (var point in points)
+        //        {
+        //            if (point.X < xMin)
+        //                xMin = point.X;
+        //            if (point.Y < yMin)
+        //                yMin = point.Y;
+        //        }
+        //    }
+        //    return new Point(xMin, yMin);
+        //}
+
+        //public static Point GetMaxXY_Tooth(List<List<Point>> pts)
+        //{
+        //    double xMax = double.MinValue;
+        //    double yMax = double.MinValue;
+
+        //    foreach (var points in pts)
+        //    {
+        //        foreach (var point in points)
+        //        {
+        //            if (point.X > xMax)
+        //                xMax = point.X;
+        //            if (point.Y > yMax)
+        //                yMax = point.Y;
+        //        }
+        //    }
+        //    return new Point(xMax, yMax);
+        //}
+
+        public static Point GetMinXY_Tooth(IEnumerable pts)
         {
             double xMin = double.MaxValue;
             double yMin = double.MaxValue;
-
-            foreach (var points in pts)
+            foreach (IEnumerable points in pts)
             {
-                foreach (var point in points)
+                foreach (PointViewModel point in points)
                 {
                     if (point.X < xMin)
                         xMin = point.X;
@@ -57,14 +96,14 @@ namespace MeditSmile2D.Common
             return new Point(xMin, yMin);
         }
 
-        public static Point GetMaxXY_Tooth(List<List<Point>> pts)
+        public static Point GetMaxXY_Tooth(IEnumerable pts)
         {
             double xMax = double.MinValue;
             double yMax = double.MinValue;
 
-            foreach (var points in pts)
+            foreach (IEnumerable points in pts)
             {
-                foreach (var point in points)
+                foreach (PointViewModel point in points)
                 {
                     if (point.X > xMax)
                         xMax = point.X;
@@ -75,73 +114,116 @@ namespace MeditSmile2D.Common
             return new Point(xMax, yMax);
         }
 
-        public static Point GetMinX_Teeth(List<Point> pts)
+        #endregion
+
+        #region Get Points for Teeth
+
+        //public static Point GetMinX_Teeth(List<Point> pts)
+        //{
+        //    Point p = new Point(double.MaxValue, 0);
+        //    foreach (Point pt in pts)
+        //        if (pt.X < p.X)
+        //            p = pt;
+        //    return p;
+        //}
+
+        //public static Point GetMinY_Teeth(List<Point> pts)
+        //{
+        //    Point p = new Point(0, double.MaxValue);
+        //    foreach (Point pt in pts)
+        //        if (pt.Y < p.Y)
+        //            p = pt;
+        //    return p;
+        //}
+
+        //public static Point GetMaxX_Teeth(List<Point> pts)
+        //{
+        //    Point p = new Point(double.MinValue, 0);
+        //    foreach (Point pt in pts)
+        //        if (pt.X > p.X)
+        //            p = pt;
+        //    return p;
+        //}
+
+        //public static Point GetMaxY_Teeth(List<Point> pts)
+        //{
+        //    Point p = new Point(0, double.MinValue);
+        //    foreach (Point pt in pts)
+        //        if (pt.Y > p.Y)
+        //            p = pt;
+        //    return p;
+        //}
+
+        public static Point GetMinX_Teeth(IEnumerable pts)
         {
             Point p = new Point(double.MaxValue, 0);
-            foreach (Point pt in pts)
+            foreach (PointViewModel pt in pts)
                 if (pt.X < p.X)
-                    p = pt;
+                    p = new Point(pt.X, pt.X);
             return p;
         }
 
-        public static Point GetMinY_Teeth(List<Point> pts)
+        public static Point GetMinY_Teeth(IEnumerable pts)
         {
             Point p = new Point(0, double.MaxValue);
-            foreach (Point pt in pts)
+            foreach (PointViewModel pt in pts)
                 if (pt.Y < p.Y)
-                    p = pt;
+                    p = new Point(pt.X, pt.Y);
             return p;
         }
 
-        public static Point GetMaxX_Teeth(List<Point> pts)
+        public static Point GetMaxX_Teeth(IEnumerable pts)
         {
             Point p = new Point(double.MinValue, 0);
-            foreach (Point pt in pts)
+            foreach (PointViewModel pt in pts)
                 if (pt.X > p.X)
-                    p = pt;
+                    p = new Point(pt.X, pt.Y);
             return p;
         }
 
-        public static Point GetMaxY_Teeth(List<Point> pts)
+        public static Point GetMaxY_Teeth(IEnumerable pts)
         {
             Point p = new Point(0, double.MinValue);
-            foreach (Point pt in pts)
+            foreach (PointViewModel pt in pts)
                 if (pt.Y > p.Y)
-                    p = pt;
+                    p = new Point(pt.X, pt.Y);
             return p;
         }
 
-        public static List<Point> TeethToList(Teeth teeth)
-        {
-            List<Point> list = new List<Point>();
-            foreach (PointViewModel p in teeth.Points)
-                list.Add(new Point(p.X, p.Y));
-            return list;
-        }
+        #endregion
 
-        public static List<List<Point>> ToothToList(FrameworkElement tooth)
-        {
-            WrapTooth wrap = null;
-            if (tooth is UpperTooth)
-            {
-                UpperTooth th = tooth as UpperTooth;
-                wrap = th.UpperWrapTooth;
-            }
-            else
-            {
-                LowerTooth th = tooth as LowerTooth;
-                wrap = th.LowerWrapTooth;
-            }
 
-            List<List<Point>> list = new List<List<Point>>();
-            foreach (ObservableCollection<PointViewModel> t in wrap.Points)
-            {
-                List<Point> sublist = new List<Point>();
-                foreach (PointViewModel p in t)
-                    sublist.Add(new Point(p.X, p.Y));
-                list.Add(sublist);
-            }
-            return list;
-        }
+        //public static List<Point> TeethToList(Teeth teeth)
+        //{
+        //    List<Point> list = new List<Point>();
+        //    foreach (PointViewModel p in teeth.Points)
+        //        list.Add(new Point(p.X, p.Y));
+        //    return list;
+        //}
+
+        //public static List<List<Point>> ToothToList(FrameworkElement tooth)
+        //{
+        //    WrapTooth wrap = null;
+        //    if (tooth is UpperTooth)
+        //    {
+        //        UpperTooth th = tooth as UpperTooth;
+        //        wrap = th.WrapTooth_UpperTooth;
+        //    }
+        //    else
+        //    {
+        //        LowerTooth th = tooth as LowerTooth;
+        //        wrap = th.WrapTooth_LowerTooth;
+        //    }
+
+        //    List<List<Point>> list = new List<List<Point>>();
+        //    foreach (ObservableCollection<PointViewModel> t in wrap.Points)
+        //    {
+        //        List<Point> sublist = new List<Point>();
+        //        foreach (PointViewModel p in t)
+        //            sublist.Add(new Point(p.X, p.Y));
+        //        list.Add(sublist);
+        //    }
+        //    return list;
+        //}
     }
 }

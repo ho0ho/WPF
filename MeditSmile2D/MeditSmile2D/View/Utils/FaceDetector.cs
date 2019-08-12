@@ -21,7 +21,7 @@ namespace MeditSmile2D.View.Utils
         public class FacePoint
         {
             public List<Point> eye;
-            public List<Point> mouth;
+            public List<Point> mouth; 
             public List<Point> midline;
             public List<Point> nose;
 

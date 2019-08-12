@@ -98,10 +98,10 @@
 
                 <!-- Tooth Templates -->
                 <Canvas>
-                    <View:UpperTooth x:Name="toothUpper" 
+                    <View:UpperTooth x:Name="UserUpper" 
                                      ShowLengths="{Binding Path=IsChecked, ElementName=lengthTeeth}" 
                                      Fill="{Binding Path=IsChecked, ElementName=ColorTeeth}"></View:UpperTooth>
-                    <View:LowerTooth x:Name="toothLower" 
+                    <View:LowerTooth x:Name="UserLower" 
                                      ShowLengths="{Binding Path=IsChecked, ElementName=lengthTeeth}" 
                                      Fill="{Binding Path=IsChecked, ElementName=ColorTeeth}"></View:LowerTooth>
                 </Canvas>
@@ -125,19 +125,19 @@
                     <Path Name="lipline" Data="{Binding LipLine}" Stroke="Black" StrokeThickness="2" Fill="Black"/>
 
                     <!-- mark -->
-                    <Path Name="eye_L" Data="{Binding EyeL}" Stroke="DeepSkyBlue" StrokeThickness="10" Fill="DeepSkyBlue"
+                    <Path Name="eye_L" Data="{Binding EyeL}" Stroke="DeepSkyBlue" StrokeThickness="10" Fill="DeepSkyBlue" Visibility="Hidden"
                               MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForFaceAlign}"
                               MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForFaceAlign}"
                               MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForFaceAlign}"/>
-                    <Path Name="eye_R" Data="{Binding EyeR}" Stroke="DeepSkyBlue" StrokeThickness="10" Fill="DeepSkyBlue"
+                    <Path Name="eye_R" Data="{Binding EyeR}" Stroke="DeepSkyBlue" StrokeThickness="10" Fill="DeepSkyBlue" Visibility="Hidden"
                               MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForFaceAlign}"
                               MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForFaceAlign}"
                               MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForFaceAlign}"/>
-                    <Path Name="mouth_L" Data="{Binding MouthL}" Stroke="DeepSkyBlue" StrokeThickness="10" Fill="DeepSkyBlue"
+                    <Path Name="mouth_L" Data="{Binding MouthL}" Stroke="DeepSkyBlue" StrokeThickness="10" Fill="DeepSkyBlue" Visibility="Hidden"
                               MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForFaceAlign}"
                               MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForFaceAlign}"
                               MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForFaceAlign}"/>
-                    <Path Name="mouth_R" Data="{Binding MouthR}" Stroke="DeepSkyBlue" StrokeThickness="10" Fill="DeepSkyBlue"
+                    <Path Name="mouth_R" Data="{Binding MouthR}" Stroke="DeepSkyBlue" StrokeThickness="10" Fill="DeepSkyBlue" Visibility="Hidden"
                               MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForFaceAlign}"
                               MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForFaceAlign}"
                               MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForFaceAlign}"/>

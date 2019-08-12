@@ -8,12 +8,13 @@
              
              x:Name="UpperToothControl"
              d:DesignHeight="860" d:DesignWidth="1280">
-    <Canvas x:Name="UpperCanvas">
-        <local:WrapTooth x:Name="UpperWrapTooth" 
+    
+    <Canvas x:Name="Canvas_UpperTooth">
+        <local:WrapTooth x:Name="WrapTooth_UpperTooth" 
                          Points="{Binding UpperPoints}"
                          Fill="{Binding Path=Fill, ElementName=UpperToothControl}"/>
 
-        <Grid Name="UpperGrid">
+        <Grid Name="Grid_UpperTooth">
             <local:Teeth x:Name="CanineL" Points="{Binding UpperPoints[5]}" 
                          ShowLengthXY="{Binding Path=ShowLengths, ElementName=UpperToothControl}"/>
             <local:Teeth x:Name="CanineR" Points="{Binding UpperPoints[2]}" 

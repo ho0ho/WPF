@@ -16,11 +16,12 @@ namespace MeditSmile2D.View
     using TeethType = ObservableCollection<PointViewModel>;
     public partial class WrapTooth : UserControl
     {
+        
         public WrapTooth()
         {
             InitializeComponent();
 
-            Border_Top.Visibility = Visibility.Hidden;
+            fillImgName = "color3";
         }
 
         #region Points
@@ -86,6 +87,7 @@ namespace MeditSmile2D.View
             set { SetValue(FillProperty, value); }
         }
 
+        private string fillImgName;
         private static void FillPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var wrap = d as WrapTooth;
@@ -95,11 +97,16 @@ namespace MeditSmile2D.View
             if (e.NewValue != null)
             {
                 Canvas tooth = wrap.Parent as Canvas;
-                Grid grid = tooth.FindName("UpperGrid") as Grid;
+
+                Grid grid = null;
+                if (tooth.Name.Equals("Canvas_UpperTooth"))
+                    grid = tooth.FindName("Grid_UpperTooth") as Grid;
+                else
+                    grid = tooth.FindName("Grid_LowerTooth") as Grid;
                 foreach (Teeth teeth in grid.Children)
                 {
                     DrawTeeth draw = teeth.FindName("drawTeeth") as DrawTeeth;
-                    draw.path.Fill = wrap.Fill ? draw.FindResource("color3") as ImageBrush : null;
+                    draw.path.Fill = wrap.Fill ? draw.FindResource(wrap.fillImgName) as ImageBrush : null;
                 }
             }
         }
@@ -150,9 +157,11 @@ namespace MeditSmile2D.View
             if (Points == null)
                 return;
 
-            wrapBorder.Visibility = Visibility.Visible;
-            wrapRect.Visibility = Visibility.Visible;
+            Border_WrapTooth.Visibility = Visibility.Visible;
+            WrappingRect.Visibility = Visibility.Visible;
             Border_Top.Visibility = Visibility.Visible;
+            foreach (Shape shape in Canvas_Smile.Children)
+                shape.Opacity = 1;
 
             var pointses = new List<List<Point>>();
             foreach (TeethType high in Points)
@@ -174,14 +183,11 @@ namespace MeditSmile2D.View
                 return;
 
             DrawRect(pointses);
-            if (this.Name.Equals("UpperWrapTooth"))
+            if (this.Name.Equals("WrapTooth_UpperTooth"))
             {
                 DrawSmileLine(pointses);
                 DrawTeethBetweenLine(pointses);
             }
-
-
-
         }
 
         #region DrawRect
@@ -195,8 +201,8 @@ namespace MeditSmile2D.View
             Point MinPoint = Numerics.GetMinXY_Tooth(Points);
             Point MaxPoint = Numerics.GetMaxXY_Tooth(Points);
 
-            wrapRect.Height = MaxPoint.Y - MinPoint.Y + padding;
-            wrapRect.Width = MaxPoint.X - MinPoint.X + padding;
+            WrappingRect.Height = MaxPoint.Y - MinPoint.Y + padding;
+            WrappingRect.Width = MaxPoint.X - MinPoint.X + padding;
 
             Top = MinPoint.Y - padding / 2;
             Left = MinPoint.X - padding / 2;
@@ -209,9 +215,9 @@ namespace MeditSmile2D.View
 
         private void DrawTeethBetweenLine(List<List<Point>> Points)
         {
-            double coorX;
-
             List<double> listX1 = new List<double>();
+
+            double coorX;
             foreach (List<Point> teeth in Points)
             {
                 coorX = Numerics.GetMaxX_Teeth(teeth).X - Left;
@@ -222,7 +228,7 @@ namespace MeditSmile2D.View
             listX1.Add(coorX);
 
             int i = 0;
-            foreach (var l in wrapGrid.Children)
+            foreach (var l in Grid_WrapTooth.Children)
             {
                 if (l is Line)
                 {
@@ -230,7 +236,7 @@ namespace MeditSmile2D.View
                     line.X1 = listX1[i];
                     line.Y1 = 0;
                     line.X2 = listX1[i++];
-                    line.Y2 = wrapRect.Height;
+                    line.Y2 = WrappingRect.Height;
                 }
             }
         }
@@ -244,9 +250,9 @@ namespace MeditSmile2D.View
             Point Right2 = Numerics.GetMaxX_Teeth(all[2]);
 
             double padding = 30;
-            Point LeftCont = new Point(Left2.X - Left - padding, wrapRect.Height / 2);
-            Point MidCont = new Point(wrapRect.Width / 2, Mid.Y - Top + 5);
-            Point RightCont = new Point(Right2.X - Left + padding, wrapRect.Height / 2);
+            Point LeftCont = new Point(Left2.X - Left - padding, WrappingRect.Height / 2);
+            Point MidCont = new Point(WrappingRect.Width / 2, Mid.Y - Top + 5);
+            Point RightCont = new Point(Right2.X - Left + padding, WrappingRect.Height / 2);
 
             // Make a list of Control Points.
             List<Point> list = new List<Point>();

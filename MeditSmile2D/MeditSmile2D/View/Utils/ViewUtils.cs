@@ -93,5 +93,17 @@ namespace MeditSmile2D.View.Utils
 
             return null;
         }
+
+
+        public static FrameworkElement FindParent(FrameworkElement child, Type parentType)
+        {
+            FrameworkElement fr = child.Parent as FrameworkElement;
+            while (fr.GetType() != parentType && !(fr is Window))
+            {
+                fr = fr.Parent as FrameworkElement;
+            }
+            var parent = !(fr is Window) ? fr : null;
+            return parent;
+        }
     }
 }

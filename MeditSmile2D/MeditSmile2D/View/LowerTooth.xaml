@@ -8,9 +8,9 @@
              x:Name="LowerToothControl"
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <Canvas x:Name="LowerCanvas">
-        <local:WrapTooth x:Name="LowerWrapTooth"  Points="{Binding LowerPoints}"/>
-        <Grid Name="LowerGrid">
+    <Canvas x:Name="Canvas_LowerTooth">
+        <local:WrapTooth x:Name="WrapTooth_LowerTooth"  Points="{Binding LowerPoints}"/>
+        <Grid Name="Grid_LowerTooth">
             <local:Teeth x:Name="LateralIncisorL" Points="{Binding LowerPoints[3]}" 
                          ShowLengthXY="{Binding Path=ShowLengths, ElementName=LowerToothControl}"
                          Fill="{Binding Path=Fill, ElementName=LowerToothControl}"/>

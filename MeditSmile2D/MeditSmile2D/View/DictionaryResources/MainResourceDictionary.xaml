@@ -65,13 +65,13 @@
     <Style x:Key="SmileControlStyle" TargetType="Ellipse">
         <Setter Property="Width" Value="10"/>
         <Setter Property="Height" Value="10"/>
-        <Setter Property="Fill" Value="Yellow"/>
-        <Setter Property="Stroke" Value="ForestGreen"/>
+        <Setter Property="Fill" Value="SkyBlue"/>
+        <Setter Property="Stroke" Value="Blue"/>
         <Setter Property="StrokeThickness" Value="2"/>
     </Style>
 
     <Style x:Key="SmileLineStyle" TargetType="Polyline">
-        <Setter Property="Stroke" Value="ForestGreen"/>
+        <Setter Property="Stroke" Value="SkyBlue"/>
         <Setter Property="StrokeThickness" Value="1"/>
     </Style>
 </ResourceDictionary>

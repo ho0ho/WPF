@@ -31,7 +31,6 @@ namespace MeditSmile2D.View.Utils
             InitFaceAlign();
         }
 
-
         public LineGeometry midline, eyeline, lipline, noselineL, noselineR;
         public EllipseGeometry eyeL, eyeR, mouthEndL, mouthEndR, noseL, noseR;
         private void InitFaceAlign()
