@@ -11,9 +11,9 @@
              mc:Ignorable="d" 
              d:designWidth="1280" d:designHeight="860">
 
-    <Border x:Name="wrapbor"  BorderThickness="1" BorderBrush="Transparent" Opacity="0" Visibility="Hidden">
+    <Border x:Name="Border_WrapTeeth"  BorderThickness="1" BorderBrush="LightSalmon" Opacity="0" Visibility="Hidden">
         <Grid>
-            <Rectangle x:Name="innerWrap" Cursor="Hand" Stroke="Transparent" Opacity="0" Visibility="Hidden"
+            <Rectangle x:Name="Rectangle_WrapTeeth" Cursor="Hand" Stroke="LightSalmon" Opacity="0" Visibility="Hidden"
                        MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForDragAndDropTeeth}"
                        MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForDragAndDropTeeth}"
                        MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForDragAndDropTeeth}">

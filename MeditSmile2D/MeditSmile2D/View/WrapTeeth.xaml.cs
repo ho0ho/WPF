@@ -113,8 +113,8 @@ namespace MeditSmile2D.View
             if (Points == null) return;
             var points = new List<Point>();
 
-            wrapbor.Visibility = Visibility.Visible;
-            innerWrap.Visibility = Visibility.Visible;
+            Border_WrapTeeth.Visibility = Visibility.Visible;
+            Rectangle_WrapTeeth.Visibility = Visibility.Visible;
 
             foreach (var point in Points)
             {
@@ -178,8 +178,8 @@ namespace MeditSmile2D.View
         private void DrawRect(Point min, Point max)
         {
             // Grid의 크기 설정
-            innerWrap.Height = max.Y - min.Y + padding;
-            innerWrap.Width = max.X - min.X + padding;
+            Rectangle_WrapTeeth.Height = max.Y - min.Y + padding;
+            Rectangle_WrapTeeth.Width = max.X - min.X + padding;
 
             Top = min.Y - padding / 2;
             Left = min.X - padding / 2;

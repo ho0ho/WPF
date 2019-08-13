@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace MeditSmile2D.View.Utils
@@ -104,6 +105,14 @@ namespace MeditSmile2D.View.Utils
             }
             var parent = !(fr is Window) ? fr : null;
             return parent;
+        }
+
+        public static FrameworkElement FindChild(Panel parent, Type childType)
+        {
+            foreach (Control fr in parent.Children)
+                if (fr.GetType() == childType)
+                    return fr;
+            return null;
         }
     }
 }

@@ -192,14 +192,19 @@ namespace MeditSmile2D.Common
 
         #endregion
 
-
-        public static List<Point> TeethToList(FrameworkElement teeth)
+        public static List<Point> TeethToList(Teeth teeth)
         {
             List<Point> list = new List<Point>();
-            Type type = teeth.GetType();
-            
+            //Teeth th = teeth as Teeth;
+            //if (teeth.GetType() == Type.GetType("MeditSmile2D.View.DrawTeeth"))
+            //    th = (DrawTeeth)teeth;
+            //else if (teeth.GetType() == Type.GetType("MeditSmile2D.View.WrapTeeth"))
+            //    th = teeth as WrapTeeth;
+            //else if (teeth.GetType() == Type.GetType("MeditSmile2D.View.RotateTeeth"))
+            //    th = teeth as RotateTeeth;
+
             foreach (PointViewModel p in teeth.Points)
-                list.Add(new Point(p.X, p.Y));
+                    list.Add(new Point(p.X, p.Y));
             return list;
         }
 

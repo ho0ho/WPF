@@ -8,18 +8,19 @@
              
              x:Name="TeethControl"
              d:DesignHeight="860" d:DesignWidth="1280">
-    <Canvas>
+    <Canvas x:Name="Canvas_Teeth">
         <!--<Slider x:Name="slider" Width="100"
                 Value="0.3" Minimum="0.1" Maximum="1.0"/>-->
 
-        <local:RotateTeeth Points="{Binding Points, RelativeSource={RelativeSource AncestorType=UserControl}}"/>        
+        <local:RotateTeeth x:Name="rotateTeeth"
+            Points="{Binding Points, RelativeSource={RelativeSource AncestorType=UserControl}}"/>        
             
         <local:DrawTeeth x:Name="drawTeeth"
             Points="{Binding Points, RelativeSource={RelativeSource AncestorType=UserControl}}"
             IsClosedCurve="{Binding IsClosedCurve}"/>
             <!--OpacitySlider="{Binding Path=Value, ElementName=slider}"-->
 
-        <local:WrapTeeth
+        <local:WrapTeeth x:Name="wrapTeeth"
             Points="{Binding Points, RelativeSource={RelativeSource AncestorType=UserControl}}"
             ShowLength="{Binding Path=ShowLengthXY, ElementName=TeethControl}"/>
 

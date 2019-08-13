@@ -20,9 +20,9 @@
         </Rectangle>
                 <!--<SolidColorBrush Color="Transparent" Opacity="0"-->
 
-        <Path x:Name="RotatePin" Stroke="CadetBlue" StrokeThickness="1" Fill="LightBlue">
+        <Path x:Name="RotatePin" Stroke="CadetBlue" StrokeThickness="1" Fill="LightBlue" Visibility="Hidden">
             <Path.Data>
-                <EllipseGeometry x:Name="Pin" Center="0,0" RadiusX="3" RadiusY="3"/>
+                <EllipseGeometry x:Name="Pin" Center="0,0" RadiusX="5" RadiusY="5"/>
             </Path.Data>
         </Path>            
     </Canvas>

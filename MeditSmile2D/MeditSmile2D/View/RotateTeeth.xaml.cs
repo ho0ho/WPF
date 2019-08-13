@@ -126,7 +126,7 @@ namespace MeditSmile2D.View
 
             //Pin.Center = new Point(Left, Top);
             Canvas.SetLeft(RotatePin, Left);
-            Canvas.SetTop(RotatePin, Top);
+            Canvas.SetTop(RotatePin, Top + 10);
         }
     }
 }

@@ -21,17 +21,18 @@
                 </Rectangle.Fill>
             </Rectangle>
 
-            <Border x:Name="Border_Top" Cursor="SizeNS" Opacity="1" Visibility="Hidden" Background="Blue"
+            <Border x:Name="Border_Top" Cursor="SizeNS" Opacity="1" Visibility="Hidden"
                     MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForResizeTooth}"
                     MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForResizeTooth}"
                     MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForResizeTooth}"
                     Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{StaticResource BorderStyle}">
-                <!--<Border.Background>
-                    <LinearGradientBrush EndPoint="0.504,1.5" StartPoint="0.504,0.03">
-                        <GradientStop Color="#FFFFC934" Offset="0"/>
-                        <GradientStop Color="#FFFFFFFF" Offset="0.567"/>
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0.5, 0" EndPoint="0.5 1">
+                        <GradientStop Color="White" Offset="0"/>
+                        <GradientStop Color="Blue" Offset="0.5"/>
+                        <GradientStop Color="White" Offset="1"/>
                     </LinearGradientBrush>
-                </Border.Background>-->
+                </Border.Background>
             </Border>
 
             <Line x:Name="Teethline5" StrokeThickness="1" Stroke="SkyBlue" Visibility="Visible"/>

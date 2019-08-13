@@ -160,8 +160,8 @@ namespace MeditSmile2D.View
             Border_WrapTooth.Visibility = Visibility.Visible;
             WrappingRect.Visibility = Visibility.Visible;
             Border_Top.Visibility = Visibility.Visible;
-            foreach (Shape shape in Canvas_Smile.Children)
-                shape.Opacity = 1;
+            //foreach (Shape shape in Canvas_Smile.Children)
+            //    shape.Opacity = 1;
 
             var pointses = new List<List<Point>>();
             foreach (TeethType high in Points)
@@ -185,7 +185,7 @@ namespace MeditSmile2D.View
             DrawRect();
             if (this.Name.Equals("WrapTooth_UpperTooth"))
             {
-                DrawSmileLine(pointses);
+              //  DrawSmileLine(pointses);
                 DrawTeethBetweenLine(pointses);
             }
 
@@ -224,7 +224,7 @@ namespace MeditSmile2D.View
                 coorX = Numerics.GetMaxX_Teeth(teeth).X - Left;
                 listX1.Add(coorX);
             }
-            IEnumerable lastTeeth = points[5];  // CanineL
+            List<Point> lastTeeth = points[5];  // CanineL
             coorX = Numerics.GetMinX_Teeth(lastTeeth).X - Left;
             listX1.Add(coorX);
 
@@ -246,7 +246,7 @@ namespace MeditSmile2D.View
         {
             Point Left2 = Numerics.GetMinX_Teeth(all[5]);
             Point Left1 = Numerics.GetMaxY_Teeth(all[4]);
-            Point Mid = Numerics.GetMaxXY_Tooth(all);
+            Point Mid = Numerics.GetMaxXY_Tooth(Points);
             Point Right1 = Numerics.GetMaxY_Teeth(all[1]);
             Point Right2 = Numerics.GetMaxX_Teeth(all[2]);
 
