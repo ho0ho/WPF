@@ -12,7 +12,7 @@
     <Border x:Name="Border_WrapTooth" BorderThickness="1" BorderBrush="Transparent" Opacity="1">
         <Grid x:Name="Grid_WrapTooth">
             <Rectangle  x:Name="WrappingRect" Cursor="Hand" Visibility="Visible" Opacity="1" 
-                        MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForDragAndDropTooth }"
+                        MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForDragAndDropTooth}"
                         MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForDragAndDropTooth}"
                         MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForDragAndDropTooth}">
 
@@ -35,23 +35,6 @@
                 </Border.Background>
             </Border>
 
-            <Line x:Name="Teethline5" StrokeThickness="1" Stroke="SkyBlue" Visibility="Visible"/>
-            <Line x:Name="Teethline6" StrokeThickness="1" Stroke="SkyBlue" Visibility="Visible"/>
-            <Line x:Name="Teethline7" StrokeThickness="1" Stroke="SkyBlue" Visibility="Visible"/>
-            <Line x:Name="Teethline4" StrokeThickness="1" Stroke="SkyBlue" Visibility="Visible"/>
-            <Line x:Name="Teethline3" StrokeThickness="1" Stroke="SkyBlue" Visibility="Visible"/>
-            <Line x:Name="Teethline2" StrokeThickness="1" Stroke="SkyBlue" Visibility="Visible"/>
-            <Line x:Name="Teethline1" StrokeThickness="1" Stroke="SkyBlue" Visibility="Visible"/>
-
-            <Canvas x:Name="Canvas_Smile">
-                <Path x:Name="SmileLine" Stroke="SkyBlue" StrokeThickness="3" />
-                <Ellipse x:Name="LeftSmileControl" Opacity="0" Style="{StaticResource SmileControlStyle}"
-                         MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForSmileLine}"/>
-                <Ellipse x:Name="MidSmileControl" Opacity="0" Style="{StaticResource SmileControlStyle}"
-                         MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForSmileLine}"/>
-                <Ellipse x:Name="RightSmileControl" Opacity="0" Style="{StaticResource SmileControlStyle}"
-                         MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForSmileLine}"/>
-            </Canvas>
 
             <Border x:Name="Border_Bottom" Cursor="SizeNS" Background="DarkCyan" Opacity="0"
                     MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForResizeTooth }"
@@ -95,6 +78,23 @@
                     MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForResizeTooth}"
                     Height="5" Width="5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{StaticResource BorderStyle}"/>
 
+            <Line x:Name="Teethline5" StrokeThickness="1" Stroke="SkyBlue" Visibility="Visible"/>
+            <Line x:Name="Teethline6" StrokeThickness="1" Stroke="SkyBlue" Visibility="Visible"/>
+            <Line x:Name="Teethline7" StrokeThickness="1" Stroke="SkyBlue" Visibility="Visible"/>
+            <Line x:Name="Teethline4" StrokeThickness="1" Stroke="SkyBlue" Visibility="Visible"/>
+            <Line x:Name="Teethline3" StrokeThickness="1" Stroke="SkyBlue" Visibility="Visible"/>
+            <Line x:Name="Teethline2" StrokeThickness="1" Stroke="SkyBlue" Visibility="Visible"/>
+            <Line x:Name="Teethline1" StrokeThickness="1" Stroke="SkyBlue" Visibility="Visible"/>
+
+            <Canvas x:Name="Canvas_Smile">
+                <Path x:Name="SmileLine" Stroke="SkyBlue" StrokeThickness="3" />
+                <Ellipse x:Name="LeftSmileControl" Opacity="0" Style="{StaticResource SmileControlStyle}"
+                         MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForSmileLine}"/>
+                <Ellipse x:Name="MidSmileControl" Opacity="0" Style="{StaticResource SmileControlStyle}"
+                         MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForSmileLine}"/>
+                <Ellipse x:Name="RightSmileControl" Opacity="0" Style="{StaticResource SmileControlStyle}"
+                         MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForSmileLine}"/>
+            </Canvas>
         </Grid>
     </Border>
 </UserControl>
