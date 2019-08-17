@@ -15,6 +15,9 @@ namespace MeditSmile2D.View.ArrowLine
         PathFigure pathfigHead2;
         PolyLineSegment polysegHead2;
 
+
+        #region ArrowAngle
+
         /// <summary>
         ///     Identifies the ArrowAngle dependency property.
         /// </summary>
@@ -36,11 +39,19 @@ namespace MeditSmile2D.View.ArrowLine
                 new FrameworkPropertyMetadata(12.0,
                         FrameworkPropertyMetadataOptions.AffectsMeasure));
 
+        #endregion
+
+        #region ArrowLength
+
         public double ArrowLength
         {
             set { SetValue(ArrowLengthProperty, value); }
             get { return (double)GetValue(ArrowLengthProperty); }
         }
+
+        #endregion
+
+        #region ArrowEnds
 
         /// <summary>
         ///     Identifies the ArrowEnds dependency property.
@@ -55,6 +66,10 @@ namespace MeditSmile2D.View.ArrowLine
             get { return (ArrowEnds)GetValue(ArrowEndsProperty); }
         }
 
+        #endregion
+
+        #region IsArrowClosed
+
         public static readonly DependencyProperty IsArrowClosedProperty =
             DependencyProperty.Register("IsArrowClosed",
                 typeof(bool), typeof(ArrowLineBase),
@@ -66,6 +81,8 @@ namespace MeditSmile2D.View.ArrowLine
             set { SetValue(IsArrowClosedProperty, value); }
             get { return (bool)GetValue(IsArrowClosedProperty); }
         }
+
+        #endregion
 
         public ArrowLineBase()
         {

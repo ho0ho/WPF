@@ -72,11 +72,15 @@
                     Width="5" Height="5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{StaticResource BorderStyle}"/>
 
             <Canvas>
-                <ar:ArrowLine x:Name="lineH" Stroke="Red" StrokeThickness="2" ArrowEnds="Both" Opacity="0.3" IsArrowClosed="True" Visibility="Hidden"></ar:ArrowLine>
+                <ar:ArrowLine x:Name="lineH" ArrowEnds="Both" IsArrowClosed="True" 
+                              Stroke="Red" StrokeThickness="2" Opacity="0.3" Visibility="Hidden"/>
                 <Label x:Name="lengthH" FontSize="9" Visibility="Hidden"></Label>
-                <ar:ArrowLine x:Name="lineV" Stroke="Blue" StrokeThickness="2" ArrowEnds="Both" Opacity="0.3" IsArrowClosed="True" Visibility="Hidden"></ar:ArrowLine>
+                
+                <ar:ArrowLine x:Name="lineV" ArrowEnds="Both" IsArrowClosed="True" 
+                              Stroke="Blue" StrokeThickness="2" Opacity="0.3" Visibility="Hidden"/>
                 <Label x:Name="lengthV" FontSize="9" Visibility="Hidden"></Label>
-                <Label x:Name="RatioHV" FontSize="11" FontWeight="Bold" Visibility="Hidden"></Label>
+                
+                <Label x:Name="RatioHV" FontSize="25" FontWeight="Bold" Visibility="Hidden"></Label>
             </Canvas>
 
         </Grid>

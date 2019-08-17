@@ -119,6 +119,7 @@
     <Compile Include="View\ArrowLine\ArrowEnds.cs" />
     <Compile Include="View\ArrowLine\ArrowLine.cs" />
     <Compile Include="View\ArrowLine\ArrowLineBase.cs" />
+    <Compile Include="View\ArrowLine\DragArrow.cs" />
     <Compile Include="View\AttachedProperties\DragInsideCanvasBehavior.cs" />
     <Compile Include="View\DrawTeeth.xaml.cs">
       <DependentUpon>DrawTeeth.xaml</DependentUpon>

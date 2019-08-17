@@ -10,17 +10,17 @@
         <DataTemplate.Resources>
             <Storyboard x:Key="OnMouseEnter1">
                 <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Ellipse.Fill)" Storyboard.TargetName="ellipse">
-                    <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Brushes.Blue}"/>
+                    <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Brushes.Red}"/>
                 </ObjectAnimationUsingKeyFrames>
             </Storyboard>
             <Storyboard x:Key="OnMouseLeave1">
                 <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Ellipse.Fill)" Storyboard.TargetName="ellipse">
-                    <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Brushes.Red}"/>
+                    <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Brushes.CornflowerBlue}"/>
                 </ObjectAnimationUsingKeyFrames>
             </Storyboard>
         </DataTemplate.Resources>
         <Grid>
-            <Ellipse  x:Name="ellipse" Fill="#FFFF4545" HorizontalAlignment="Left" VerticalAlignment="Top" Width="5" Height="5" RenderTransformOrigin="0.5,0.5">
+            <Ellipse  x:Name="ellipse" Fill="CornflowerBlue" HorizontalAlignment="Left" VerticalAlignment="Top" Width="5" Height="5" RenderTransformOrigin="0.5,0.5">
                 <Ellipse.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform ScaleX="0.8" ScaleY="0.8"/>

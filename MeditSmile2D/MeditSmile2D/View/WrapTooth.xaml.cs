@@ -158,8 +158,7 @@ namespace MeditSmile2D.View
                 return;
 
             Border_WrapTooth.Visibility = Visibility.Visible;
-            WrappingRect.Visibility = Visibility.Visible;
-            Border_Top.Visibility = Visibility.Visible;
+            MoveTop.Visibility = Visibility.Visible;
             //foreach (Shape shape in Canvas_Smile.Children)
             //    shape.Opacity = 1;
 
@@ -195,24 +194,40 @@ namespace MeditSmile2D.View
 
         public double Top;
         public double Left;
-        readonly double padding = 100;
+        readonly double padding = 50;
 
         private void DrawRect()
         {
             Point MinPoint = Numerics.GetMinXY_Tooth(Points);
             Point MaxPoint = Numerics.GetMaxXY_Tooth(Points);
 
-            WrappingRect.Height = MaxPoint.Y - MinPoint.Y + padding;
-            WrappingRect.Width = MaxPoint.X - MinPoint.X + padding;
+            Border_WrapTooth.Height = MaxPoint.Y - MinPoint.Y + padding;
+            Border_WrapTooth.Width = MaxPoint.X - MinPoint.X + padding;
 
             Top = MinPoint.Y - padding / 2;
             Left = MinPoint.X - padding / 2;
 
             Canvas.SetTop(this, Top);
             Canvas.SetLeft(this, Left);
+
+            //MoveTop.X1 = Border_WrapTooth.Width / 2;
+            //MoveTop.Y1 = -50;
+            //MoveTop.X2 = Border_WrapTooth.Width / 2;
+            //MoveTop.Y2 = -30;
+
+            MoveTop.TopX = Border_WrapTooth.Width / 2;
+            MoveTop.TopY = -50;
+            MoveTop.BottomX = Border_WrapTooth.Width / 2;
+            MoveTop.BottomY = -30;
+            MoveTop.LeftX = Border_WrapTooth.Width / 2 - 10;
+            MoveTop.LeftY = -40;
+            MoveTop.RightX = Border_WrapTooth.Width / 2 + 10;
+            MoveTop.RightY = -40;
         }
 
         #endregion
+
+        #region DrawTeethBetweenLine
 
         private void DrawTeethBetweenLine(List<List<Point>> points)
         {
@@ -237,10 +252,14 @@ namespace MeditSmile2D.View
                     line.X1 = listX1[i];
                     line.Y1 = 0;
                     line.X2 = listX1[i++];
-                    line.Y2 = WrappingRect.Height;
+                    line.Y2 = Border_WrapTooth.Height;
                 }
             }
         }
+
+        #endregion
+
+        #region DrawSmileLine 
 
         private void DrawSmileLine(List<List<Point>> all)
         {
@@ -251,9 +270,9 @@ namespace MeditSmile2D.View
             Point Right2 = Numerics.GetMaxX_Teeth(all[2]);
 
             double padding = 30;
-            Point LeftCont = new Point(Left2.X - Left - padding, WrappingRect.Height / 2);
-            Point MidCont = new Point(WrappingRect.Width / 2, Mid.Y - Top + 5);
-            Point RightCont = new Point(Right2.X - Left + padding, WrappingRect.Height / 2);
+            Point LeftCont = new Point(Left2.X - Left - padding, Border_WrapTooth.Height / 2);
+            Point MidCont = new Point(Border_WrapTooth.Width / 2, Mid.Y - Top + 5);
+            Point RightCont = new Point(Right2.X - Left + padding, Border_WrapTooth.Height / 2);
 
             // Make a list of Control Points.
             List<Point> list = new List<Point>();
@@ -298,5 +317,7 @@ namespace MeditSmile2D.View
             smile_geometry.Figures = smile_pathfigureCollection;
             SmileLine.Data = smile_geometry;
         }
+
+        #endregion
     }
 }

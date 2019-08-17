@@ -62,7 +62,7 @@ namespace MeditSmile2D.View
         }
 
         public static readonly DependencyProperty PathColorProperty =
-            DependencyProperty.Register("PathColor", typeof(Brush), typeof(Teeth), new PropertyMetadata(Brushes.Coral));
+            DependencyProperty.Register("PathColor", typeof(Brush), typeof(Teeth), new PropertyMetadata(Brushes.MidnightBlue));
 
         #endregion
 

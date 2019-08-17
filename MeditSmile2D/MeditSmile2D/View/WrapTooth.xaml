@@ -5,23 +5,24 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              
-             xmlns:MouseBehaviors="clr-namespace:MeditSmile2D.View.Utils"             
+             xmlns:MouseBehaviors="clr-namespace:MeditSmile2D.View.Utils"  
+             xmlns:Arrow="clr-namespace:MeditSmile2D.View.ArrowLine"
              d:DesignHeight="860" d:DesignWidth="1280">
 
 
     <Border x:Name="Border_WrapTooth" BorderThickness="1" BorderBrush="Transparent" Opacity="1">
         <Grid x:Name="Grid_WrapTooth">
-            <Rectangle  x:Name="WrappingRect" Cursor="Hand" Visibility="Visible" Opacity="1" 
-                        MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForDragAndDropTooth}"
+            <!--<Rectangle  x:Name="WrappingRect" Cursor="Hand" Opacity="1"
+                MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForDragAndDropTooth}"
                         MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForDragAndDropTooth}"
                         MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForDragAndDropTooth}">
 
                 <Rectangle.Fill>
                     <SolidColorBrush Color="LightCoral" Opacity="0"/>
                 </Rectangle.Fill>
-            </Rectangle>
+            </Rectangle>-->
 
-            <Border x:Name="Border_Top" Cursor="SizeNS" Opacity="1" Visibility="Hidden"
+            <Border x:Name="Border_Top" Cursor="SizeNS" Opacity="0.5" Visibility="Hidden"
                     MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForResizeTooth}"
                     MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForResizeTooth}"
                     MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForResizeTooth}"
@@ -29,11 +30,25 @@
                 <Border.Background>
                     <LinearGradientBrush StartPoint="0.5, 0" EndPoint="0.5 1">
                         <GradientStop Color="White" Offset="0"/>
-                        <GradientStop Color="Blue" Offset="0.5"/>
+                        <GradientStop Color="SkyBlue" Offset="0.5"/>
                         <GradientStop Color="White" Offset="1"/>
                     </LinearGradientBrush>
                 </Border.Background>
             </Border>
+
+            <!--<Arrow:ArrowLine x:Name="MoveTop" 
+                    Visibility="Hidden" Stroke="SkyBlue" StrokeThickness="2" Fill="MidnightBlue" Cursor="Hand"
+                    ArrowEnds="Start" ArrowLength="5" IsArrowClosed="True"
+                    MouseBehaviors:MouseBehaviors.MouseLeftButtonDownCommand="{Binding MouseLeftDownForDragAndDropTooth}"
+                    MouseBehaviors:MouseBehaviors.MouseMoveCommand="{Binding MouseMoveForDragAndDropTooth}"
+                    MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForDragAndDropTooth}"/>-->
+
+            <Arrow:DragArrow  x:Name="MoveTop" 
+                              Visibility="Hidden" Stroke="SkyBlue" StrokeThickness="2" Fill="MidnightBlue" Cursor="Hand"
+                              ArrowEnds="Both" ArrowLength="5" IsArrowClosed="True"
+                              />
+
+
 
 
             <Border x:Name="Border_Bottom" Cursor="SizeNS" Background="DarkCyan" Opacity="0"
@@ -86,6 +101,8 @@
             <Line x:Name="Teethline2" StrokeThickness="1" Stroke="SkyBlue" Visibility="Visible"/>
             <Line x:Name="Teethline1" StrokeThickness="1" Stroke="SkyBlue" Visibility="Visible"/>
 
+                
+            
             <Canvas x:Name="Canvas_Smile">
                 <Path x:Name="SmileLine" Stroke="SkyBlue" StrokeThickness="3" />
                 <Ellipse x:Name="LeftSmileControl" Opacity="0" Style="{StaticResource SmileControlStyle}"
@@ -95,6 +112,9 @@
                 <Ellipse x:Name="RightSmileControl" Opacity="0" Style="{StaticResource SmileControlStyle}"
                          MouseBehaviors:MouseBehaviors.MouseLeftButtonUpCommand="{Binding MouseLeftUpForSmileLine}"/>
             </Canvas>
+            
+            
+            
         </Grid>
     </Border>
 </UserControl>

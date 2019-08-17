@@ -2,6 +2,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using MeditSmile2D.Common;
 using MeditSmile2D.View;
+using MeditSmile2D.View.ArrowLine;
 using MeditSmile2D.View.Utils;
 using MeditSmile2D.ViewModel.Command;
 using Microsoft.Win32;
@@ -792,18 +793,12 @@ namespace MeditSmile2D.ViewModel
         private bool leftdown = false;
         private bool leftdown_with_ctrl = false;
         private bool dragging = false;
-        //private bool exist_with_ctrl = false, exist_notwith_ctrl = false;
 
         private List<Teeth> DeletedList = new List<Teeth>();
 
         #region DragDrop for Teeth 
 
-        //public Rectangle rect_dragdrop = null;
-        //private Border border_dragdrop = null;
-
         private Brush orgBrush;
-
-    //    private bool captured_dragdrop;
         private Point originalPoint;
 
         private RelayCommand<object> _mouseLeftDownForDragAndDropTeeth;
@@ -838,8 +833,8 @@ namespace MeditSmile2D.ViewModel
                 if (SelectedList.Count == 0)
                 {
                     SelectedList.Add(th);
-                    rect.Visibility = Visibility.Visible;
-                    border.Visibility = Visibility.Visible;
+                    //rect.Visibility = Visibility.Visible;
+                    //border.Visibility = Visibility.Visible;
                     draw.path.Fill = Brushes.LightSkyBlue;
                     rotate.RotatePin.Visibility = Visibility.Visible;
 
@@ -871,8 +866,8 @@ namespace MeditSmile2D.ViewModel
                     SelectedList.Clear();
 
                     SelectedList.Add(th);
-                    rect.Visibility = Visibility.Visible;
-                    border.Visibility = Visibility.Visible;
+                    //rect.Visibility = Visibility.Visible;
+                    //border.Visibility = Visibility.Visible;
                     draw.path.Fill = Brushes.LightSkyBlue;
                     rotate.RotatePin.Visibility = Visibility.Visible;
 
@@ -886,8 +881,7 @@ namespace MeditSmile2D.ViewModel
 
             // padding
             originalPoint.X += 5;
-            originalPoint.Y += 5;            
-
+            originalPoint.Y += 5;
         }
 
         private RelayCommand<object> _mouseMoveForDragAndDropTeeth;
@@ -901,8 +895,6 @@ namespace MeditSmile2D.ViewModel
             }
             set { _mouseMoveForDragAndDropTeeth = value; }
         }
-
-        int same = 0;
         public void ExecuteMouseMoveForDragAndDropTeeth(MouseEventArgs e)
         {
             if (dragging)
@@ -913,23 +905,12 @@ namespace MeditSmile2D.ViewModel
                     Teeth me_rect = ViewUtils.FindParent(rect, Type.GetType("MeditSmile2D.View.Teeth")) as Teeth;
                     if (SelectedList.Contains(me_rect)) {                 
                         foreach (Teeth me in SelectedList)
-                        {
-
-                            //WrapTeeth wrap = ViewUtils.FindParent(rect, Type.GetType("MeditSmile2D.View.WrapTeeth")) as WrapTeeth;
-                            //Debug.Assert(wrap != null);
-
+                        { 
                             Teeth you = null;
                             if (main.mirror.IsChecked == true)
                             {
-                                //WrapTeeth wrap_me = me.FindName("wrapTeeth") as WrapTeeth;
                                 Grid grid_me = ViewUtils.FindParent(me, (new Grid()).GetType()) as Grid;
-                                //Debug.Assert(wrap_me != null && grid_me != null);
-                                //var findTeeth = FindUpElement(wrap, Type.GetType("MeditSmile2D.View.Teeth"));
-                                //var findGrid = FindUpElement(wrap, Type.GetType("System.Windows.Controls.Grid"));
-
-                                //Teeth me = findTeeth as Teeth;
-                                //Grid upper = findGrid as Grid;
-
+                             
                                 int idx_me = main.dic[me.Name];
                                 int idx_you = idx_me + (idx_me >= 0 && idx_me < 3 ? +3 : -3);
                                 var myKey = main.dic.FirstOrDefault(p => p.Value == idx_you).Key;
@@ -981,20 +962,21 @@ namespace MeditSmile2D.ViewModel
 
                 Teeth th = ViewUtils.FindParent(rect_dragdrop, Type.GetType("MeditSmile2D.View.Teeth")) as Teeth;
                 Canvas cv = th.FindName("Canvas_Teeth") as Canvas;
-                DrawTeeth draw = ViewUtils.FindChild(cv, Type.GetType("MeditSmile2D.View.DrawTeeth")) as DrawTeeth;
-                RotateTeeth rotate = ViewUtils.FindChild(cv, Type.GetType("MeditSmile2D.View.RotateTeeth")) as RotateTeeth;
+                DrawTeeth draw = cv.FindName("drawTeeth") as DrawTeeth;
+                RotateTeeth rotate = cv.FindName("rotateTeeth") as RotateTeeth;
+                //DrawTeeth draw = ViewUtils.FindChild(cv, Type.GetType("MeditSmile2D.View.DrawTeeth")) as DrawTeeth;
+                //RotateTeeth rotate = ViewUtils.FindChild(cv, Type.GetType("MeditSmile2D.View.RotateTeeth")) as RotateTeeth;
                 if (!dragging)
                 {
                     if (leftdown_with_ctrl)
                     {
                         if (SelectedList.Contains(th))
-                        {
-                            Console.WriteLine($"{th.Name}");
+                        {                            
                             rect_dragdrop.Stroke = orgBrush;
                             border_dragdrop.BorderBrush = orgBrush;
 
                             //rect_dragdrop.Visibility = Visibility.Hidden;
-                            border_dragdrop.Visibility = Visibility.Hidden;
+                            //border_dragdrop.Visibility = Visibility.Hidden;
                             draw.path.Fill = null;
                             rotate.RotatePin.Visibility = Visibility.Hidden;
                             flag = 1;
@@ -1004,7 +986,7 @@ namespace MeditSmile2D.ViewModel
                         {
                             SelectedList.Add(th);
                             //rect_dragdrop.Visibility = Visibility.Visible;
-                            border_dragdrop.Visibility = Visibility.Visible;
+                            //border_dragdrop.Visibility = Visibility.Visible;
                             draw.path.Fill = Brushes.LightSkyBlue;
                             rotate.RotatePin.Visibility = Visibility.Visible;
                         }
@@ -1050,8 +1032,8 @@ namespace MeditSmile2D.ViewModel
 
                             SelectedList.Clear();
                             SelectedList.Add(th);
-                            rect_dragdrop.Visibility = Visibility.Visible;
-                            border_dragdrop.Visibility = Visibility.Visible;
+                            //rect_dragdrop.Visibility = Visibility.Visible;
+                            //border_dragdrop.Visibility = Visibility.Visible;
                             draw.path.Fill = Brushes.LightSkyBlue;
                             rotate.RotatePin.Visibility = Visibility.Visible;
                         }
@@ -1072,8 +1054,6 @@ namespace MeditSmile2D.ViewModel
         #region DragDrop for Tooth
 
         //private bool captured;            // teeth¿Í °øÀ¯
-        //private Point originalPoint_tooth;
-
         private Brush orgBrush2;
 
         private RelayCommand<object> _mouseLeftDownForDragAndDropTooth;
@@ -1089,26 +1069,15 @@ namespace MeditSmile2D.ViewModel
         }
         public void ExecuteMouseLeftDownForDragAndDropTooth(MouseEventArgs e)
         {
-            Rectangle me = e.Source as Rectangle;
+            //Rectangle me = e.Source as Rectangle;
+            ArrowLine me = e.Source as ArrowLine;
             Border me_border = ViewUtils.FindParent(me, (new Border()).GetType()) as Border;
             foreach(Teeth th_in_List in SelectedList)
             {
-                //Canvas cv = th_in_List.FindName("Canvas_Teeth") as Canvas;
-
-                // FindName, Control
                 RotateTeeth rotate = th_in_List.FindName("rotateTeeth") as RotateTeeth;
                 DrawTeeth draw = th_in_List.FindName("drawTeeth") as DrawTeeth;
                 WrapTeeth wrap = th_in_List.FindName("wrapTeeth") as WrapTeeth;
 
-                // FindName, panel
-                //RotateTeeth rotate = cv.FindName("RotateTeeth_WrapTeeth") as RotateTeeth;
-                //DrawTeeth draw = cv.FindName("drawTeeth") as DrawTeeth;
-                //WrapTeeth wrap = cv.FindName("wrapTeeth") as WrapTeeth;
-
-                // FindChild, panel
-                //RotateTeeth rotate = ViewUtils.FindChild(cv, Type.GetType("MeditSmile2D.View.RotateTeeth")) as RotateTeeth;
-                //DrawTeeth draw = ViewUtils.FindChild(cv, Type.GetType("MeditSmile2D.View.DrawTeeth")) as DrawTeeth;
-                //WrapTeeth wrap = ViewUtils.FindChild(cv, Type.GetType("MeditSmile2D.View.WrapTeeth")) as WrapTeeth;
                 Border border = wrap.FindName("Border_WrapTeeth") as Border;
                 Rectangle rect = wrap.FindName("Rectangle_WrapTeeth") as Rectangle;
 
@@ -1126,7 +1095,7 @@ namespace MeditSmile2D.ViewModel
             originalPoint.Y += 5;
 
             orgBrush2 = me_border.BorderBrush;
-            me.Stroke = Brushes.Red;
+            //me.Stroke = Brushes.Red;
             me_border.BorderBrush = Brushes.Red;
 
             leftdown = true;
@@ -1146,7 +1115,8 @@ namespace MeditSmile2D.ViewModel
         }
         public void ExecuteMouseMoveForDragAndDropTooth(MouseEventArgs e)
         {
-            Rectangle me = e.Source as Rectangle;
+            //Rectangle me = e.Source as Rectangle;
+            ArrowLine me = e.Source as ArrowLine;
             WrapTooth wrap = ViewUtils.FindParent(me, Type.GetType("MeditSmile2D.View.WrapTooth")) as WrapTooth;
             if (leftdown == true)
             {
@@ -1178,9 +1148,11 @@ namespace MeditSmile2D.ViewModel
         {
             //rect2.Stroke = orgBrush2;
             //border2.BorderBrush = orgBrush2;
-            Rectangle me = e.Source as Rectangle;
+
+            //Rectangle me = e.Source as Rectangle;
+            ArrowLine me = e.Source as ArrowLine;
             Border me_border = ViewUtils.FindParent(me, (new Border()).GetType()) as Border;
-            me.Stroke = orgBrush2;
+            //me.Stroke = orgBrush2;
             me_border.BorderBrush = orgBrush2;
 
             leftdown = false;
