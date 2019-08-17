@@ -42,42 +42,6 @@ namespace MeditSmile2D.Common
 
         #region Get Points for Tooth
 
-        // for Tooth.
-        //public static Point GetMinXY_Tooth(List<List<Point>> pts)
-        //{
-        //    double xMin = double.MaxValue;
-        //    double yMin = double.MaxValue;
-
-        //    foreach (var points in pts)
-        //    {
-        //        foreach (var point in points)
-        //        {
-        //            if (point.X < xMin)
-        //                xMin = point.X;
-        //            if (point.Y < yMin)
-        //                yMin = point.Y;
-        //        }
-        //    }
-        //    return new Point(xMin, yMin);
-        //}
-
-        //public static Point GetMaxXY_Tooth(List<List<Point>> pts)
-        //{
-        //    double xMax = double.MinValue;
-        //    double yMax = double.MinValue;
-
-        //    foreach (var points in pts)
-        //    {
-        //        foreach (var point in points)
-        //        {
-        //            if (point.X > xMax)
-        //                xMax = point.X;
-        //            if (point.Y > yMax)
-        //                yMax = point.Y;
-        //        }
-        //    }
-        //    return new Point(xMax, yMax);
-        //}
 
         public static Point GetMinXY_Tooth(IEnumerable pts)
         {
@@ -153,42 +117,6 @@ namespace MeditSmile2D.Common
                     p = pt;
             return p;
         }
-
-        //public static Point GetMinX_Teeth(IEnumerable pts)
-        //{
-        //    Point p = new Point(double.MaxValue, 0);
-        //    foreach (PointViewModel pt in pts)
-        //        if (pt.X < p.X)
-        //            p = new Point(pt.X, pt.X);
-        //    return p;
-        //}
-
-        //public static Point GetMinY_Teeth(IEnumerable pts)
-        //{
-        //    Point p = new Point(0, double.MaxValue);
-        //    foreach (PointViewModel pt in pts)
-        //        if (pt.Y < p.Y)
-        //            p = new Point(pt.X, pt.Y);
-        //    return p;
-        //}
-
-        //public static Point GetMaxX_Teeth(IEnumerable pts)
-        //{
-        //    Point p = new Point(double.MinValue, 0);
-        //    foreach (PointViewModel pt in pts)
-        //        if (pt.X > p.X)
-        //            p = new Point(pt.X, pt.Y);
-        //    return p;
-        //}
-
-        //public static Point GetMaxY_Teeth(IEnumerable pts)
-        //{
-        //    Point p = new Point(0, double.MinValue);
-        //    foreach (PointViewModel pt in pts)
-        //        if (pt.Y > p.Y)
-        //            p = new Point(pt.X, pt.Y);
-        //    return p;
-        //}
 
         #endregion
 

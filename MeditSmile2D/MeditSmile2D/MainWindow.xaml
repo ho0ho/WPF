@@ -81,11 +81,11 @@
                         </Grid.ColumnDefinitions>
 
                         <RadioButton x:Name="Lower_no" Grid.Column="0" Margin="10" IsChecked="{Binding LowerTmpNo}">No Lower</RadioButton>
-                        <RadioButton x:Name="radioLower0" Grid.Column="1" Margin="10" IsChecked="{Binding LowerTmp1}">Lower Template #1</RadioButton>
-                        <!--<RadioButton x:Name="radioLower1" Grid.Column="2" Margin="10" IsChecked="{Binding LowerTmp1}" IsEnabled="{Binding Path=IsChecked, ElementName=Check_LowerTooth}">Lower Template #1</RadioButton>-->
-                        <!--<RadioButton x:Name="radioLower2" Grid.Column="3" Margin="10" IsChecked="{Binding LowerTmp2}" IsEnabled="{Binding Path=IsChecked, ElementName=Check_LowerTooth}">Lower Template #2</RadioButton>
-                        <RadioButton x:Name="radioLower3" Grid.Column="4" Margin="10" IsChecked="{Binding LowerTmp3}" IsEnabled="{Binding Path=IsChecked, ElementName=Check_LowerTooth}">Lower Template #3</RadioButton>
-                        <RadioButton x:Name="radioLower4" Grid.Column="5" Margin="10" IsChecked="{Binding LowerTmp4}" IsEnabled="{Binding Path=IsChecked, ElementName=Check_LowerTooth}">Lower Template #4</RadioButton>-->
+                        <RadioButton x:Name="radioLower1" Grid.Column="1" Margin="10" IsChecked="{Binding LowerTmp1}">Lower Template #1</RadioButton>
+                        <RadioButton x:Name="radioLower2" Grid.Column="2" Margin="10" IsChecked="{Binding LowerTmp2}">Lower Template #2</RadioButton>
+                        <RadioButton x:Name="radioLower3" Grid.Column="3" Margin="10" IsChecked="{Binding LowerTmp3}">Lower Template #3</RadioButton>
+                        <RadioButton x:Name="radioLower4" Grid.Column="4" Margin="10" IsChecked="{Binding LowerTmp4}">Lower Template #4</RadioButton>
+                        <RadioButton x:Name="radioLower5" Grid.Column="5" Margin="10" IsChecked="{Binding LowerTmp5}">Lower Template #5</RadioButton>
                     </Grid>
                 </GroupItem>
             </GroupBox>

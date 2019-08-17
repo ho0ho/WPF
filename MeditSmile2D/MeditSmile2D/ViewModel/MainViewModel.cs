@@ -64,9 +64,10 @@ namespace MeditSmile2D.ViewModel
             LowerToothList = new List<bool>();
             LowerToothList.Add(LowerTmpNo = false);
             LowerToothList.Add(LowerTmp1 = false);
-            //LowerToothList.Add( = false);
-            //LowerToothList.Add( = false);
-            //LowerToothList.Add( = false);
+            LowerToothList.Add(LowerTmp2 = false);
+            LowerToothList.Add(LowerTmp3 = false);
+            LowerToothList.Add(LowerTmp4 = false);
+            LowerToothList.Add(LowerTmp5 = false);
 
 
             for (int i = 0; i < 10; i++)
@@ -224,6 +225,70 @@ namespace MeditSmile2D.ViewModel
                     _LowerTmp1 = value;
                     LowerToothList[1] = value;
                     RaisePropertyChanged("LowerTmp1");
+                    RaisePropertyChanged("LowerPoints");
+                }
+            }
+        }
+
+        private bool _LowerTmp2;
+        public bool LowerTmp2
+        {
+            get { return _LowerTmp2; }
+            set
+            {
+                if (_LowerTmp2 != value)
+                {
+                    _LowerTmp2 = value;
+                    LowerToothList[2] = value;
+                    RaisePropertyChanged("LowerTmp2");
+                    RaisePropertyChanged("LowerPoints");
+                }
+            }
+        }
+
+        private bool _LowerTmp3;
+        public bool LowerTmp3
+        {
+            get { return _LowerTmp3; }
+            set
+            {
+                if (_LowerTmp3 != value)
+                {
+                    _LowerTmp3 = value;
+                    LowerToothList[3] = value;
+                    RaisePropertyChanged("LowerTmp3");
+                    RaisePropertyChanged("LowerPoints");
+                }
+            }
+        }
+
+        private bool _LowerTmp4;
+        public bool LowerTmp4
+        {
+            get { return _LowerTmp4; }
+            set
+            {
+                if (_LowerTmp4 != value)
+                {
+                    _LowerTmp4 = value;
+                    LowerToothList[4] = value;
+                    RaisePropertyChanged("LowerTmp4");
+                    RaisePropertyChanged("LowerPoints");
+                }
+            }
+        }
+
+        private bool _LowerTmp5;
+        public bool LowerTmp5
+        {
+            get { return _LowerTmp5; }
+            set
+            {
+                if (_LowerTmp5 != value)
+                {
+                    _LowerTmp5 = value;
+                    LowerToothList[5] = value;
+                    RaisePropertyChanged("LowerTmp5");
                     RaisePropertyChanged("LowerPoints");
                 }
             }
@@ -784,10 +849,8 @@ namespace MeditSmile2D.ViewModel
                 }
                 else if(SelectedList.Contains(th))
                 {
-                    //rect.Visibility = Visibility.Hidden;
-                    //border.Visibility = Visibility.Hidden;
-                    draw.path.Fill = null;
-                    rotate.RotatePin.Visibility = Visibility.Hidden;
+                    //draw.path.Fill = null;
+                    //rotate.RotatePin.Visibility = Visibility.Hidden;
                 }
                 else
                 {
@@ -838,50 +901,56 @@ namespace MeditSmile2D.ViewModel
             }
             set { _mouseMoveForDragAndDropTeeth = value; }
         }
+
+        int same = 0;
         public void ExecuteMouseMoveForDragAndDropTeeth(MouseEventArgs e)
         {
             if (dragging)
             {
                 if (leftdown == true)
                 {
-                    foreach (Teeth me in SelectedList)
-                    {
-                        //Rectangle rect = e.Source as Rectangle;
-                        //WrapTeeth wrap = ViewUtils.FindParent(rect, Type.GetType("MeditSmile2D.View.WrapTeeth")) as WrapTeeth;
-                        //Debug.Assert(wrap != null);
-
-                        Teeth you = null;
-                        if (main.mirror.IsChecked == true)
+                    Rectangle rect = e.Source as Rectangle;
+                    Teeth me_rect = ViewUtils.FindParent(rect, Type.GetType("MeditSmile2D.View.Teeth")) as Teeth;
+                    if (SelectedList.Contains(me_rect)) {                 
+                        foreach (Teeth me in SelectedList)
                         {
-                            //WrapTeeth wrap_me = me.FindName("wrapTeeth") as WrapTeeth;
-                            Grid grid_me = ViewUtils.FindParent(me, (new Grid()).GetType()) as Grid;
-                            //Debug.Assert(wrap_me != null && grid_me != null);
-                            //var findTeeth = FindUpElement(wrap, Type.GetType("MeditSmile2D.View.Teeth"));
-                            //var findGrid = FindUpElement(wrap, Type.GetType("System.Windows.Controls.Grid"));
 
-                            //Teeth me = findTeeth as Teeth;
-                            //Grid upper = findGrid as Grid;
+                            //WrapTeeth wrap = ViewUtils.FindParent(rect, Type.GetType("MeditSmile2D.View.WrapTeeth")) as WrapTeeth;
+                            //Debug.Assert(wrap != null);
 
-                            int idx_me = main.dic[me.Name];
-                            int idx_you = idx_me + (idx_me >= 0 && idx_me < 3 ? +3 : -3);
-                            var myKey = main.dic.FirstOrDefault(p => p.Value == idx_you).Key;
-                            you = grid_me.FindName(myKey) as Teeth;
-                        }
-
-                        Point curPoint = e.GetPosition((IInputElement)e.Source);
-                        var dragDelta = curPoint - originalPoint;
-                        foreach (PointViewModel point in me.Points)
-                        {
-                            point.X += dragDelta.X;
-                            point.Y += dragDelta.Y;
-                        }
-
-                        if (you != null)
-                        {
-                            foreach (PointViewModel point in you.Points)
+                            Teeth you = null;
+                            if (main.mirror.IsChecked == true)
                             {
-                                point.X -= dragDelta.X;
+                                //WrapTeeth wrap_me = me.FindName("wrapTeeth") as WrapTeeth;
+                                Grid grid_me = ViewUtils.FindParent(me, (new Grid()).GetType()) as Grid;
+                                //Debug.Assert(wrap_me != null && grid_me != null);
+                                //var findTeeth = FindUpElement(wrap, Type.GetType("MeditSmile2D.View.Teeth"));
+                                //var findGrid = FindUpElement(wrap, Type.GetType("System.Windows.Controls.Grid"));
+
+                                //Teeth me = findTeeth as Teeth;
+                                //Grid upper = findGrid as Grid;
+
+                                int idx_me = main.dic[me.Name];
+                                int idx_you = idx_me + (idx_me >= 0 && idx_me < 3 ? +3 : -3);
+                                var myKey = main.dic.FirstOrDefault(p => p.Value == idx_you).Key;
+                                you = grid_me.FindName(myKey) as Teeth;
+                            }
+
+                            Point curPoint = e.GetPosition((IInputElement)e.Source);
+                            var dragDelta = curPoint - originalPoint;
+                            foreach (PointViewModel point in me.Points)
+                            {
+                                point.X += dragDelta.X;
                                 point.Y += dragDelta.Y;
+                            }
+
+                            if (you != null)
+                            {
+                                foreach (PointViewModel point in you.Points)
+                                {
+                                    point.X -= dragDelta.X;
+                                    point.Y += dragDelta.Y;
+                                }
                             }
                         }
                     }
